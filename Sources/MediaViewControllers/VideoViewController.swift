@@ -10,7 +10,7 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-class VLCVideoViewController: VLCMediaViewController {
+class VideoViewController: MediaViewController {
     override init(services: Services) {
         super.init(services: services)
         setupUI()
@@ -26,9 +26,7 @@ class VLCVideoViewController: VLCMediaViewController {
     }
 
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        return [
-            VLCMovieCategoryViewController(services),
-            VLCShowEpisodeCategoryViewController(services),
-        ]
+        return [MovieCategoryViewController(services),
+                VideoGroupCategoryViewController(services)]
     }
 }

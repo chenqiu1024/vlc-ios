@@ -19,8 +19,8 @@ class VLCRendererDiscovererManager: NSObject {
 
     @objc weak var delegate: VLCRendererDiscovererManagerDelegate?
 
-    @objc lazy var actionSheet: VLCActionSheet = {
-        let actionSheet = VLCActionSheet()
+    @objc lazy var actionSheet: ActionSheet = {
+        let actionSheet = ActionSheet()
         actionSheet.delegate = self
         actionSheet.dataSource = self
         actionSheet.modalPresentationStyle = .custom
@@ -99,7 +99,7 @@ class VLCRendererDiscovererManager: NSObject {
     }
 
     fileprivate func setRendererItem(rendererItem: VLCRendererItem) {
-        let vpcRenderer = VLCPlaybackController.sharedInstance().renderer
+        let vpcRenderer = PlaybackService.sharedInstance().renderer
         var finalRendererItem: VLCRendererItem?
         var isSelected: Bool = false
 
@@ -108,7 +108,7 @@ class VLCRendererDiscovererManager: NSObject {
             isSelected = true
         }
 
-        VLCPlaybackController.sharedInstance().renderer = finalRendererItem
+        PlaybackService.sharedInstance().renderer = finalRendererItem
         for button in rendererButtons {
             button.isSelected = isSelected
         }
@@ -118,7 +118,7 @@ class VLCRendererDiscovererManager: NSObject {
         actionSheet.setAction { [weak self] (item) in
             if let rendererItem = item as? VLCRendererItem {
                 //if we select the same renderer we want to disconnect
-                let oldRenderer = VLCPlaybackController.sharedInstance().renderer
+                let oldRenderer = PlaybackService.sharedInstance().renderer
                 self?.setRendererItem(rendererItem: rendererItem)
                 if let handler = selectionHandler {
                     handler(oldRenderer == rendererItem ? nil : rendererItem)
@@ -162,7 +162,7 @@ extension VLCRendererDiscovererManager: VLCRendererDiscovererDelegate {
     }
 
     func rendererDiscovererItemDeleted(_ rendererDiscoverer: VLCRendererDiscoverer, item: VLCRendererItem) {
-        let playbackController = VLCPlaybackController.sharedInstance()
+        let playbackController = PlaybackService.sharedInstance()
         // Current renderer has been removed
         if playbackController.renderer == item {
             playbackController.renderer = nil
@@ -187,7 +187,7 @@ extension VLCRendererDiscovererManager: VLCRendererDiscovererDelegate {
         }
     }
 
-    fileprivate func updateCollectionViewCellApparence(cell: VLCActionSheetCell, highlighted: Bool) {
+    fileprivate func updateCollectionViewCellApparence(cell: ActionSheetCell, highlighted: Bool) {
         var image = UIImage(named: "renderer")
         var textColor = PresentationTheme.current.colors.cellTextColor
         var tintColor = PresentationTheme.current.colors.cellDetailTextColor
@@ -206,7 +206,7 @@ extension VLCRendererDiscovererManager: VLCRendererDiscovererDelegate {
 
 // MARK: VLCActionSheetDelegate
 
-extension VLCRendererDiscovererManager: VLCActionSheetDelegate {
+extension VLCRendererDiscovererManager: ActionSheetDelegate {
     func headerViewTitle() -> String? {
         return NSLocalizedString("HEADER_TITLE_RENDERER", comment: "")
     }
@@ -222,11 +222,11 @@ extension VLCRendererDiscovererManager: VLCActionSheetDelegate {
 
     func actionSheet(collectionView: UICollectionView, didSelectItem item: Any, At indexPath: IndexPath) {
         guard let renderer = item as? VLCRendererItem,
-            let cell = collectionView.cellForItem(at: indexPath) as? VLCActionSheetCell else {
+            let cell = collectionView.cellForItem(at: indexPath) as? ActionSheetCell else {
             assertionFailure("VLCRendererDiscovererManager: VLCActionSheetDelegate: Cell is not a VLCActionSheetCell")
             return
         }
-        let isCurrentlySelectedRenderer = renderer == VLCPlaybackController.sharedInstance().renderer
+        let isCurrentlySelectedRenderer = renderer == PlaybackService.sharedInstance().renderer
 
         if !isCurrentlySelectedRenderer {
             collectionView.reloadData()
@@ -239,7 +239,7 @@ extension VLCRendererDiscovererManager: VLCActionSheetDelegate {
 
 // MARK: VLCActionSheetDataSource
 
-extension VLCRendererDiscovererManager: VLCActionSheetDataSource {
+extension VLCRendererDiscovererManager: ActionSheetDataSource {
     func numberOfRows() -> Int {
         return getAllRenderers().count
     }
@@ -247,14 +247,14 @@ extension VLCRendererDiscovererManager: VLCActionSheetDataSource {
     @discardableResult
     func actionSheet(collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: VLCActionSheetCell.identifier, for: indexPath) as? VLCActionSheetCell else {
+            withReuseIdentifier: ActionSheetCell.identifier, for: indexPath) as? ActionSheetCell else {
             assertionFailure("VLCRendererDiscovererManager: VLCActionSheetDataSource: Unable to dequeue reusable cell")
             return UICollectionViewCell()
         }
         let renderers = getAllRenderers()
         if indexPath.row < renderers.count {
             cell.name.text = renderers[indexPath.row].name
-            let isSelectedRenderer = renderers[indexPath.row] == VLCPlaybackController.sharedInstance().renderer ? true : false
+            let isSelectedRenderer = renderers[indexPath.row] == PlaybackService.sharedInstance().renderer ? true : false
             updateCollectionViewCellApparence(cell: cell, highlighted: isSelectedRenderer)
         } else {
             assertionFailure("VLCRendererDiscovererManager: VLCActionSheetDataSource: IndexPath out of range")

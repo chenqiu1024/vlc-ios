@@ -12,8 +12,7 @@
 class PlaylistModel: MLBaseModel {
     typealias MLType = VLCMLPlaylist
 
-    var sortModel = SortModel(alpha: true,
-                              duration: true)
+    var sortModel = SortModel([.alpha, .duration])
 
     var updateView: (() -> Void)?
 
@@ -50,24 +49,52 @@ class PlaylistModel: MLBaseModel {
 
     // Creates a VLCMLPlaylist appending it and updates linked view
     func create(name: String) {
-        append(medialibrary.createPlaylist(with: name))
+        guard let playlist = medialibrary.createPlaylist(with: name) else {
+            assertionFailure("PlaylistModel: create: Failed to create a playlist.")
+            return
+        }
+        append(playlist)
         updateView?()
     }
 }
 
 // MARK: - Sort
-
 extension PlaylistModel {
-    func sort(by criteria: VLCMLSortingCriteria) {
-        files = medialibrary.playlists(sortingCriteria: criteria)
+    func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
+        files = medialibrary.playlists(sortingCriteria: criteria, desc: desc)
         sortModel.currentSort = criteria
+        sortModel.desc = desc
         updateView?()
     }
 }
 
+// MARK: - Search
+extension VLCMLPlaylist: SearchableMLModel {
+    func contains(_ searchString: String) -> Bool {
+        return name.lowercased().contains(searchString)
+    }
+}
+
+// MARK: - MediaLibraryObserver
 extension PlaylistModel: MediaLibraryObserver {
     func medialibrary(_ medialibrary: MediaLibraryService, didAddPlaylists playlists: [VLCMLPlaylist]) {
         playlists.forEach({ append($0) })
+        updateView?()
+    }
+
+    func medialibrary(_ medialibrary: MediaLibraryService,
+                      didModifyPlaylistsWithIds playlistsIds: [NSNumber]) {
+        var playlists = [VLCMLPlaylist]()
+
+        playlistsIds.forEach() {
+            guard let safePlaylist = medialibrary.medialib.playlist(withIdentifier: $0.int64Value)
+                else {
+                    return
+            }
+            playlists.append(safePlaylist)
+        }
+
+        files = swapModels(with: playlists)
         updateView?()
     }
 
@@ -82,9 +109,31 @@ extension PlaylistModel: MediaLibraryObserver {
     }
 }
 
+// MARK: - Helpers
+
 extension VLCMLPlaylist {
-    func description() -> String {
-        let tracksString = media.count == 1 ? NSLocalizedString("TRACK", comment: "") : NSLocalizedString("TRACKS", comment: "")
-        return String(format: tracksString, media.count)
+    func numberOfTracksString() -> String {
+        let mediaCount = media?.count ?? 0
+        let tracksString = mediaCount > 1 ? NSLocalizedString("TRACKS", comment: "") : NSLocalizedString("TRACK", comment: "")
+        return String(format: tracksString, mediaCount)
+    }
+
+    func accessibilityText() -> String? {
+        return name + " " + numberOfTracksString()
+    }
+}
+
+extension VLCMLPlaylist: MediaCollectionModel {
+    func sortModel() -> SortModel? {
+        return nil
+    }
+
+    func files(with criteria: VLCMLSortingCriteria = .alpha,
+               desc: Bool = false) -> [VLCMLMedia]? {
+        return media
+    }
+
+    func title() -> String {
+        return name
     }
 }

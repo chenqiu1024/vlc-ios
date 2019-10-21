@@ -32,7 +32,7 @@ protocol RemoteNetworkDataSourceDelegate {
 class RemoteNetworkDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     let cloudVC = VLCCloudServicesTableViewController(nibName: "VLCCloudServicesTableViewController", bundle: Bundle.main)
     let streamingVC = VLCOpenNetworkStreamViewController(nibName: "VLCOpenNetworkStreamViewController", bundle: Bundle.main)
-    let downloadVC = VLCDownloadViewController(nibName: "VLCDownloadViewController", bundle: Bundle.main)
+    let downloadVC = VLCDownloadViewController.sharedInstance()
 
     @objc weak var delegate: RemoteNetworkDataSourceDelegate?
 
@@ -66,9 +66,9 @@ class RemoteNetworkDataSource: NSObject, UITableViewDataSource, UITableViewDeleg
             }
         case .download:
             if let networkCell = tableView.dequeueReusableCell(withIdentifier: VLCRemoteNetworkCell.cellIdentifier) {
-                networkCell.textLabel?.text = downloadVC.title
-                networkCell.detailTextLabel?.text = downloadVC.detailText
-                networkCell.imageView?.image = downloadVC.cellImage
+                networkCell.textLabel?.text = downloadVC?.title
+                networkCell.detailTextLabel?.text = downloadVC?.detailText
+                networkCell.imageView?.image = downloadVC?.cellImage
                 networkCell.accessibilityIdentifier = VLCAccessibilityIdentifier.downloads
                 return networkCell
             }
@@ -109,6 +109,19 @@ class RemoteNetworkDataSource: NSObject, UITableViewDataSource, UITableViewDeleg
         case .wifi:
             assertionFailure("We shouldn't get in here since we return nil in willSelect")
             return nil
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let cellType = RemoteNetworkCellType(rawValue: indexPath.row) else {
+            assertionFailure("We're having more rows than types of cells that should never happen")
+            return UITableView.automaticDimension
+        }
+        switch cellType {
+        case .cloud, .streaming, .download:
+            return 64
+        case .wifi:
+            return 80
         }
     }
 }

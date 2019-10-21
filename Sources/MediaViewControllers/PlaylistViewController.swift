@@ -10,7 +10,7 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-class VLCPlaylistViewController: VLCMediaViewController {
+class PlaylistViewController: MediaViewController {
     override init(services: Services) {
         super.init(services: services)
         setupUI()
@@ -20,14 +20,14 @@ class VLCPlaylistViewController: VLCMediaViewController {
         title = NSLocalizedString("PLAYLISTS", comment: "")
         tabBarItem = UITabBarItem(
             title: NSLocalizedString("PLAYLISTS", comment: ""),
-            image: UIImage(named: "tableViewIcon"),
-            selectedImage: UIImage(named: "tableViewIcon"))
+            image: UIImage(named: "Playlist"),
+            selectedImage: UIImage(named: "Playlist"))
         tabBarItem.accessibilityIdentifier = VLCAccessibilityIdentifier.playlist
     }
 
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         return [
-            VLCPlaylistCategoryViewController(services)
+            PlaylistCategoryViewController(services)
         ]
     }
 }

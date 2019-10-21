@@ -12,7 +12,7 @@
  *****************************************************************************/
 
 #import "VLCMovieViewControlPanelView.h"
-#import "VLCPlaybackController.h"
+#import "VLCPlaybackService.h"
 #import "VLCMetadata.h"
 #import "VLC-Swift.h"
 
@@ -23,7 +23,7 @@
 @property (nonatomic, strong) UIView *spacer2;
 @property (nonatomic, strong) NSMutableArray *constraints;
 @property (nonatomic, assign) BOOL compactMode;
-@property (nonatomic, strong) VLCPlaybackController *playbackController;
+@property (nonatomic, strong) VLCPlaybackService *playbackController;
 @end
 
 @implementation VLCMovieViewControlPanelView
@@ -34,6 +34,7 @@ static const CGFloat maxControlsWidth = 474.0;
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.semanticContentAttribute = UISemanticContentAttributeForceLeftToRight;
         [self setupSubviews];
         [self setupConstraints];
         _compactMode = YES;
@@ -56,6 +57,7 @@ static const CGFloat maxControlsWidth = 474.0;
 
     _playbackControls = [[UIView alloc] initWithFrame:CGRectZero];
     _playbackControls.translatesAutoresizingMaskIntoConstraints = NO;
+    _playbackControls.semanticContentAttribute = UISemanticContentAttributeForceLeftToRight;
     [self addSubview:_playbackControls];
 
     _bwdButton = [[UIButton alloc] initWithFrame:CGRectZero];
@@ -221,10 +223,10 @@ static const CGFloat maxControlsWidth = 474.0;
     [self updateViewConstraints];
 }
 
-- (VLCPlaybackController *)playbackController
+- (VLCPlaybackService *)playbackController
 {
     if (!_playbackController) {
-        _playbackController = [VLCPlaybackController sharedInstance];
+        _playbackController = [VLCPlaybackService sharedInstance];
     }
     return _playbackController;
 }

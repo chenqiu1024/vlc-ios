@@ -13,6 +13,7 @@
 import Foundation
 
 class MovieCollectionViewCell: BaseCollectionViewCell {
+    @IBOutlet weak var checkboxImageView: UIImageView!
 
     @IBOutlet weak var thumbnailView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -21,8 +22,29 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var collectionOverlay: UIView!
     @IBOutlet weak var numberOfTracks: UILabel!
-    override class var cellPadding: CGFloat {
-        return 5.0
+
+    @IBOutlet weak var selectionOverlay: UIView!
+
+    override class var edgePadding: CGFloat {
+        return 12.5
+    }
+    override class var interItemPadding: CGFloat {
+        return 7.5
+    }
+
+    override var isSelected: Bool {
+        didSet {
+            checkboxImageView.image = isSelected ? UIImage(named: "checkboxSelected")
+                : UIImage(named: "checkboxEmpty")
+        }
+    }
+
+    override var checkImageView: UIImageView? {
+        return checkboxImageView
+    }
+
+    override var selectionViewOverlay: UIView? {
+        return selectionOverlay
     }
 
     override var media: VLCMLObject? {
@@ -31,14 +53,23 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
                 update(movie:movie)
             } else if let playlist = media as? VLCMLPlaylist {
                 update(playlist:playlist)
+            } else if let videoGroup = media as? VLCMLVideoGroup {
+                update(videoGroup: videoGroup)
             } else {
-                fatalError("wrong object")
+                assertionFailure("MovieCollectionViewCell: media: Needs to be of a supported Type.")
             }
         }
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        if #available(iOS 11.0, *) {
+            thumbnailView.accessibilityIgnoresInvertColors = true
+        }
+
+        clipsToBounds = true
+        layer.cornerRadius = 2
+
         newLabel.text = NSLocalizedString("NEW", comment: "")
         newLabel.textColor = PresentationTheme.current.colors.orangeUI
         NotificationCenter.default.addObserver(self, selector: #selector(themeDidChange), name: .VLCThemeDidChangeNotification, object: nil)
@@ -52,36 +83,67 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
     }
 
     func update(movie: VLCMLMedia) {
-        titleLabel.text = movie.title
-        descriptionLabel.text = movie.mediaDuration()
-        if movie.isThumbnailGenerated() {
-            thumbnailView.image = UIImage(contentsOfFile: movie.thumbnail.absoluteString)
+        var title = movie.title
+        if UserDefaults.standard.bool(forKey: kVLCOptimizeItemNamesForDisplay) == true {
+            title = (title as NSString).deletingPathExtension
         }
-        let progress = movie.mediaProgress()
+        titleLabel.text = title
+        accessibilityLabel = movie.accessibilityText(editing: false)
+        descriptionLabel.text = movie.mediaDuration()
+        thumbnailView.image = movie.thumbnailImage()
+        let progress = movie.progress
         progressView.isHidden = progress == 0
         progressView.progress = progress
-        newLabel.isHidden = !movie.isNew()
+        newLabel.isHidden = !movie.isNew
     }
 
     func update(playlist: VLCMLPlaylist) {
         collectionOverlay.isHidden = false
-        numberOfTracks.text = String(playlist.media.count)
+        numberOfTracks.text = String(playlist.media?.count ?? 0)
         titleLabel.text = playlist.name
-        descriptionLabel.text = playlist.description()
+        accessibilityLabel = playlist.accessibilityText()
+        descriptionLabel.text = playlist.numberOfTracksString()
+        thumbnailView.image = playlist.thumbnail()
+        progressView.isHidden = true
+    }
+
+    func update(videoGroup: VLCMLVideoGroup) {
+        collectionOverlay.isHidden = false
+        numberOfTracks.text = String(videoGroup.count())
+        titleLabel.text = videoGroup.name()
+        accessibilityLabel = videoGroup.accessibilityText()
+        descriptionLabel.text = videoGroup.numberOfTracksString()
+        thumbnailView.image = videoGroup.thumbnail()
+        progressView.isHidden = true
+    }
+
+    override class func numberOfColumns(for width: CGFloat) -> CGFloat {
+        if width <= DeviceWidth.iPhonePortrait.rawValue {
+            return 2
+        } else if width <= DeviceWidth.iPhoneLandscape.rawValue {
+            return 3
+        } else if width <= DeviceWidth.iPadLandscape.rawValue {
+            return 4
+        } else {
+            return 5
+        }
     }
 
     override class func cellSizeForWidth(_ width: CGFloat) -> CGSize {
-        let numberOfCells: CGFloat = round(width / 250)
+        let numberOfCells: CGFloat = numberOfColumns(for: width)
         let aspectRatio: CGFloat = 10.0 / 16.0
 
-        // We have the number of cells and we always have numberofCells + 1 padding spaces. -pad-[Cell]-pad-[Cell]-pad-
-        // we then have the entire padding, we divide the entire padding by the number of Cells to know how much needs to be substracted from ech cell
-        // since this might be an uneven number we ceil
-        var cellWidth = width / numberOfCells
-        cellWidth = cellWidth - ceil(((numberOfCells + 1) * cellPadding) / numberOfCells)
+        // We have the number of cells and we always have numberofCells + 1 interItemPadding spaces.
+        //
+        // edgePadding-interItemPadding-[Cell]-interItemPadding-[Cell]-interItemPadding-edgePadding
+        //
 
-        // 3*20 for the labels + 24 for 3*8 which is the padding
-        return CGSize(width: cellWidth, height: cellWidth * aspectRatio + 3*20+24)
+        let overallWidth = width - (2 * edgePadding)
+        let overallCellWidthWithoutPadding = overallWidth - (numberOfCells + 1) * interItemPadding
+        let cellWidth = floor(overallCellWidthWithoutPadding / numberOfCells)
+
+        // 17 * 2 for title, 14 for new + duration, 3 * 4 paddings for lines
+        return CGSize(width: cellWidth, height: cellWidth * aspectRatio + (16 * 2) + 14 + (3 * 3))
     }
 
     override func prepareForReuse() {
@@ -93,5 +155,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
         newLabel.isHidden = true
         collectionOverlay.isHidden = true
         numberOfTracks.text = ""
+        checkboxImageView.isHidden = true
+        selectionOverlay.isHidden = true
     }
 }

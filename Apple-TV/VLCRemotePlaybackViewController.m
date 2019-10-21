@@ -67,7 +67,7 @@
     self.discoveredFiles = [NSMutableArray array];
 
     NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    discoverer.directoryPath = [[searchPaths firstObject] stringByAppendingPathComponent:@"Upload"];
+    discoverer.directoryPath = [[searchPaths firstObject] stringByAppendingPathComponent:kVLCHTTPUploadDirectory];
     [discoverer addObserver:self];
     [discoverer startDiscovering];
 
@@ -300,7 +300,7 @@
     VLCMediaList *medialist = [[VLCMediaList alloc] init];
     [medialist addMedia:[VLCMedia mediaWithURL:url]];
 
-    [[VLCPlaybackController sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
+    [[VLCPlaybackService sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
     [self presentViewController:[VLCFullscreenMovieTVViewController fullscreenMovieTVViewController]
                        animated:YES
                      completion:nil];

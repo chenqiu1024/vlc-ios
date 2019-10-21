@@ -10,55 +10,77 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-@objc(VLCService)
+@objc(VLCServices)
 class Services: NSObject {
     @objc let medialibraryService = MediaLibraryService()
     @objc let rendererDiscovererManager = VLCRendererDiscovererManager(presentingViewController: nil)
 }
 
 @objc class AppCoordinator: NSObject {
-    private var childCoordinators: [NSObject] = []
-    private var viewController: UIViewController
-    private var playerController: VLCPlayerDisplayController
-    private var tabBarController: UITabBarController
     private var services = Services()
+    private var childCoordinators: [NSObject] = []
+    private var playerDisplayController: VLCPlayerDisplayController
+    private var tabBarController: UITabBarController
+    private lazy var tabBarCoordinator: VLCTabBarCoordinator = {
+        return VLCTabBarCoordinator(tabBarController: tabBarController, services: services)
+    }()
     private var migrationViewController = VLCMigrationViewController(nibName: String(describing: VLCMigrationViewController.self),
                                                                      bundle: nil)
 
-    @objc init(viewController: UIViewController) {
-        self.viewController = viewController
-        self.playerController = VLCPlayerDisplayController(services: services)
-        self.tabBarController = UITabBarController()
+    @objc init(tabBarController: UITabBarController) {
+        self.playerDisplayController = VLCPlayerDisplayController(services: services)
+        self.tabBarController = tabBarController
         super.init()
         setupChildViewControllers()
 
         // Init the HTTP Server and clean its cache
         // FIXME: VLCHTTPUploaderController should perhaps be a service?
         VLCHTTPUploaderController.sharedInstance().cleanCache()
+        VLCHTTPUploaderController.sharedInstance().medialibrary = services.medialibraryService
         services.medialibraryService.migrationDelegate = self
     }
 
     private func setupChildViewControllers() {
-        viewController.addChild(tabBarController)
-        viewController.view.addSubview(tabBarController.view)
-        tabBarController.view.frame = viewController.view.frame
-        tabBarController.didMove(toParent: viewController)
-
-        viewController.addChild(playerController)
-        viewController.view.addSubview(playerController.view)
-        playerController.view.layoutMargins = UIEdgeInsets(top: 0,
+        tabBarController.addChild(playerDisplayController)
+        tabBarController.view.addSubview(playerDisplayController.view)
+        playerDisplayController.view.layoutMargins = UIEdgeInsets(top: 0,
                                                            left: 0,
                                                            bottom: tabBarController.tabBar.frame.size.height,
                                                            right: 0)
-        playerController.realBottomAnchor = tabBarController.tabBar.topAnchor
-        playerController.didMove(toParent: viewController)
+        playerDisplayController.realBottomAnchor = tabBarController.tabBar.topAnchor
+        playerDisplayController.didMove(toParent: tabBarController)
+
+        // Set app cornerRadius back to 0
+        // For some unknown reason, reading tabBarController anchors sets round corners for the entire app.
+        // We set cornerRadius to 0 for the topmost layer so there are no round corners anymore.
+        if #available(iOS 13, *) {
+            tabBarController.view.layer.superlayer?.cornerRadius = 0
+        }
     }
 
     @objc func start() {
-
-        let tabbarCoordinator = VLCTabBarCoordinator(tabBarController: tabBarController, services: services)
-        childCoordinators.append(tabbarCoordinator)
+        childCoordinators.append(tabBarCoordinator)
     }
+
+    @objc func handleShortcutItem(_ item: UIApplicationShortcutItem) {
+        tabBarCoordinator.handleShortcutItem(item)
+    }
+
+    @objc func mediaForUserActivity(_ activity: NSUserActivity) -> VLCMLMedia? {
+        let userActivityType = activity.activityType
+        guard let dict = activity.userInfo else { return nil }
+        var identifier: Int64? = nil
+
+        if userActivityType == CSSearchableItemActionType, let searchIdentifier = dict[CSSearchableItemActivityIdentifier] as? NSString {
+            identifier = Int64(searchIdentifier.integerValue)
+        } else if let mediaIdentifier = dict["playingmedia"] as? Int64 {
+            identifier = mediaIdentifier
+        }
+        guard let mediaIdentifier = identifier else { return nil }
+
+        return services.medialibraryService.media(for: mediaIdentifier)
+    }
+
 }
 
 extension AppCoordinator: MediaLibraryMigrationDelegate {
@@ -70,11 +92,9 @@ extension AppCoordinator: MediaLibraryMigrationDelegate {
     }
 
     func medialibraryDidFinishMigration(_ medialibrary: MediaLibraryService) {
-        if tabBarController.presentedViewController === migrationViewController {
-            DispatchQueue.main.async {
-                [tabBarController] in
-                tabBarController.dismiss(animated: true, completion: nil)
-            }
+        DispatchQueue.main.async {
+            [migrationViewController] in
+            migrationViewController.dismiss(animated: true, completion: nil)
         }
     }
 

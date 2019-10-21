@@ -14,7 +14,7 @@
 
 #import "VLCGoogleDriveController.h"
 #import "NSString+SupportedMedia.h"
-#import "VLCPlaybackController.h"
+#import "VLCPlaybackService.h"
 #import "VLCMediaFileDiscoverer.h"
 #import "VLC-Swift.h"
 #import <XKKeychain/XKKeychain.h>
@@ -225,7 +225,7 @@
     NSString *urlString = [NSString stringWithFormat:@"https://www.googleapis.com/drive/v3/files/%@?alt=media&access_token=%@",
                      file.identifier, token];
 
-    VLCPlaybackController *vpc = [VLCPlaybackController sharedInstance];
+    VLCPlaybackService *vpc = [VLCPlaybackService sharedInstance];
     VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:urlString]];
     VLCMediaList *medialist = [[VLCMediaList alloc] init];
     [medialist addMedia:media];
@@ -305,7 +305,6 @@
 
         // Fetcher logging can include comments.
         [fetcher setCommentWithFormat:@"Downloading \"%@\"", file.name];
-        __weak GTMSessionFetcher *weakFetcher = fetcher;
         _startDL = [NSDate timeIntervalSinceReferenceDate];
         fetcher.downloadProgressBlock = ^(int64_t bytesWritten,
                                           int64_t totalBytesWritten,
@@ -315,7 +314,7 @@
                 self->_lastStatsUpdate = [NSDate timeIntervalSinceReferenceDate];
             }
 
-            CGFloat progress = (CGFloat)weakFetcher.downloadedLength / (CGFloat)[file.size unsignedLongValue];
+            CGFloat progress = (CGFloat)totalBytesWritten / (CGFloat)[file.size unsignedLongValue];
             if ([self.delegate respondsToSelector:@selector(currentProgressInformation:)])
                 [self.delegate currentProgressInformation:progress];
         };

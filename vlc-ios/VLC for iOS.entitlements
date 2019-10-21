@@ -18,7 +18,7 @@
 	<string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>$(GROUP_IDENTIFIER)</string>
+		<string>group.cyllenge</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>

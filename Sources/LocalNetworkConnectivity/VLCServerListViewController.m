@@ -18,7 +18,7 @@
 #import "VLCServerListViewController.h"
 #import "VLCLocalServerDiscoveryController.h"
 
-#import "VLCPlaybackController.h"
+#import "VLCPlaybackService.h"
 #import "VLCNetworkListCell.h"
 #import "VLCNetworkLoginViewController.h"
 #import "VLCNetworkServerBrowserViewController.h"
@@ -41,7 +41,7 @@
 
 #import "VLC-Swift.h"
 
-@interface VLCServerListViewController () <UITableViewDataSource, UITableViewDelegate, VLCLocalServerDiscoveryControllerDelegate, VLCNetworkLoginViewControllerDelegate, VLCRemoteNetworkDataSourceDelegate, VLCFileServerSectionTableHeaderViewDelegate>
+@interface VLCServerListViewController () <UITableViewDataSource, UITableViewDelegate, VLCLocalServerDiscoveryControllerDelegate, VLCNetworkLoginViewControllerDelegate, VLCRemoteNetworkDataSourceDelegate, VLCFileServerViewDelegate>
 {
     VLCLocalServerDiscoveryController *_discoveryController;
 
@@ -96,10 +96,10 @@
     _localNetworkTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _localNetworkTableView.rowHeight = [VLCNetworkListCell heightOfCell];
     _localNetworkTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _localNetworkTableView.estimatedRowHeight = [VLCNetworkListCell heightOfCell];
 
     [self.navigationController.navigationBar setTranslucent:NO];
-
-    [_localNetworkTableView registerClass:[VLCFileServerSectionTableHeaderView class] forHeaderFooterViewReuseIdentifier:VLCFileServerSectionTableHeaderView.identifier];
+    self.navigationController.view.backgroundColor = PresentationTheme.current.colors.background;
 
     _remoteNetworkTableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStylePlain];
     _remoteNetworkTableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -109,6 +109,10 @@
     _remoteNetworkTableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     _remoteNetworkTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _remoteNetworkTableView.bounces = NO;
+
+    VLCFileServerView *fileServerView = [VLCFileServerView new];
+    fileServerView.translatesAutoresizingMaskIntoConstraints = NO;
+    fileServerView.delegate = self;
 
     [_remoteNetworkTableView registerClass:[VLCWiFiUploadTableViewCell class] forCellReuseIdentifier:[VLCWiFiUploadTableViewCell cellIdentifier]];
     [_remoteNetworkTableView registerClass:[VLCRemoteNetworkCell class] forCellReuseIdentifier:VLCRemoteNetworkCell.cellIdentifier];
@@ -126,6 +130,7 @@
     [_localNetworkTableView addSubview:_activityIndicator];
 
     [_scrollView addSubview:_localNetworkTableView];
+    [_scrollView addSubview:fileServerView];
     [_scrollView addSubview:_remoteNetworkTableView];
 
     [_remoteNetworkTableView layoutIfNeeded];
@@ -136,7 +141,10 @@
                                               [_remoteNetworkTableView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor],
                                               [_remoteNetworkTableView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor],
                                               [_remoteNetworkTableView.topAnchor constraintEqualToAnchor:_scrollView.topAnchor],
-                                              [_localNetworkTableView.topAnchor constraintEqualToAnchor:_remoteNetworkTableView.bottomAnchor],
+                                              [fileServerView.topAnchor constraintEqualToAnchor:_remoteNetworkTableView.bottomAnchor],
+                                              [fileServerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor],
+                                              [fileServerView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor],
+                                              [_localNetworkTableView.topAnchor constraintEqualToAnchor:fileServerView.bottomAnchor],
                                               [_localNetworkTableView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor],
                                               [_localNetworkTableView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor],
                                               [_localNetworkTableView.bottomAnchor constraintEqualToAnchor:_scrollView.bottomAnchor],
@@ -148,8 +156,8 @@
 
 - (void)setupUI
 {
-    self.title = NSLocalizedString(@"LOCAL_NETWORK", nil);
-    self.tabBarItem = [[UITabBarItem alloc] initWithTitle: NSLocalizedString(@"LOCAL_NETWORK", nil)
+    self.title = NSLocalizedString(@"NETWORK", nil);
+    self.tabBarItem = [[UITabBarItem alloc] initWithTitle: NSLocalizedString(@"NETWORK", nil)
                                                     image: [UIImage imageNamed:@"Network"]
                                             selectedImage: [UIImage imageNamed:@"Network"]];
     self.tabBarItem.accessibilityIdentifier = VLCAccessibilityIdentifier.localNetwork;
@@ -161,7 +169,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeDidChange) name:kVLCThemeDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentSizeDidChange) name:UIContentSizeCategoryDidChangeNotification object:nil];
-
+    [self themeDidChange];
     NSArray *browserClasses = @[
                                 [VLCLocalNetworkServiceBrowserUPnP class],
                                 [VLCLocalNetworkServiceBrowserPlex class],
@@ -190,6 +198,9 @@
 {
     [super viewWillAppear:animated];
     [_discoveryController startDiscovery];
+    if (@available(iOS 11.0, *)) {
+        self.navigationController.navigationBar.prefersLargeTitles = YES;
+    }
 }
 
 - (BOOL)shouldAutorotate
@@ -235,20 +246,8 @@
     return [_discoveryController numberOfItemsInSection:section];
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    if (section == 0) {
-        VLCFileServerSectionTableHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:VLCFileServerSectionTableHeaderView.identifier];
-        headerView.delegate = self;
-        return headerView;
-    }
-    return nil;
-}
-
 - (void)tableView:(UITableView *)tableView willDisplayCell:(VLCNetworkListCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIColor *color = PresentationTheme.current.colors.cellBackgroundA;
-    cell.backgroundColor = cell.titleLabel.backgroundColor = cell.folderTitleLabel.backgroundColor = cell.subtitleLabel.backgroundColor = color;
     cell.titleLabel.textColor = cell.folderTitleLabel.textColor = cell.thumbnailView.tintColor = PresentationTheme.current.colors.cellTextColor;
     cell.subtitleLabel.textColor = PresentationTheme.current.colors.cellDetailTextColor;
 }
@@ -293,7 +292,7 @@
 
             VLCMediaList *medialist = [[VLCMediaList alloc] init];
             [medialist addMedia:[VLCMedia mediaWithURL:playbackURL]];
-            [[VLCPlaybackController sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
+            [[VLCPlaybackService sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
             return;
         }
     }
@@ -315,8 +314,14 @@
         navCon.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:navCon animated:YES completion:nil];
 
-        if (loginViewController.navigationItem.leftBarButtonItem == nil)
-            loginViewController.navigationItem.leftBarButtonItem = [UIBarButtonItem themedDarkToolbarButtonWithTitle:NSLocalizedString(@"BUTTON_CANCEL", nil) target:self andSelector:@selector(_dismissLogin)];
+        if (loginViewController.navigationItem.leftBarButtonItem == nil) {
+            loginViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]
+                                                                    initWithTitle:NSLocalizedString(@"BUTTON_CANCEL", nil)
+                                                                    style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(_dismissLogin)];
+        }
+
     } else {
         [self.navigationController pushViewController:loginViewController animated:YES];
     }
@@ -335,6 +340,11 @@
     _scrollView.backgroundColor = PresentationTheme.current.colors.background;
     _localNetworkTableView.separatorColor = PresentationTheme.current.colors.background;
     _refreshControl.backgroundColor = PresentationTheme.current.colors.background;
+    self.navigationController.view.backgroundColor = PresentationTheme.current.colors.background;
+    if (@available(iOS 13.0, *)) {
+        self.navigationController.navigationBar.standardAppearance = [VLCApperanceManager navigationbarAppearance];
+        self.navigationController.navigationBar.scrollEdgeAppearance = [VLCApperanceManager navigationbarAppearance];
+    }
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
@@ -389,8 +399,6 @@
         APLog(@"Unsupported URL Scheme requested %@", identifier);
     }
 
-    [self _dismissLogin];
-
     if (serverBrowser) {
         VLCNetworkServerBrowserViewController *targetViewController = [[VLCNetworkServerBrowserViewController alloc] initWithServerBrowser:serverBrowser];
         [self.navigationController pushViewController:targetViewController animated:YES];
@@ -402,16 +410,6 @@
     [_localNetworkTableView reloadData];
     [_localNetworkTableView layoutIfNeeded];
     _localNetworkHeight.constant = _localNetworkTableView.contentSize.height;
-}
-
-#pragma mark - custom table view appearance
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    if (section == 0)
-        return 56.;
-
-    return 0.;
 }
 
 @end

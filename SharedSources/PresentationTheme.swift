@@ -82,14 +82,22 @@ extension Notification.Name {
     }
 }
 
+// MARK: - PresentationThemeType
+
+enum PresentationThemeType: Int {
+    case bright = 0
+    case dark
+    case auto
+}
+
 @objcMembers class PresentationTheme: NSObject {
 
     static let brightTheme = PresentationTheme(colors: brightPalette)
     static let darkTheme = PresentationTheme(colors: darkPalette)
 
     static var current: PresentationTheme = {
-        let isDarkTheme = UserDefaults.standard.bool(forKey: kVLCSettingAppTheme)
-        return isDarkTheme ? PresentationTheme.darkTheme : PresentationTheme.brightTheme
+        let themeSettings = UserDefaults.standard.integer(forKey: kVLCSettingAppTheme)
+        return PresentationTheme.respectiveTheme(for: PresentationThemeType(rawValue: themeSettings))
     }() {
         didSet {
             AppearanceManager.setupAppearance(theme: self.current)
@@ -100,6 +108,30 @@ extension Notification.Name {
     init(colors: ColorPalette) {
         self.colors = colors
         super.init()
+    }
+
+    static func themeDidUpdate() {
+        let themeSettings = UserDefaults.standard.integer(forKey: kVLCSettingAppTheme)
+        PresentationTheme.current = PresentationTheme.respectiveTheme(for:
+            PresentationThemeType(rawValue: themeSettings))
+    }
+
+    static func respectiveTheme(for theme: PresentationThemeType?) -> PresentationTheme {
+        guard let theme = theme else {
+            return PresentationTheme.brightTheme
+        }
+
+        var presentationTheme = PresentationTheme.brightTheme
+
+        if theme == .dark {
+            presentationTheme = PresentationTheme.darkTheme
+        } else if theme == .auto {
+            if #available(iOS 13.0, *) {
+                let isSystemDarkTheme = UIScreen.main.traitCollection.userInterfaceStyle == .dark
+                presentationTheme = isSystemDarkTheme ? PresentationTheme.darkTheme : PresentationTheme.brightTheme
+            }
+        }
+        return presentationTheme
     }
 
     let colors: ColorPalette
@@ -143,13 +175,13 @@ extension Notification.Name {
 
 let brightPalette = ColorPalette(isDark: false,
                                  name: "Default",
-                                 statusBarStyle: .default,
+                                 statusBarStyle: .autoDarkContent,
                                  navigationbarColor: UIColor(0xFFFFFF),
                                  navigationbarTextColor: UIColor(0x000000),
-                                 background: UIColor(0xF9F9F7),
-                                 cellBackgroundA: UIColor(0xF9F9F7),
+                                 background: UIColor(0xFFFFFF),
+                                 cellBackgroundA: UIColor(0xFFFFFF),
                                  cellBackgroundB: UIColor(0xE5E5E3),
-                                 cellDetailTextColor: UIColor(0xA9A9A9),
+                                 cellDetailTextColor: UIColor(0x84929C),
                                  cellTextColor: UIColor(0x000000),
                                  lightTextColor: UIColor(0x888888),
                                  sectionHeaderTextColor: UIColor(0x25292C),
@@ -166,8 +198,8 @@ let darkPalette = ColorPalette(isDark: true,
                                navigationbarTextColor: UIColor(0xFFFFFF),
                                background: UIColor(0x1B1E21),
                                cellBackgroundA: UIColor(0x1B1E21),
-                               cellBackgroundB: UIColor(0x000000),
-                               cellDetailTextColor: UIColor(0xD3D3D3),
+                               cellBackgroundB: UIColor(0x494B4D),
+                               cellDetailTextColor: UIColor(0x84929C),
                                cellTextColor: UIColor(0xFFFFFF),
                                lightTextColor: UIColor(0xB8B8B8),
                                sectionHeaderTextColor: UIColor(0x828282),
@@ -178,3 +210,15 @@ let darkPalette = ColorPalette(isDark: true,
                                toolBarStyle: UIBarStyle.black)
 
 let defaultFont = Typography(tableHeaderFont: UIFont.systemFont(ofSize: 24, weight: .semibold))
+
+// MARK: - UIStatusBarStyle - autoDarkContent
+
+extension UIStatusBarStyle {
+    static var autoDarkContent: UIStatusBarStyle {
+        if #available(iOS 13.0, *) {
+            return .darkContent
+        } else {
+            return .default
+        }
+    }
+}

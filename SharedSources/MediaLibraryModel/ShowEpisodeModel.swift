@@ -9,14 +9,10 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-class ShowEpisodeModel: MLBaseModel {
+class ShowEpisodeModel: MediaModel {
     typealias MLType = VLCMLMedia
 
-    var sortModel = SortModel(alpha: true,
-                              duration: true,
-                              insertionDate: true,
-                              releaseDate: true,
-                              fileSize: true)
+    var sortModel = SortModel([.alpha, .duration, .insertionDate, .releaseDate, .fileSize])
 
     var updateView: (() -> Void)?
 
@@ -45,10 +41,12 @@ class ShowEpisodeModel: MLBaseModel {
 // MARK: - Sort
 
 extension ShowEpisodeModel {
-    func sort(by criteria: VLCMLSortingCriteria) {
+    func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
         // Currently no show specific getter on medialibrary.
     }
 }
+
+// MARK: - MediaLibraryObserver
 
 extension ShowEpisodeModel: MediaLibraryObserver {
     func medialibrary(_ medialibrary: MediaLibraryService, didAddShowEpisodes showEpisodes: [VLCMLMedia]) {

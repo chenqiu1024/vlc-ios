@@ -12,10 +12,12 @@
 
 #import "VLCNetworkServerBrowserVLCMedia.h"
 #import "NSString+SupportedMedia.h"
+#import "VLC-Swift.h"
 
 @interface VLCNetworkServerBrowserVLCMedia () <VLCMediaListDelegate, VLCMediaDelegate>
 {
-    BOOL _needsNotifyDelegate;
+    VLCDialogProvider *_dialogProvider;
+    VLCCustomDialogRendererHandler *_customDialogHandler;
 }
 
 @property (nonatomic) VLCMedia *rootMedia;
@@ -36,13 +38,19 @@
         _mediaList = [[VLCMediaList alloc] init];
         _rootMedia = media;
         _rootMedia.delegate = self;
-        [media parseWithOptions:VLCMediaParseNetwork];
+        // Set timeout to 0 in order to avoid getting interrupted in dialogs for timeout reasons
+        [media parseWithOptions:VLCMediaParseNetwork|VLCMediaDoInteract timeout:0];
         _mediaListUnfiltered = [_rootMedia subitems];
         _mediaListUnfiltered.delegate = self;
         NSMutableDictionary *mediaOptionsNoFilter = [mediaOptions mutableCopy];
         [mediaOptionsNoFilter setObject:@" " forKey:@":ignore-filetypes"];
         _mediaOptions = [mediaOptionsNoFilter copy];
         [self _addMediaListRootItemsToList];
+
+        _dialogProvider = [[VLCDialogProvider alloc] initWithLibrary:[VLCLibrary sharedLibrary] customUI:YES];
+        _customDialogHandler = [[VLCCustomDialogRendererHandler alloc]
+                                initWithDialogProvider:_dialogProvider];
+        _dialogProvider.customRenderer = _customDialogHandler;
     }
     return self;
 }
@@ -111,26 +119,13 @@
 
 - (void)mediaDidFinishParsing:(VLCMedia *)aMedia
 {
-    [self setNeedsNotifyDelegateForDidUpdate];
-}
-- (void)mediaMetaDataDidChange:(VLCMedia *)aMedia
-{
-    [self setNeedsNotifyDelegateForDidUpdate];
-}
-
-- (void)setNeedsNotifyDelegateForDidUpdate
-{
-    if (_needsNotifyDelegate) {
-        return;
-    }
-    _needsNotifyDelegate = YES;
-
-    double amountOfSeconds = 0.1;
-    dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(amountOfSeconds * NSEC_PER_SEC));
-    dispatch_after(delayTime, dispatch_get_main_queue(), ^{
-        self->_needsNotifyDelegate = NO;
+    if ([aMedia parsedStatus] != VLCMediaParsedStatusDone) {
+        [self.delegate networkServerBrowserShouldPopView:self];
+    } else if (self.mediaList.count != 0) {
         [self.delegate networkServerBrowserDidUpdate:self];
-    });
+    } else {
+        [self.delegate networkServerBrowserEndParsing:self];
+    }
 }
 
 @end

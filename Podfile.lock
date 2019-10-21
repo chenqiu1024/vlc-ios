@@ -15,35 +15,41 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - AppAuth (0.95.0)
+  - AppAuth (0.95.1)
+  - AppCenter (2.3.0):
+    - AppCenter/Analytics (= 2.3.0)
+    - AppCenter/Crashes (= 2.3.0)
+  - AppCenter/Analytics (2.3.0):
+    - AppCenter/Core
+  - AppCenter/Core (2.3.0)
+  - AppCenter/Crashes (2.3.0):
+    - AppCenter/Core
   - Base32 (1.1.2)
   - box-ios-sdk-v2 (1.2.3):
     - box-ios-sdk-v2/no-arc (= 1.2.3)
   - box-ios-sdk-v2/no-arc (1.2.3)
   - CocoaHTTPServer (2.3)
-  - GoogleAPIClientForREST/Core (1.3.8):
+  - GoogleAPIClientForREST/Core (1.3.10):
     - GTMSessionFetcher (>= 1.1.7)
-  - GoogleAPIClientForREST/Drive (1.3.8):
+  - GoogleAPIClientForREST/Drive (1.3.10):
     - GoogleAPIClientForREST/Core
     - GTMSessionFetcher (>= 1.1.7)
   - GRKArrayDiff (2.2.1)
   - GTMAppAuth (0.7.1):
     - AppAuth (~> 0.95)
     - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.2.1):
-    - GTMSessionFetcher/Full (= 1.2.1)
-  - GTMSessionFetcher/Core (1.2.1)
-  - GTMSessionFetcher/Full (1.2.1):
-    - GTMSessionFetcher/Core (= 1.2.1)
-  - HockeySDK-tvOS (5.1.0)
-  - HockeySDK/CrashOnlyLib (5.1.4)
+  - GTMSessionFetcher (1.2.2):
+    - GTMSessionFetcher/Full (= 1.2.2)
+  - GTMSessionFetcher/Core (1.2.2)
+  - GTMSessionFetcher/Full (1.2.2):
+    - GTMSessionFetcher/Core (= 1.2.2)
   - InAppSettingsKit (2.2.2)
-  - MediaLibraryKit-prod (2.6.8):
+  - MediaLibraryKit-prod (2.6.9):
     - MobileVLCKit (~> 3.3.0)
   - MetaDataFetcherKit (0.3.1):
     - AFNetworking (= 3.1.0)
     - OROpenSubtitleDownloader
-  - MobileVLCKit (3.3.1)
+  - MobileVLCKit (3.3.6)
   - "NSData+Base64 (1.0.0)"
   - ObjectiveDropboxOfficial (1.1)
   - OBSlider (1.1.0)
@@ -72,38 +78,37 @@ PODS:
   - PAPasscode (1.0)
   - SimulatorStatusMagic (2.4.1)
   - SwiftLint (0.25.1)
-  - TVVLCKit (3.3.1)
+  - TVVLCKit (3.3.6)
   - upnpx (1.4.1)
   - VLC-WhiteRaccoon (1.0.0)
-  - VLCMediaLibraryKit (0.1.0):
+  - VLCMediaLibraryKit (0.6.1):
     - MobileVLCKit
   - XKKeychain (1.0.1)
   - xmlrpc (2.3.4):
     - "NSData+Base64 (~> 1.0.0)"
 
 DEPENDENCIES:
+  - AppCenter (~> 2.3.0)
   - box-ios-sdk-v2 (from `git://github.com/fkuehne/box-ios-sdk-v2.git`)
   - CocoaHTTPServer (from `git://github.com/fkuehne/CocoaHTTPServer.git`)
   - GoogleAPIClientForREST/Drive
   - GRKArrayDiff (~> 2.1)
-  - GTMAppAuth
-  - HockeySDK-tvOS (~> 5.1.0)
-  - HockeySDK/CrashOnlyLib (~> 5.1.4)
+  - GTMAppAuth (= 0.7.1)
   - InAppSettingsKit (from `git://github.com/fkuehne/InAppSettingsKit.git`, commit `415ea6bb`)
   - MediaLibraryKit-prod
   - MetaDataFetcherKit (~> 0.3.1)
-  - MobileVLCKit (= 3.3.1)
-  - ObjectiveDropboxOfficial (from `git://github.com/carolanitz/dropbox-sdk-obj-c.git`)
+  - MobileVLCKit (= 3.3.6)
+  - ObjectiveDropboxOfficial (from `git://github.com/Mikanbu/dropbox-sdk-obj-c.git`)
   - OBSlider (= 1.1.0)
   - OneDriveSDK
   - OROpenSubtitleDownloader (from `https://github.com/orta/OROpenSubtitleDownloader.git`, commit `0509eac2`)
   - PAPasscode (~> 1.0)
   - SimulatorStatusMagic
   - SwiftLint (~> 0.25.0)
-  - TVVLCKit (= 3.3.1)
+  - TVVLCKit (= 3.3.6)
   - upnpx (~> 1.4.0)
   - VLC-WhiteRaccoon
-  - VLCMediaLibraryKit
+  - VLCMediaLibraryKit (= 0.6.1)
   - XKKeychain (~> 1.0)
 
 SPEC REPOS:
@@ -111,13 +116,12 @@ SPEC REPOS:
     - ADAL
     - AFNetworking
     - AppAuth
+    - AppCenter
     - Base32
     - GoogleAPIClientForREST
     - GRKArrayDiff
     - GTMAppAuth
     - GTMSessionFetcher
-    - HockeySDK
-    - HockeySDK-tvOS
     - MediaLibraryKit-prod
     - MetaDataFetcherKit
     - MobileVLCKit
@@ -143,7 +147,7 @@ EXTERNAL SOURCES:
     :commit: 415ea6bb
     :git: git://github.com/fkuehne/InAppSettingsKit.git
   ObjectiveDropboxOfficial:
-    :git: git://github.com/carolanitz/dropbox-sdk-obj-c.git
+    :git: git://github.com/Mikanbu/dropbox-sdk-obj-c.git
   OROpenSubtitleDownloader:
     :commit: 0509eac2
     :git: https://github.com/orta/OROpenSubtitleDownloader.git
@@ -159,8 +163,8 @@ CHECKOUT OPTIONS:
     :commit: 415ea6bb
     :git: git://github.com/fkuehne/InAppSettingsKit.git
   ObjectiveDropboxOfficial:
-    :commit: 153b109c26aa8546fbe99567d229d91e09d2cd3b
-    :git: git://github.com/carolanitz/dropbox-sdk-obj-c.git
+    :commit: e07b5aa5bc41879ac664b73e03a2d2c162d89b5b
+    :git: git://github.com/Mikanbu/dropbox-sdk-obj-c.git
   OROpenSubtitleDownloader:
     :commit: 0509eac2
     :git: https://github.com/orta/OROpenSubtitleDownloader.git
@@ -168,35 +172,34 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   ADAL: f2eb2158b9bcd2c8416ff2d026c176b98ea6651f
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  AppAuth: 137f6bb6fc9dfbaf2cf9f6fcff1d336ff0163bc6
+  AppAuth: cd34aac431e5c77c46ec7f03935377faa8c5808b
+  AppCenter: 9784d2fc998c9bd0b8fbaf4fb9ed69526d12ce1a
   Base32: 163c298644d184e89ca4e00a996bad6bf5166390
   box-ios-sdk-v2: 9423bd75373350ea40b92f3d2d6e89f81d96d634
   CocoaHTTPServer: 07df8b05a8bde406fe367d22c90a24a2fd4ca49f
-  GoogleAPIClientForREST: 5447a194eae517986cafe6421a5330b80b820591
+  GoogleAPIClientForREST: 4acfffd77f1c3c8741b6be9eaed0e603278efbde
   GRKArrayDiff: 7522e374edcc55c1731a219e428847164b04cfab
   GTMAppAuth: c5e41aaf039ac1ccc41543e6ea2ef7abd255ad41
-  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
-  HockeySDK: 15afe6bc0a5bfe3a531fd73dbf082095f37dac3b
-  HockeySDK-tvOS: 62e86233bfa7356c5ac5cd946816d1ca0e9033f6
+  GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   InAppSettingsKit: 76d5cfbaa3e3f8aa53fe3628516da7eb1aa6a5cb
-  MediaLibraryKit-prod: 4443ed3ab6eec5b42701d2979c37a8581d40b9ad
+  MediaLibraryKit-prod: 718b52b55cb40b479eeae29fb5cc0cfbbbce0191
   MetaDataFetcherKit: d1d61b061bf74268aaffb6bf08a70396672163df
-  MobileVLCKit: 021031f214414aa801909f61544912162d3bcd49
+  MobileVLCKit: ac619632d83dd1691e9eedb40f5efdf3c2e6d67c
   "NSData+Base64": 4e84902c4db907a15673474677e57763ef3903e4
-  ObjectiveDropboxOfficial: e11cdf40e8965a6c24c6d6ff64905f2df43ab653
+  ObjectiveDropboxOfficial: b9e95d98e3ff2baa0cd86aea7c8322a712f356d6
   OBSlider: 490f108007bfdd5414a38650b211fe403a95b8a0
   OneDriveSDK: 90ab8781f0992c37d96b68cc340585f5cf36701f
   OROpenSubtitleDownloader: 154b8c08acbf8836b77ac259018dc8b5baef907e
   PAPasscode: b408fb87c530cad58a554e26482e87dbb14b7bc2
   SimulatorStatusMagic: 28d4a9d1a500ac7cea0b2b5a43c1c6ddb40ba56c
   SwiftLint: ce933681be10c3266e82576dad676fa815a602e9
-  TVVLCKit: 17de95597464ab6fdf3cb70bd87940967aae7459
+  TVVLCKit: c568ead8117ed607f837f1e9579500abe5fb4ed0
   upnpx: f2a1b44c095b90e0a017ec0394e367053e78c31f
   VLC-WhiteRaccoon: 1e7e59b0568959135a89d09c416d1e11a5d9a986
-  VLCMediaLibraryKit: 20b34ef599056f60abf73a4fd022ea45c1830f0a
+  VLCMediaLibraryKit: aebe63267f4d75cdd40d6ef10fd84aa91a0ec7a4
   XKKeychain: 852ef663c56a7194c73d3c68e8d9d4f07b121d4f
   xmlrpc: 109bb21d15ed6d108b2c1ac5973a6a223a50f5f4
 
-PODFILE CHECKSUM: e241329bf5875aeb1694fe8692d12ce89ae53475
+PODFILE CHECKSUM: 3265905311d5f45470b414d7b2d64b86b3a15d92
 
 COCOAPODS: 1.6.1

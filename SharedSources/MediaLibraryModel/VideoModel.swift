@@ -12,11 +12,7 @@
 class VideoModel: MediaModel {
     typealias MLType = VLCMLMedia
 
-    var sortModel = SortModel(alpha: true,
-                              duration: true,
-                              insertionDate: true,
-                              releaseDate: true,
-                              fileSize: true)
+    var sortModel = SortModel([.alpha, .duration, .insertionDate, .releaseDate, .fileSize])
 
     var updateView: (() -> Void)?
 
@@ -32,23 +28,18 @@ class VideoModel: MediaModel {
         self.medialibrary = medialibrary
         medialibrary.addObserver(self)
         files = medialibrary.media(ofType: .video)
-        medialibrary.requestThumbnail(for: files)
-    }
-}
-
-// MARK: - Edit
-extension VideoModel: EditableMLModel {
-    func editCellType() -> BaseCollectionViewCell.Type {
-        return MediaEditCell.self
     }
 }
 
 // MARK: - Sort
 
 extension VideoModel {
-    func sort(by criteria: VLCMLSortingCriteria) {
-        files = medialibrary.media(ofType: .video, sortingCriteria: criteria)
+    func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
+        files = medialibrary.media(ofType: .video,
+                                   sortingCriteria: criteria,
+                                   desc: desc)
         sortModel.currentSort = criteria
+        sortModel.desc = desc
         updateView?()
     }
 }
@@ -61,6 +52,13 @@ extension VideoModel: MediaLibraryObserver {
         updateView?()
     }
 
+    func medialibrary(_ medialibrary: MediaLibraryService, didModifyVideos videos: [VLCMLMedia]) {
+        if !videos.isEmpty {
+            files = swapModels(with: videos)
+            updateView?()
+        }
+    }
+
     func medialibrary(_ medialibrary: MediaLibraryService, didDeleteMediaWithIds ids: [NSNumber]) {
         files = files.filter() {
             for id in ids where $0.identifier() == id.int64Value {
@@ -70,19 +68,14 @@ extension VideoModel: MediaLibraryObserver {
         }
         updateView?()
     }
-}
 
-// MARK: MediaLibraryObserver - Thumbnail
+    // MARK: - Thumbnail
 
-extension VideoModel {
     func medialibrary(_ medialibrary: MediaLibraryService, thumbnailReady media: VLCMLMedia) {
-        for (index, file) in files.enumerated() {
-            if file == media {
-                files[index] = media
-                break
-            }
+        for (index, file) in files.enumerated() where file == media {
+            files[index] = media
+            break
         }
         updateView?()
     }
 }
-

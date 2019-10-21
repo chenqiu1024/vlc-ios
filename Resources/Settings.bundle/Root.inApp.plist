@@ -20,15 +20,25 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<string>NO</string>
+			<integer>0</integer>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
 			<key>Key</key>
 			<string>darkMode</string>
 			<key>Title</key>
 			<string>SETTINGS_DARKTHEME</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>IASKSubtitle</key>
-			<string>SETTINGS_THEME_SUBTITLE</string>
+			<key>Titles</key>
+			<array>
+				<string>SETTINGS_THEME_BRIGHT</string>
+				<string>SETTINGS_THEME_DARK</string>
+				<string>SETTINGS_THEME_SYSTEM</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -65,16 +75,6 @@
 			<string>AllowFaceID</string>
 			<key>Title</key>
 			<string>SETTINGS_PASSCODE_LOCK_ALLOWFACEID</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
-			<key>DefaultValue</key>
-			<true/>
-			<key>Key</key>
-			<string>MLDecrapifyTitles</string>
-			<key>Title</key>
-			<string>SETTINGS_DECRAPIFY</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -597,6 +597,76 @@
 			<string>BackgroundAudioPlayback</string>
 			<key>Title</key>
 			<string>SETTINGS_BACKGROUND_AUDIO</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>SETTINGS_MEDIA_LIBRARY</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Key</key>
+			<string>forceMediaLibraryRescan</string>
+			<key>Title</key>
+			<string>SETTINGS_MEDIA_LIBRARY_RESCAN</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>MLDecrapifyTitles</string>
+			<key>Title</key>
+			<string>SETTINGS_DECRAPIFY</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH</string>
+			<key>Key</key>
+			<string>VideoGroupPrefixLength</string>
+			<key>DefaultValue</key>
+			<string>6</string>
+			<key>Titles</key>
+			<array>
+				<string>SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT</string>
+				<string>SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL</string>
+				<string>SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG</string>
+				<string>SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>3</string>
+				<string>6</string>
+				<string>9</string>
+				<string>12</string>
+			</array>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>ShowThumbnails</string>
+			<key>Title</key>
+			<string>SETTINGS_SHOW_THUMBNAILS</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>ShowArtworks</string>
+			<key>Title</key>
+			<string>SETTINGS_SHOW_ARTWORKS</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>

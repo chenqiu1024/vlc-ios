@@ -13,7 +13,7 @@
 
 #import "VLCDropboxController.h"
 #import "NSString+SupportedMedia.h"
-#import "VLCPlaybackController.h"
+#import "VLCPlaybackService.h"
 #import "VLCActivityManager.h"
 #import "VLCMediaFileDiscoverer.h"
 #import "VLCDropboxConstants.h"
@@ -89,6 +89,9 @@
 - (void)logout
 {
     [DBClientsManager unlinkAndResetClients];
+    [self reset];
+    if ([self.delegate respondsToSelector:@selector(mediaListUpdated)])
+        [self.delegate mediaListUpdated];
 }
 
 - (BOOL)isAuthorized
@@ -111,28 +114,6 @@
     return [filename isSupportedMediaFormat]
         || [filename isSupportedAudioMediaFormat]
         || [filename isSupportedSubtitleFormat];
-}
-
-- (NSString *)_createPotentialNameFrom:(NSString *)path
-{
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-
-    NSString *fileName = [path lastPathComponent];
-    NSString *finalFilePath = [path stringByDeletingLastPathComponent];
-
-    if ([fileManager fileExistsAtPath:path]) {
-        NSString *potentialFilename;
-        NSString *fileExtension = [fileName pathExtension];
-        NSString *rawFileName = [fileName stringByDeletingPathExtension];
-        for (NSUInteger x = 1; x < 100; x++) {
-            potentialFilename = [NSString stringWithFormat:@"%@_%lu.%@", rawFileName, (unsigned long)x, fileExtension];
-            if (![fileManager fileExistsAtPath:[finalFilePath stringByAppendingPathComponent:potentialFilename]]) {
-                break;
-            }
-        }
-        return [finalFilePath stringByAppendingPathComponent:potentialFilename];
-    }
-    return path;
 }
 
 - (BOOL)canPlayAll
@@ -223,6 +204,11 @@
     }];
 }
 
+- (NSArray *)currentListFiles
+{
+    return _currentFileList;
+}
+
 - (void)downloadFileFrom:(NSString *)path to:(NSString *)destination
 {
     if (![self _supportedFileExtension:[path lastPathComponent]]) {
@@ -238,7 +224,10 @@
     // Need to replace all ' ' by '_' because it causes a `NSInvalidArgumentException ... destination path is nil` in the dropbox library.
     destination = [destination stringByReplacingOccurrencesOfString:@" " withString:@"_"];
 
-    destination = [self _createPotentialNameFrom:destination];
+    destination = [self createPotentialPathFrom:destination];
+    destination = [destination
+                   stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet
+                                                                       URLPathAllowedCharacterSet]];
 
     [[[self.client.filesRoutes downloadUrl:path overwrite:YES destination:[NSURL URLWithString:destination]]
         setResponseBlock:^(DBFILESFileMetadata * _Nullable result, DBFILESDownloadError * _Nullable routeError, DBRequestError * _Nullable networkError, NSURL * _Nonnull destination) {
@@ -287,7 +276,7 @@
             VLCMedia *media = [VLCMedia mediaWithURL:[NSURL URLWithString:result.link]];
             VLCMediaList *medialist = [[VLCMediaList alloc] init];
             [medialist addMedia:media];
-            [[VLCPlaybackController sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
+            [[VLCPlaybackService sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
 #if TARGET_OS_TV
             if (self.lastKnownNavigationController) {
                 VLCFullscreenMovieTVViewController *movieVC = [VLCFullscreenMovieTVViewController fullscreenMovieTVViewController];

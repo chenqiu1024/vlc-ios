@@ -15,7 +15,7 @@
 #import "VLCBoxController.h"
 #import <XKKeychain/XKKeychainGenericPasswordItem.h>
 #import "UIDevice+VLC.h"
-#import "VLCPlaybackController.h"
+#import "VLCPlaybackService.h"
 #import "VLC-Swift.h"
 
 #if TARGET_OS_IOS
@@ -51,9 +51,9 @@
     self.controller.delegate = self;
 
 #if TARGET_OS_IOS
-    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Box"]];
+    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"BoxCell"]];
 
-    [self.cloudStorageLogo setImage:[UIImage imageNamed:@"Box"]];
+    [self.cloudStorageLogo setImage:[UIImage imageNamed:@"box"]];
 
     [self.cloudStorageLogo sizeToFit];
     self.cloudStorageLogo.center = self.view.center;
@@ -114,8 +114,11 @@
     self.controller = _boxController;
     self.controller.delegate = self;
 
-    if (!_listOfFiles || _listOfFiles.count == 0)
-        [self requestInformationForCurrentPath];
+    if (@available(iOS 11.0, *)) {
+        self.navigationController.navigationBar.prefersLargeTitles = NO;
+    }
+
+    [self updateViewAfterSessionChange];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -132,7 +135,11 @@
 - (void)mediaListUpdated
 {
     _listOfFiles = [[VLCBoxController sharedInstance].currentListFiles copy];
-    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+        [super mediaListUpdated];
+    });
 }
 
 - (VLCCloudStorageTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -219,7 +226,7 @@
         VLCMedia *media = [VLCMedia mediaWithURL:theActualURL];
         VLCMediaList *medialist = [[VLCMediaList alloc] init];
         [medialist addMedia:media];
-        [[VLCPlaybackController sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
+        [[VLCPlaybackService sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
     }
 
     return request;
@@ -273,7 +280,8 @@
     [ubiquitousStore setString:token forKey:kVLCStoreBoxCredentials];
     [ubiquitousStore synchronize];
     self.authorizationInProgress = YES;
-    [self updateViewAfterSessionChange];
+    [self performSelectorOnMainThread:@selector(updateViewAfterSessionChange)
+                           withObject:nil waitUntilDone:NO];
     self.authorizationInProgress = NO;
 }
 

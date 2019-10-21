@@ -67,7 +67,19 @@
     [dataSource configureWithTableView:self.tableView];
     self.dataSource = dataSource;
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"BUTTON_CONNECT", nil) style:UIBarButtonItemStyleDone target:self action:@selector(connectLoginDataSource)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                              initWithTitle:NSLocalizedString(@"BUTTON_CONNECT", nil)
+                                              style:UIBarButtonItemStyleDone target:self
+                                              action:@selector(connectLoginDataSource)];
+    if (@available(iOS 13.0, *)) {
+        self.navigationController.navigationBar.standardAppearance = [VLCApperanceManager navigationbarAppearance];
+        self.navigationController.navigationBar.scrollEdgeAppearance = [VLCApperanceManager navigationbarAppearance];
+    }
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return PresentationTheme.current.colors.statusBarStyle;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -174,16 +186,13 @@
     [self.delegate loginWithLoginViewController:self loginInfo:dataSource.loginInformation];
 
     [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)connectLoginDataSource
 {
-    if (!self.protocolSelected)
-        return;
-
-    [self.delegate loginWithLoginViewController:self loginInfo:self.loginInformation];
-
-    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+    [self connectLoginDataSource:self.loginDataSource];
 }
 
 - (BOOL)protocolSelected

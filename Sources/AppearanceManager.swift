@@ -27,13 +27,18 @@ class AppearanceManager: NSObject {
         UINavigationBar.appearance().barTintColor = theme.colors.navigationbarColor
         UINavigationBar.appearance(whenContainedInInstancesOf: [VLCPlaybackNavigationController.self]).barTintColor = nil
         UINavigationBar.appearance().tintColor = theme.colors.orangeUI
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: theme.colors.navigationbarTextColor]
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: theme.colors.navigationbarTextColor]
 
         if #available(iOS 11.0, *) {
             UINavigationBar.appearance().prefersLargeTitles = true
             UINavigationBar.appearance(whenContainedInInstancesOf: [VLCPlaybackNavigationController.self]).prefersLargeTitles = false
-            UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: theme.colors.navigationbarTextColor]
+            UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: theme.colors.navigationbarTextColor]
         }
+
+        let selectedBackgroundView = UIView()
+        selectedBackgroundView.backgroundColor = theme.colors.mediaCategorySeparatorColor
+        UITableViewCell.appearance().selectedBackgroundView = selectedBackgroundView
+
         // For the edit selection indicators
         UITableView.appearance().tintColor = theme.colors.orangeUI
         UISegmentedControl.appearance().tintColor = theme.colors.orangeUI
@@ -41,11 +46,31 @@ class AppearanceManager: NSObject {
         UISearchBar.appearance().barTintColor = .white
 
         UITabBar.appearance().tintColor = theme.colors.orangeUI
+        if #available(iOS 10.0, *) {
+            UITabBar.appearance().unselectedItemTintColor = theme.colors.cellDetailTextColor
+        }
+
+        UIPageControl.appearance().backgroundColor = theme.colors.background
+        UIPageControl.appearance().pageIndicatorTintColor = .lightGray
+        UIPageControl.appearance().currentPageIndicatorTintColor = theme.colors.orangeUI
+    }
+
+    @available(iOS 13.0, *)
+    @objc class func navigationbarAppearance() -> UINavigationBarAppearance {
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.backgroundColor = PresentationTheme.current.colors.navigationbarColor
+        navBarAppearance.titleTextAttributes = [.foregroundColor: PresentationTheme.current.colors.navigationbarTextColor]
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: PresentationTheme.current.colors.navigationbarTextColor]
+        return navBarAppearance
     }
 }
 
 //extensions so that preferredStatusBarStyle is called on all childViewControllers otherwise this is not forwarded
 extension UINavigationController {
+    override open var preferredStatusBarStyle: UIStatusBarStyle {
+        return PresentationTheme.current.colors.statusBarStyle
+    }
+
     override open var childForStatusBarStyle: UIViewController? {
         return self.topViewController
     }

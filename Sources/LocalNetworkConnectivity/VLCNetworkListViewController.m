@@ -135,6 +135,16 @@ NSString *VLCNetworkListCellIdentifier = @"VLCNetworkListCellIdentifier";
     // to be implemented by subclass
 }
 
+- (void)startActivityIndicator
+{
+    [_activityIndicator startAnimating];
+}
+
+- (void)stopActivityIndicator
+{
+    [_activityIndicator stopAnimating];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -156,9 +166,6 @@ NSString *VLCNetworkListCellIdentifier = @"VLCNetworkListCellIdentifier";
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(VLCNetworkListCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIColor *color = (indexPath.row % 2 == 0)? [UIColor blackColor]: [UIColor VLCDarkBackgroundColor];
-    cell.backgroundColor = cell.titleLabel.backgroundColor = cell.folderTitleLabel.backgroundColor = cell.subtitleLabel.backgroundColor =  color;
-
     if ([indexPath row] == ((NSIndexPath *)[[tableView indexPathsForVisibleRows] lastObject]).row)
         [_activityIndicator stopAnimating];
 }

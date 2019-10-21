@@ -25,6 +25,7 @@
     UIRefreshControl *_refreshControl;
     UIBarButtonItem *_progressBarButtonItem;
     UIBarButtonItem *_logoutButton;
+    UINavigationController *tempNav;
 }
 
 @end
@@ -75,13 +76,14 @@
     _progressView = [VLCProgressView new];
     _progressBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_progressView];
     _progressView.tintColor = PresentationTheme.current.colors.orangeUI;
+    _progressView.progressLabel.textColor = PresentationTheme.current.colors.cellTextColor;
     
     sheet = [[VLCActionSheet alloc] init];
     manager = [[VLCCloudSortingSpecifierManager alloc] initWithController: self];
     sheet.dataSource = manager;
     sheet.delegate = manager;
     sheet.modalPresentationStyle = UIModalPresentationCustom;
-    [sheet.collectionView registerClass:[VLCSettingsSheetCell class] forCellWithReuseIdentifier:VLCSettingsSheetCell.identifier];
+    [sheet.collectionView registerClass:[VLCActionSheetCell class] forCellWithReuseIdentifier:VLCActionSheetCell.identifier];
 
     [self _showProgressInToolbar:NO];
     [self updateForTheme];
@@ -96,17 +98,26 @@
     _activityIndicator.activityIndicatorViewStyle = PresentationTheme.current == PresentationTheme.brightTheme ? UIActivityIndicatorViewStyleGray : UIActivityIndicatorViewStyleWhiteLarge;
     self.loginToCloudStorageView.backgroundColor = PresentationTheme.current.colors.background;
     self.navigationController.toolbar.barStyle = PresentationTheme.current.colors.toolBarStyle;
+    _progressView.progressLabel.textColor = PresentationTheme.current.colors.cellTextColor;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.navigationController.toolbarHidden = NO;
+    //Workaround since in viewWillDisappear self.navigationController can be nil which will lead to a lingering toolbar
+    tempNav = self.navigationController;
+    tempNav.toolbarHidden = NO;
     [super viewWillAppear:animated];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return PresentationTheme.current.colors.statusBarStyle;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    self.navigationController.toolbarHidden = YES;
+    tempNav.toolbarHidden = YES;
+    tempNav = nil;
     [super viewWillDisappear:animated];
 }
 
@@ -264,6 +275,7 @@
 
 - (void)logout
 {
+    _currentPath = nil;
     [self.controller logout];
     [self updateViewAfterSessionChange];
 }

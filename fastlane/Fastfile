@@ -58,15 +58,21 @@ lane :ci do
     configuration: 'Debug',
     clean: true,
     build: true,
-    destination: 'platform=tvOS Simulator,name=Apple TV,OS=11.2'
+    destination: 'platform=tvOS Simulator,name=Apple TV,OS=12.2'
   )
   test
 end
 
 desc 'Take screenshots'
 lane :screenshots do
+  git_apply_fake_VolumeSlider
   capture_screenshots(stop_after_first_error: true)
   frameit(white: true, path: './fastlane/screenshots')
+end
+
+desc 'Apply fakeVolumeSlider patch'
+private_lane :git_apply_fake_VolumeSlider do
+  sh('xcrun git apply 0001-fakeVolumeSlider.patch')
 end
 
 #### Tests ####
@@ -74,7 +80,8 @@ end
 desc 'Run Tests'
 lane :test do
   cocoapods(repo_update: true)
-  scan(scheme: 'VLC-iOS')
+  scan(scheme: 'VLC-iOS-Tests')
+  scan(scheme: 'VLC-iOS-UITests')
 end
 
 #### Private ####
@@ -101,9 +108,9 @@ private_lane :update_changelog do |options|
   if (match = File.read('../Docs/NEWS').match(regex))
     changelog = match.captures
     set_changelog(app_identifier: 'org.videolan.vlc-ios',
-                  changelog: changelog,
                   username: '*',
-                  team: 'VideoLAN',
+                  changelog: changelog.first.strip,
+                  team_name: 'VideoLAN',
                   platform: platform == 'tvOS' ? 'appletvos' : 'ios')
   else
     puts("⚠️  Changelog not found for: #{platform} [#{version}]")
@@ -114,11 +121,7 @@ end
 desc 'Apply privateConstants patch including credentials'
 private_lane :git_apply_private_constants do
   Dir.chdir('..') do
-    gitapply = `xcrun git apply 0001-privateConstants.patch`
-    if gitapply != ''
-      puts("⚠️  There are conflicts. Please resolve the conflicts and update the privateConstants.patch before continuing.\n#{gitapply}")
-      exit 1
-    end
+    sh('xcrun git apply 0001-privateConstants.patch')
   end
 end
 

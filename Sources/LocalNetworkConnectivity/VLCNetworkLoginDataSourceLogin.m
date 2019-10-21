@@ -65,7 +65,6 @@ typedef NS_ENUM(NSUInteger, VLCNetworkServerLoginIndex) {
     NSString *labelString = nil;
     NSString *valueString = nil;
     UIReturnKeyType returnKeyType = UIReturnKeyNext;
-    UITextAutocapitalizationType autocapitalizationType = UITextAutocapitalizationTypeSentences;
     switch (row) {
         case VLCNetworkServerLoginIndexServer:
             keyboardType = UIKeyboardTypeURL;
@@ -79,7 +78,6 @@ typedef NS_ENUM(NSUInteger, VLCNetworkServerLoginIndex) {
             break;
         case VLCNetworkServerLoginIndexUsername:
             labelString = NSLocalizedString(@"USER_LABEL", nil);
-            autocapitalizationType = UITextAutocapitalizationTypeNone;
             valueString = self.loginInformation.username;
             break;
         case VLCNetworkServerLoginIndexPassword:
@@ -106,12 +104,13 @@ typedef NS_ENUM(NSUInteger, VLCNetworkServerLoginIndex) {
 
     fieldCell.placeholderString = labelString;
     UITextField *textField = fieldCell.textField;
-    textField.autocapitalizationType = autocapitalizationType;
-    textField.text              = valueString;
-    textField.keyboardType      = keyboardType;
-    textField.secureTextEntry   = secureTextEntry;
-    textField.returnKeyType     = returnKeyType;
-    textField.tag               = row;
+    textField.autocorrectionType     = UITextAutocorrectionTypeNo;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    textField.text                   = valueString;
+    textField.keyboardType           = keyboardType;
+    textField.secureTextEntry        = secureTextEntry;
+    textField.returnKeyType          = returnKeyType;
+    textField.tag                    = row;
     fieldCell.delegate = self;
 }
 

@@ -419,14 +419,15 @@
                         formData.append(paramName, options.blob, file.name);
                     } else {
                         $.each(options.files, function (index, file) {
+                            var filepath = file.relativePath !== undefined ? file.relativePath : "";
+                            filepath += file.name !== undefined ? file.name : "";
                             // This check allows the tests to run with
                             // dummy objects:
                             if (that._isInstanceOf('File', file) ||
                                     that._isInstanceOf('Blob', file)) {
                                 formData.append(
                                     options.paramName[index] || paramName,
-                                    file,
-                                    file.name
+                                    file, filepath
                                 );
                             }
                         });

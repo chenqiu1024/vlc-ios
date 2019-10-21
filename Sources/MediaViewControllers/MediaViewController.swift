@@ -12,15 +12,42 @@
 
 import UIKit
 
-class VLCMediaViewController: VLCPagingViewController<VLCLabelCell> {
+class MediaViewController: VLCPagingViewController<VLCLabelCell>, MediaCategoryViewControllerDelegate {
+
     var services: Services
     private var rendererButton: UIButton
-    private var sortButton: UIBarButtonItem?
+    private(set) lazy var sortButton: UIBarButtonItem = {
+        let sortButton = setupSortbutton()
+
+        sortButton.addTarget(self, action: #selector(handleSort), for: .touchUpInside)
+        sortButton.addGestureRecognizer(UILongPressGestureRecognizer(target: self,
+                                                                     action: #selector(handleSortShortcut(sender:))))
+        return UIBarButtonItem(customView: sortButton)
+    }()
+
+    private lazy var editButton: UIBarButtonItem = {
+        var editButton = UIBarButtonItem(image: UIImage(named: "edit"),
+                                     style: .plain, target: self,
+                                     action: #selector(customSetEditing(button:)))
+        editButton.tintColor = PresentationTheme.current.colors.orangeUI
+        editButton.accessibilityLabel = NSLocalizedString("BUTTON_EDIT", comment: "")
+        editButton.accessibilityHint = NSLocalizedString("BUTTON_EDIT_HINT", comment: "")
+        return editButton
+    }()
+
+    private lazy var doneButton: UIBarButtonItem = {
+        return UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(customSetEditing(button:)))
+    }()
+
+    private var rightBarButtons: [UIBarButtonItem]?
+    private var leftBarButton: UIBarButtonItem?
 
     init(services: Services) {
         self.services = services
         rendererButton = services.rendererDiscovererManager.setupRendererButton()
         super.init(nibName: nil, bundle: nil)
+        rightBarButtons = [editButton, UIBarButtonItem(customView: rendererButton)]
+        leftBarButton = sortButton
     }
 
     override func viewDidLoad() {
@@ -30,8 +57,27 @@ class VLCMediaViewController: VLCPagingViewController<VLCLabelCell> {
             oldCell?.iconLabel.textColor = PresentationTheme.current.colors.cellDetailTextColor
             newCell?.iconLabel.textColor = PresentationTheme.current.colors.orangeUI
         }
-        setupNavigationBar()
         super.viewDidLoad()
+        viewControllers.forEach {
+            ($0 as? MediaCategoryViewController)?.delegate = self
+        }
+        setupNavigationBar()
+    }
+
+    private func setupSortbutton() -> UIButton {
+        let sortButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+
+        sortButton.setImage(UIImage(named: "sort"), for: .normal)
+        // It seems that using a custom view, UIBarButtonItem have a offset of 16, therefore adding a large margin
+        if UIView.userInterfaceLayoutDirection(for: sortButton.semanticContentAttribute) == .rightToLeft {
+            sortButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -16)
+        } else {
+            sortButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -16, bottom: 0, right: 0)
+        }
+        sortButton.tintColor = PresentationTheme.current.colors.orangeUI
+        sortButton.accessibilityLabel = NSLocalizedString("BUTTON_SORT", comment: "")
+        sortButton.accessibilityHint = NSLocalizedString("BUTTON_SORT_HINT", comment: "")
+        return sortButton
     }
 
     private func setupNavigationBar() {
@@ -39,11 +85,18 @@ class VLCMediaViewController: VLCPagingViewController<VLCLabelCell> {
             navigationController?.navigationBar.prefersLargeTitles = false
         }
         navigationController?.navigationBar.isTranslucent = false
-        navigationItem.rightBarButtonItems = [editButtonItem, UIBarButtonItem(customView: rendererButton)]
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NSLocalizedString("SORT", comment: ""),
-                                                           style: .plain,
-                                                           target: self,
-                                                           action: #selector(handleSort))
+        updateButtonsFor(viewControllers[currentIndex])
+    }
+    // MARK: - MediaCatgoryViewControllerDelegate
+
+    func needsToUpdateNavigationbarIfNeeded(_ viewController: MediaCategoryViewController) {
+        if viewController == viewControllers[currentIndex] {
+            updateButtonsFor(viewController)
+        }
+    }
+
+    func enableCategorySwitching(for viewController: MediaCategoryViewController, enable: Bool) {
+        scrollingEnabled(enable)
     }
 
     // MARK: - PagerTabStripDataSource
@@ -52,32 +105,69 @@ class VLCMediaViewController: VLCPagingViewController<VLCLabelCell> {
         fatalError("this should only be used as subclass")
     }
 
+    func updateButtonsFor(_ viewController: UIViewController) {
+        var showButtons = false
+        if let mediaCategoryViewController = viewController as? MediaCategoryViewController,
+            !mediaCategoryViewController.isSearching {
+            showButtons = true
+        }
+        navigationItem.rightBarButtonItems = showButtons ? rightBarButtons : nil
+        navigationItem.leftBarButtonItem = showButtons ? leftBarButton : nil
+    }
+
     override func configure(cell: VLCLabelCell, for indicatorInfo: IndicatorInfo) {
         cell.iconLabel.text = indicatorInfo.title
+        cell.accessibilityIdentifier = indicatorInfo.accessibilityIdentifier
     }
 
     override func updateIndicator(for viewController: PagerTabStripViewController, fromIndex: Int, toIndex: Int, withProgressPercentage progressPercentage: CGFloat, indexWasChanged: Bool) {
+        if indexWasChanged {
+            updateButtonsFor(viewControllers[toIndex])
+        }
         super.updateIndicator(for: viewController, fromIndex: fromIndex, toIndex: toIndex, withProgressPercentage: progressPercentage, indexWasChanged: indexWasChanged)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return PresentationTheme.current.colors.statusBarStyle
     }
+}
+
+// MARK: - Edit
+
+extension MediaViewController {
+    @objc private func customSetEditing(button: UIButton) {
+        isEditing = !isEditing
+        rightBarButtons = isEditing ? [doneButton] : [editButton, UIBarButtonItem(customView: rendererButton)]
+        leftBarButton = isEditing ? nil : sortButton
+        navigationItem.rightBarButtonItems = rightBarButtons
+        navigationItem.leftBarButtonItem = leftBarButton
+    }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
 
         scrollingEnabled(!editing)
-        navigationItem.leftBarButtonItem = editing ? nil : sortButton
         viewControllers[currentIndex].setEditing(editing, animated: animated)
-    }
-
-    // Hack to send to the child vc the sort event
-    override func handleSort() {
-        viewControllers[currentIndex].handleSort()
     }
 }
 
-extension UIViewController {
-    @objc func handleSort() {}
+// MARK: - Sort
+
+extension MediaViewController {
+    @objc func handleSort() {
+        if let mediaCategoryViewController = viewControllers[currentIndex] as? MediaCategoryViewController {
+            mediaCategoryViewController.handleSort()
+        }
+    }
+
+    @objc func handleSortShortcut(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            if #available(iOS 10.0, *) {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }
+            if let mediaCategoryViewController = viewControllers[currentIndex] as? MediaCategoryViewController {
+                mediaCategoryViewController.handleSortShortcut()
+            }
+        }
+    }
 }

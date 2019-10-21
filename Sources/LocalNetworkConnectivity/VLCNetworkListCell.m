@@ -15,6 +15,8 @@
 
 #import "VLCStatusLabel.h"
 
+#import "VLC-Swift.h"
+
 @implementation VLCNetworkListCell
 
 + (VLCNetworkListCell *)cellWithReuseIdentifier:(NSString *)ident
@@ -33,11 +35,35 @@
     self.subtitleLabel.text = @"";
     self.thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
     self.downloadButton.hidden = YES;
-    self.titleLabel.highlightedTextColor = [UIColor blackColor];
-    self.folderTitleLabel.highlightedTextColor = [UIColor blackColor];
-    self.subtitleLabel.highlightedTextColor = [UIColor blackColor];
-    self.statusLabel.highlightedTextColor = [UIColor blackColor];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeDidChange)
+                                                 name:kVLCThemeDidChangeNotification object:nil];
+    // If a tableViewCell is highlighted, one needs to manualy set the opaque property
+    if (@available(iOS 13.0, *)) {
+        self.opaque = NO;
+    }
+    [self themeDidChange];
     [super awakeFromNib];
+}
+
+- (void)themeDidChange
+{
+    self.titleLabel.textColor = PresentationTheme.current.colors.cellTextColor;
+    self.subtitleLabel.textColor = PresentationTheme.current.colors.cellDetailTextColor;
+    self.folderTitleLabel.textColor = PresentationTheme.current.colors.cellDetailTextColor;
+    self.titleLabel.highlightedTextColor = PresentationTheme.current.colors.cellTextColor;
+    self.subtitleLabel.highlightedTextColor = PresentationTheme.current.colors.cellDetailTextColor;
+    self.folderTitleLabel.highlightedTextColor = PresentationTheme.current.colors.cellTextColor;
+
+    UIColor *backgroundColor = PresentationTheme.current.colors.background;
+
+    if (@available(iOS 13.0, *)) {
+        backgroundColor = UIColor.clearColor;
+    }
+
+    self.backgroundColor = backgroundColor;
+    self.titleLabel.backgroundColor = backgroundColor;
+    self.folderTitleLabel.backgroundColor = backgroundColor;
+    self.subtitleLabel.backgroundColor = backgroundColor;
 }
 
 - (void)setTitleLabelCentered:(BOOL)titleLabelCentered

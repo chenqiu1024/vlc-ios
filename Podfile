@@ -8,8 +8,9 @@ def shared_pods
   pod 'upnpx', '~>1.4.0'
   pod 'CocoaHTTPServer', :git => 'git://github.com/fkuehne/CocoaHTTPServer.git' # has our fixes
   pod 'VLC-WhiteRaccoon'
-  pod 'ObjectiveDropboxOfficial', :git => 'git://github.com/carolanitz/dropbox-sdk-obj-c.git' #update ios platform version
+  pod 'ObjectiveDropboxOfficial', :git => 'git://github.com/Mikanbu/dropbox-sdk-obj-c.git' #update ios platform version
 
+  pod 'AppCenter', '~> 2.3.0'
   # debug
   pod 'SwiftLint', '~> 0.25.0', :configurations => ['Debug']
 end
@@ -19,16 +20,15 @@ target 'VLC-iOS' do
   shared_pods
   pod 'OBSlider', '1.1.0'
   pod 'InAppSettingsKit', :git => 'git://github.com/fkuehne/InAppSettingsKit.git', :commit => '415ea6bb' #tvOS fix
-  pod 'HockeySDK', '~>5.1.4', :subspecs => ['CrashOnlyLib']
   pod 'PAPasscode', '~>1.0'
   pod 'GoogleAPIClientForREST/Drive'
-  pod 'MobileVLCKit', '3.3.1'
-  pod 'VLCMediaLibraryKit'
+  pod 'MobileVLCKit', '3.3.6'
+  pod 'VLCMediaLibraryKit', '0.6.1'
   pod 'MediaLibraryKit-prod'
-  pod 'GTMAppAuth'
+  pod 'GTMAppAuth', '0.7.1'
   pod 'OneDriveSDK'
 
-  target 'VLC-iOSUITests' do
+  target 'VLC-iOS-Screenshots' do
     inherit! :search_paths
     pod 'SimulatorStatusMagic'
   end
@@ -38,13 +38,12 @@ target 'VLC-iOS' do
 end
 
 target 'VLC-tvOS' do
-  platform :tvos, '10.2'
+  platform :tvos, '11.0'
   shared_pods
   pod 'MetaDataFetcherKit', '~>0.3.1'
   pod "OROpenSubtitleDownloader", :git => 'https://github.com/orta/OROpenSubtitleDownloader.git', :commit => '0509eac2'
   pod 'GRKArrayDiff', '~> 2.1'
-  pod 'HockeySDK-tvOS', '~>5.1.0'
-  pod 'TVVLCKit', '3.3.1'
+  pod 'TVVLCKit', '3.3.6'
 end
 
 post_install do |installer_representation|
@@ -55,5 +54,11 @@ post_install do |installer_representation|
        config.build_settings['ARCHS'] = 'armv7 armv7s arm64 i386 x86_64'
        config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
      end
+    target.build_configurations.each do |config|
+        xcconfig_path = config.base_configuration_reference.real_path
+        xcconfig = File.read(xcconfig_path)
+        new_xcconfig = xcconfig.sub('-l"sqlite3"', '')
+        File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+    end
   end
 end

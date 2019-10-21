@@ -16,6 +16,7 @@ class VLCSettingsTableViewCell: UITableViewCell {
     
     @objc fileprivate func themeDidChange() {
         backgroundColor = PresentationTheme.current.colors.background
+        selectedBackgroundView?.backgroundColor = PresentationTheme.current.colors.mediaCategorySeparatorColor
         textLabel?.textColor = PresentationTheme.current.colors.cellTextColor
         detailTextLabel?.textColor = PresentationTheme.current.colors.cellDetailTextColor
     }
@@ -33,6 +34,8 @@ class VLCSettingsTableViewCell: UITableViewCell {
         case kIASKOpenURLSpecifier:
             accessoryType = .disclosureIndicator
         case kIASKPSMultiValueSpecifier:
+            accessoryType = .none
+        case kIASKButtonSpecifier:
             accessoryType = .none
         default:
             assertionFailure("\(reuseIdentifier) has not been defined for VLCSettingsTableViewCell")
@@ -56,6 +59,8 @@ class VLCSettingsTableViewCell: UITableViewCell {
             configureMultiValue(specifier, settingsValue)
         case kIASKOpenURLSpecifier:
             break
+        case kIASKButtonSpecifier:
+            break
         default:
             assertionFailure("\(specifier.type() ?? "nil") has not been defined for VLCSettingsTableViewCell")
         }
@@ -77,11 +82,13 @@ class VLCSettingsTableViewCell: UITableViewCell {
                 state = currentValue
             }
         }
-        
+
         if let toggle = accessoryView as? IASKSwitch {
             toggle.isOn = state
             toggle.key = specifier.key()
         }
+
+        selectionStyle = .none
     }
     
     fileprivate func configureMultiValue(_ specifier: IASKSpecifier, _ value: Any?) {

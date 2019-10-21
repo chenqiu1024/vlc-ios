@@ -22,10 +22,9 @@
 #import "NSString+SupportedMedia.h"
 #import "UIDevice+VLC.h"
 #import "VLCHTTPUploaderController.h"
-#import "VLCPlaybackController.h"
-#import "VLCPlaybackController+MediaLibrary.h"
+#import "VLCPlaybackService.h"
+#import "VLCPlaybackService+MediaLibrary.h"
 #import <MediaPlayer/MediaPlayer.h>
-#import <HockeySDK/HockeySDK.h>
 #import "VLCActivityManager.h"
 #import "VLCDropboxConstants.h"
 #import "VLCPlaybackNavigationController.h"
@@ -34,6 +33,10 @@
 #import <OneDriveSDK.h>
 #import "VLCOneDriveConstants.h"
 
+#import <AppCenter/AppCenter.h>
+#import <AppCenterAnalytics/AppCenterAnalytics.h>
+#import <AppCenterCrashes/AppCenterCrashes.h>
+
 #define BETA_DISTRIBUTION 1
 
 @interface VLCAppDelegate ()
@@ -41,7 +44,7 @@
     BOOL _isComingFromHandoff;
     VLCKeychainCoordinator *_keychainCoordinator;
     AppCoordinator *appCoordinator;
-    UIViewController *rootViewController;
+    UITabBarController *rootViewController;
 }
 
 @end
@@ -52,7 +55,8 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    NSDictionary *appDefaults = @{kVLCSettingPasscodeAllowFaceID : @(1),
+    NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(kVLCSettingAppThemeBright),
+                                  kVLCSettingPasscodeAllowFaceID : @(1),
                                   kVLCSettingPasscodeAllowTouchID : @(1),
                                   kVLCSettingContinueAudioInBackgroundKey : @(YES),
                                   kVLCSettingStretchAudio : @(NO),
@@ -77,34 +81,33 @@
                                   kVLCSettingFTPTextEncoding : kVLCSettingFTPTextEncodingDefaultValue,
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,
+                                  kVLCSettingEqualizerProfileDisabled : @(YES),
                                   kVLCSettingPlaybackForwardSkipLength : kVLCSettingPlaybackForwardSkipLengthDefaultValue,
                                   kVLCSettingPlaybackBackwardSkipLength : kVLCSettingPlaybackBackwardSkipLengthDefaultValue,
                                   kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
-                                  kVLCAutomaticallyPlayNextItem : @(YES)};
+                                  kVLCAutomaticallyPlayNextItem : @(YES),
+                                  kVLCSettingsMediaLibraryVideoGroupPrefixLength: kVLCSettingsMediaLibraryVideoGroupPrefixLengthDefaultValue,
+                                  kVLCSettingShowThumbnails : kVLCSettingShowThumbnailsDefaultValue,
+                                  kVLCSettingShowArtworks : kVLCSettingShowArtworksDefaultValue
+    };
     [defaults registerDefaults:appDefaults];
 }
 
 - (void)setup
 {
     void (^setupAppCoordinator)(void) = ^{
-        self->appCoordinator = [[AppCoordinator alloc] initWithViewController:self->rootViewController];
+        self->appCoordinator = [[AppCoordinator alloc] initWithTabBarController:self->rootViewController];
         [self->appCoordinator start];
     };
     [self validatePasscodeIfNeededWithCompletion:setupAppCoordinator];
-
-    BOOL spotlightEnabled = ![VLCKeychainCoordinator passcodeLockEnabled];
-    [[MLMediaLibrary sharedMediaLibrary] setSpotlightIndexingEnabled:spotlightEnabled];
-    [[MLMediaLibrary sharedMediaLibrary] applicationWillStart];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    BITHockeyManager *hockeyManager = [BITHockeyManager sharedHockeyManager];
-    [hockeyManager configureWithBetaIdentifier:@"0114ca8e265244ce588d2ebd035c3577"
-                                liveIdentifier:@"c95f4227dff96c61f8b3a46a25edc584"
-                                      delegate:nil];
-    [hockeyManager startManager];
-
+    [MSAppCenter start:@"0114ca8e-2652-44ce-588d-2ebd035c3577" withServices:@[
+                                                                              [MSAnalytics class],
+                                                                              [MSCrashes class]
+                                                                              ]];
     // Configure Dropbox
     [DBClientsManager setupWithAppKey:kVLCDropboxAppKey];
 
@@ -112,38 +115,37 @@
     [ODClient setMicrosoftAccountAppId:kVLCOneDriveClientID scopes:@[@"onedrive.readwrite", @"offline_access"]];
 
     [VLCApperanceManager setupAppearanceWithTheme:PresentationTheme.current];
+    self.orientationLock = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    rootViewController = [UIViewController new];
+    rootViewController = [UITabBarController new];
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
     [self setup];
 
     /* add our static shortcut items the dynamic way to ease l10n and dynamic elements to be introduced later */
-    if (@available(iOS 9, *)) {
-        if (application.shortcutItems == nil || application.shortcutItems.count < 4) {
-            UIApplicationShortcutItem *localLibraryItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutLocalLibrary
-                                                                                           localizedTitle:NSLocalizedString(@"SECTION_HEADER_LIBRARY",nil)
-                                                                                        localizedSubtitle:nil
-                                                                                                     icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"AllFiles"]
-                                                                                                 userInfo:nil];
-            UIApplicationShortcutItem *localServerItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutLocalServers
-                                                                                           localizedTitle:NSLocalizedString(@"LOCAL_NETWORK",nil)
-                                                                                        localizedSubtitle:nil
-                                                                                                     icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"Local"]
-                                                                                                 userInfo:nil];
-            UIApplicationShortcutItem *openNetworkStreamItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutOpenNetworkStream
-                                                                                           localizedTitle:NSLocalizedString(@"OPEN_NETWORK",nil)
-                                                                                        localizedSubtitle:nil
-                                                                                                     icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"OpenNetStream"]
-                                                                                                 userInfo:nil];
-            UIApplicationShortcutItem *cloudsItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutClouds
-                                                                                           localizedTitle:NSLocalizedString(@"CLOUD_SERVICES",nil)
-                                                                                        localizedSubtitle:nil
-                                                                                                     icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"iCloudIcon"]
-                                                                                                 userInfo:nil];
-            application.shortcutItems = @[localLibraryItem, localServerItem, openNetworkStreamItem, cloudsItem];
-        }
+    if (application.shortcutItems == nil || application.shortcutItems.count < 4) {
+        UIApplicationShortcutItem *localVideoItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutLocalVideo
+                                                                                     localizedTitle:NSLocalizedString(@"VIDEO",nil)
+                                                                                  localizedSubtitle:nil
+                                                                                               icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"Video"]
+                                                                                           userInfo:nil];
+        UIApplicationShortcutItem *localAudioItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutLocalAudio
+                                                                                     localizedTitle:NSLocalizedString(@"AUDIO",nil)
+                                                                                  localizedSubtitle:nil
+                                                                                               icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"Audio"]
+                                                                                           userInfo:nil];
+        UIApplicationShortcutItem *localplaylistItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutPlaylist
+                                                                                        localizedTitle:NSLocalizedString(@"PLAYLISTS",nil)
+                                                                                     localizedSubtitle:nil
+                                                                                                  icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"Playlist"]
+                                                                                              userInfo:nil];
+        UIApplicationShortcutItem *networkItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutNetwork
+                                                                                  localizedTitle:NSLocalizedString(@"NETWORK",nil)
+                                                                               localizedSubtitle:nil
+                                                                                            icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"Network"]
+                                                                                        userInfo:nil];
+        application.shortcutItems = @[localVideoItem, localAudioItem, localplaylistItem, networkItem];
     }
 
     return YES;
@@ -153,48 +155,20 @@
 
 - (BOOL)application:(UIApplication *)application willContinueUserActivityWithType:(NSString *)userActivityType
 {
-    if ([userActivityType isEqualToString:kVLCUserActivityLibraryMode] ||
-        [userActivityType isEqualToString:kVLCUserActivityPlaying] ||
-        [userActivityType isEqualToString:kVLCUserActivityLibrarySelection])
-        return YES;
-
-    return NO;
+    return [userActivityType isEqualToString:kVLCUserActivityPlaying];
 }
 
 - (BOOL)application:(UIApplication *)application
 continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *))restorationHandler
 {
-    NSString *userActivityType = userActivity.activityType;
-    NSDictionary *dict = userActivity.userInfo;
-    if([userActivityType isEqualToString:kVLCUserActivityLibraryMode] ||
-       [userActivityType isEqualToString:kVLCUserActivityLibrarySelection]) {
-        //TODO: Add restoreUserActivityState to the mediaviewcontroller
-        _isComingFromHandoff = YES;
-        return YES;
-    } else {
-        NSURL *uriRepresentation = nil;
-        if ([userActivityType isEqualToString:CSSearchableItemActionType]) {
-            uriRepresentation = [NSURL URLWithString:dict[CSSearchableItemActivityIdentifier]];
-        } else {
-            uriRepresentation = dict[@"playingmedia"];
-        }
+    VLCMLMedia *media = [appCoordinator mediaForUserActivity:userActivity];
+    if (!media) return NO;
 
-        if (!uriRepresentation) {
-            return NO;
-        }
-
-        NSManagedObject *managedObject = [[MLMediaLibrary sharedMediaLibrary] objectForURIRepresentation:uriRepresentation];
-        if (managedObject == nil) {
-            APLog(@"%s file not found: %@",__PRETTY_FUNCTION__,userActivity);
-            return NO;
-        }
-        [self validatePasscodeIfNeededWithCompletion:^{
-            [[VLCPlaybackController sharedInstance] openMediaLibraryObject:managedObject];
-        }];
-        return YES;
-    }
-    return NO;
+    [self validatePasscodeIfNeededWithCompletion:^{
+        [[VLCPlaybackService sharedInstance] playMedia:media];
+    }];
+    return YES;
 }
 
 - (void)application:(UIApplication *)application
@@ -211,7 +185,7 @@ didFailToContinueUserActivityWithType:(NSString *)userActivityType
     for (id<VLCURLHandler> handler in URLHandlers.handlers) {
         if ([handler canHandleOpenWithUrl:url options:options]) {
             if ([handler performOpenWithUrl:url options:options]) {
-                break;
+                return YES;
             }
         }
     }
@@ -234,7 +208,7 @@ didFailToContinueUserActivityWithType:(NSString *)userActivityType
     }
     [self validatePasscodeIfNeededWithCompletion:^{
         //TODO: handle updating the videoview and
-        if ([VLCPlaybackController sharedInstance].isPlaying){
+        if ([VLCPlaybackService sharedInstance].isPlaying){
             //TODO: push playback
         }
     }];
@@ -246,7 +220,7 @@ didFailToContinueUserActivityWithType:(NSString *)userActivityType
     if (!_isComingFromHandoff) {
         [[MLMediaLibrary sharedMediaLibrary] updateMediaDatabase];
       //  [[VLCMediaFileDiscoverer sharedInstance] updateMediaList];
-        [[VLCPlaybackController sharedInstance] recoverDisplayedMetadata];
+        [[VLCPlaybackService sharedInstance] recoverDisplayedMetadata];
     } else if(_isComingFromHandoff) {
         _isComingFromHandoff = NO;
     }
@@ -254,7 +228,7 @@ didFailToContinueUserActivityWithType:(NSString *)userActivityType
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
 {
-    //TODO: shortcutItem should be implemented
+    [appCoordinator handleShortcutItem:shortcutItem];
 }
 
 #pragma mark - pass code validation
@@ -274,6 +248,11 @@ didFailToContinueUserActivityWithType:(NSString *)userActivityType
     } else {
         completion();
     }
+}
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    return self.orientationLock;
 }
 
 @end

@@ -1,5 +1,68 @@
 # Changelog
 
+## iOS [3.2.2]
+
+· Add automatic video grouping by name
+· Add deletion to audio collections such as artist and albums
+· Add setting to force rescan of the media library
+· Fix HTTP download if file already exist
+· Fix swipe gesture settings affecting double tap to seek
+· Fix meta data for external media
+· Fix Box cloud service overall usage
+· Fix download progress
+· Fix download enqueuing
+· Fix download speed calculation
+· Remove network login automatic capitalization and completion
+· Rework download view according to new design
+· Update translations
+
+## iOS [3.2.1]
+
+· Add automatic appearance setting for iOS 13
+· Add indicator inside a playlist for reordering
+· Adapt empty view for current context
+· Fix SMB 2 credential storage
+· Fix local network navigation
+· Fix local network infinite reloading
+· Fix local network connection dialog
+· Fix external screen, AirPlay mirroring black screen
+· Fix opening media from other applications using x-callback-url
+· Fix artwork being shown after backgrounding the application during playback
+· Fix cancel button not being shown on the local network connect screen on iPads
+· Fix minor stability and interface issues
+· Video Grouping will be back soon in a new version of VLC-iOS
+
+## iOS [3.2.0]
+· This releases introduces a completely new interface, more intuitive, easier to use and features an up-to-date look. This is a first step for future releases that will improve this interface even more.
+· It also introduces a completely new media library backend, that allows a much easier management of Music and Audio files.
+One can now browse per Album, Genre, Artist and Songs.
+· Sorting, a feature that many asked for, also ships with this new version.
+· The folders feature was revamped into proper playlist management and playlists have their own dedicated tab now.
+· This version of VLC has now both a light and dark mode. Just choose your favorite in the settings
+· Finally, in the media backend, numerous things were improved, including bluetooth Audio delay and drop, and better support for SMB shares
+
+## tvOS [3.0.6]
+
+· Fix SMB 2 issue
+· Fix thumbnails for media
+· Add thumbnail for video in remote playback
+· Add manual connection to SMB/FTP/Plex
+· Bugfixes and stability improvements
+
+## tvOS [3.0.5]
+
+· Fix SMB 2 issue
+· Add thumbnail for video in remote playback
+· Add manual connection to SMB/FTP/Plex
+· Bugfixes and stability improvements
+
+## iOS [3.1.8]
+
+· Improve action sheet animation
+· Fix SMB 2 issue
+· Fix Chromecast no video issue
+· Bugfixes and stability improvements
+
 ## tvOS [3.0.4]
 
 · Added support for SMB 2

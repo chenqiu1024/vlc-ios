@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1020"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -45,6 +45,21 @@
                BlueprintIdentifier = "41B0BC851F73ED7D0063BA26"
                BuildableName = "VLC-iOSUITests.xctest"
                BlueprintName = "VLC-iOSUITests"
+               ReferencedContainer = "container:VLC.xcodeproj">
+            </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "Screenshot/testCaptureVideoPlayback()">
+               </Test>
+            </SkippedTests>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4133CADB22CCB0620047A4EC"
+               BuildableName = "VLC-iOS-Screenshots.xctest"
+               BlueprintName = "VLC-iOS-Screenshots"
                ReferencedContainer = "container:VLC.xcodeproj">
             </BuildableReference>
          </TestableReference>

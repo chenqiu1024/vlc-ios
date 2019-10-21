@@ -23,6 +23,13 @@ class VLCSettingsSpecifierManager: NSObject {
             assertionFailure("VLCSettingsSpecifierManager: No rows provided for \(specifier?.key() ?? "null specifier")")
             return []
         }
+        if specifier?.key() == kVLCSettingAppTheme {
+            if #available(iOS 13.0, *) {
+                return items
+            } else {
+                return items.subarray(with: NSRange(location: 0, length: items.count - 1)) as NSArray
+            }
+        }
         return items
     }
     
@@ -31,7 +38,7 @@ class VLCSettingsSpecifierManager: NSObject {
         if let selectedItem = settingsStore.object(forKey: specifier?.key()) {
             index = items.index(of: selectedItem)
         } else if let specifier = specifier {
-            index = items.index(of: specifier.defaultValue())
+            index = items.index(of: specifier.defaultValue() as Any)
         } else {
             fatalError("VLCSettingsSpecifierManager: No specifier provided")
         }
@@ -47,7 +54,7 @@ class VLCSettingsSpecifierManager: NSObject {
 
 // MARK: VLCActionSheetDelegate
 
-extension VLCSettingsSpecifierManager: VLCActionSheetDelegate {
+extension VLCSettingsSpecifierManager: ActionSheetDelegate {
     
     func headerViewTitle() -> String? {
         return specifier?.title()
@@ -60,19 +67,22 @@ extension VLCSettingsSpecifierManager: VLCActionSheetDelegate {
     func actionSheet(collectionView: UICollectionView, didSelectItem item: Any, At indexPath: IndexPath) {
         settingsStore.setObject(item, forKey: specifier?.key())
         settingsStore.synchronize()
+        if specifier?.key() == kVLCSettingAppTheme {
+            PresentationTheme.themeDidUpdate()
+        }
     }
 }
 
 // MARK: VLCActionSheetDataSource
 
-extension VLCSettingsSpecifierManager: VLCActionSheetDataSource {
+extension VLCSettingsSpecifierManager: ActionSheetDataSource {
     
     func numberOfRows() -> Int {
         return items.count
     }
     
     func actionSheet(collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VLCSettingsSheetCell.identifier, for: indexPath) as? VLCSettingsSheetCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ActionSheetCell.identifier, for: indexPath) as? ActionSheetCell else {
             return UICollectionViewCell()
         }
         

@@ -24,16 +24,18 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
 {
     VLCActionSheet *actionSheet;
     VLCSettingsSpecifierManager *specifierManager;
+    MediaLibraryService *_medialibraryService;
 }
 @end
 
 @implementation VLCSettingsController
 
-- (instancetype)initWithStyle:(UITableViewStyle)style
+- (instancetype)initWithMediaLibraryService:(MediaLibraryService *)medialibraryService
 {
-    self = [super initWithStyle:style];
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         [self setupUI];
+        _medialibraryService = medialibraryService;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingDidChange:) name:kIASKAppSettingChanged object:nil];
     }
 
@@ -72,9 +74,13 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
     
     actionSheet = [[VLCActionSheet alloc] init];
     actionSheet.modalPresentationStyle = UIModalPresentationCustom;
-    [actionSheet.collectionView registerClass:[VLCSettingsSheetCell class] forCellWithReuseIdentifier:VLCSettingsSheetCell.identifier];
     
     specifierManager = [[VLCSettingsSpecifierManager alloc] initWithSettingsReader:self.settingsReader settingsStore:self.settingsStore];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(themeDidChange)
+                                                 name:kVLCThemeDidChangeNotification
+                                               object:nil];
 }
 
 - (void)themeDidChange
@@ -135,24 +141,10 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
             PAPasscodeViewController *passcodeLockController = [[PAPasscodeViewController alloc] initForAction:PasscodeActionSet];
             passcodeLockController.delegate = self;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:passcodeLockController];
+            // Specify modal presentation style due to iOS 13 behaviour
+            navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
             [self.navigationController presentViewController:navigationController animated:YES completion:nil];
         }
-    }
-    if ([notification.object isEqual:kVLCSettingAppTheme]) {
-        BOOL darkTheme = [[notification.userInfo objectForKey:kVLCSettingAppTheme] boolValue];
-        PresentationTheme.current = darkTheme ? PresentationTheme.darkTheme : PresentationTheme.brightTheme;
-        [self themeDidChange];
-    }
-}
-
-- (void)updateUIAndCoreSpotlightForPasscodeSetting:(BOOL)passcodeOn
-{
-    [self filterCellsWithAnimation:YES];
-
-    [[MLMediaLibrary sharedMediaLibrary] setSpotlightIndexingEnabled:!passcodeOn];
-    if (passcodeOn) {
-        // delete whole index for VLC
-        [[CSSearchableIndex defaultSearchableIndex] deleteAllSearchableItemsWithCompletionHandler:nil];
     }
 }
 
@@ -168,6 +160,7 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
 - (void)PAPasscodeViewControllerDidCancel:(PAPasscodeViewController *)controller
 {
     [self updateForPasscode:nil];
+    [self.settingsStore setBool:false forKey:kVLCSettingPasscodeOnKey];
 }
 
 - (void)PAPasscodeViewControllerDidSetPasscode:(PAPasscodeViewController *)controller
@@ -191,10 +184,13 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
     NSError *error = nil;
     [VLCKeychainCoordinator setPasscodeWithPasscode:passcode error:&error];
     if (error == nil) {
+        if (passcode != nil) {
+            [[CSSearchableIndex defaultSearchableIndex] deleteAllSearchableItemsWithCompletionHandler:nil];
+        } else {
+            [_medialibraryService reindexAllMediaForSpotlight];
+        }
         //Set manually the value to enable/disable the UISwitch.
-        BOOL passcodeEnabled = passcode != nil;
-        [[NSUserDefaults standardUserDefaults] setBool:passcodeEnabled forKey:kVLCSettingPasscodeOnKey];
-        [self updateUIAndCoreSpotlightForPasscodeSetting:passcode != nil];
+        [self filterCellsWithAnimation:YES];
     }
     if ([self.navigationController.presentedViewController isKindOfClass:[UINavigationController class]] && [((UINavigationController *)self.navigationController.presentedViewController).viewControllers.firstObject isKindOfClass:[PAPasscodeViewController class]]) {
         [self.navigationController.presentedViewController dismissViewControllerAnimated:YES completion:nil];
@@ -220,6 +216,8 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
 
     if ([specifier.type isEqualToString: kIASKPSMultiValueSpecifier]) {
         [self displayActionSheetFor:specifier];
+    } else if ([specifier.type isEqualToString: kIASKButtonSpecifier]) {
+        [self buttonTappedFor:specifier];
     } else {
         [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
@@ -236,9 +234,37 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
     actionSheet.delegate = specifierManager;
     actionSheet.dataSource = specifierManager;
     
-    [self presentViewController:actionSheet animated:YES completion:^{
+    [self presentViewController:actionSheet animated:NO completion:^{
         [self->actionSheet.collectionView selectItemAtIndexPath:self->specifierManager.selectedIndex animated:NO scrollPosition:UICollectionViewScrollPositionCenteredVertically];
     }];
+}
+
+- (void)buttonTappedFor:(IASKSpecifier *)specifier
+{
+    __weak typeof(self) weakSelf = self;
+
+    if ([specifier.specifierDict[@"Key"] isEqual: @"forceMediaLibraryRescan"]) {
+        UIAlertController *alert = [UIAlertController
+                                    alertControllerWithTitle:NSLocalizedString(@"FORCE_RESCAN_TITLE", "")
+                                                     message:NSLocalizedString(@"FORCE_RESCAN_MESSAGE", "")
+                                              preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction* rescanAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_RESCAN", "")
+                                                                style:UIAlertActionStyleDestructive
+                                                              handler:^(UIAlertAction * action) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                [strongSelf->_medialibraryService forceRescan];
+            });
+        }];
+        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_CANCEL", "")
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+
+        [alert addAction:cancelAction];
+        [alert addAction:rescanAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 @end

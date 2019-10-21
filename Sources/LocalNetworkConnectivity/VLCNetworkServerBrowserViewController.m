@@ -16,7 +16,7 @@
 #import "VLCNetworkListCell.h"
 #import "VLCActivityManager.h"
 #import "VLCStatusLabel.h"
-#import "VLCPlaybackController.h"
+#import "VLCPlaybackService.h"
 #import "VLCDownloadViewController.h"
 
 #import "VLCNetworkServerBrowser-Protocol.h"
@@ -79,11 +79,26 @@
     [_refreshControl endRefreshing];
 }
 
+- (void)networkServerBrowserShouldPopView:(id<VLCNetworkServerBrowser>)networkBrowser
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)networkServerBrowserEndParsing:(id<VLCNetworkServerBrowser>)networkBrowser
+{
+    [self stopActivityIndicator];
+}
+
 - (void)networkServerBrowser:(id<VLCNetworkServerBrowser>)networkBrowser requestDidFailWithError:(NSError *)error
 {
     [VLCAlertViewController alertViewManagerWithTitle:NSLocalizedString(@"LOCAL_SERVER_CONNECTION_FAILED_TITLE", nil)
                                          errorMessage:NSLocalizedString(@"LOCAL_SERVER_CONNECTION_FAILED_MESSAGE", nil)
                                        viewController:self];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return PresentationTheme.current.colors.statusBarStyle;
 }
 
 - (void)updateUI
@@ -179,7 +194,6 @@
     if([indexPath row] == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
         [[VLCActivityManager defaultManager] networkActivityStopped];
 
-    cell.backgroundColor = cell.titleLabel.backgroundColor = cell.folderTitleLabel.backgroundColor = cell.subtitleLabel.backgroundColor = PresentationTheme.current.colors.cellBackgroundA;
     cell.titleLabel.textColor = cell.folderTitleLabel.textColor = cell.subtitleLabel.textColor = cell.thumbnailView.tintColor = PresentationTheme.current.colors.cellTextColor;
 }
 

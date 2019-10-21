@@ -24,7 +24,7 @@ protocol MediaLibraryBaseModel {
 
     func append(_ item: VLCMLObject)
     func delete(_ items: [VLCMLObject])
-    func sort(by criteria: VLCMLSortingCriteria)
+    func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
 }
 
 protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
@@ -43,7 +43,7 @@ protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
     func append(_ item: MLType)
     // FIXME: Ideally items should be MLType but Swift isn't happy so it will always fail
     func delete(_ items: [VLCMLObject])
-    func sort(by criteria: VLCMLSortingCriteria)
+    func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
 }
 
 extension MLBaseModel {
@@ -59,13 +59,74 @@ extension MLBaseModel {
         fatalError()
     }
 
-    func sort(by criteria: VLCMLSortingCriteria) {
+    func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
         fatalError()
     }
 }
 
-protocol EditableMLModel {
+protocol SearchableMLModel {
+    func contains(_ searchString: String) -> Bool
+}
 
-    func editCellType() -> BaseCollectionViewCell.Type
+protocol MediaCollectionModel {
+    func files(with criteria: VLCMLSortingCriteria,
+               desc: Bool) -> [VLCMLMedia]?
+    func sortModel() -> SortModel?
+    func title() -> String
+}
 
+// MARK: - Helper methods
+
+extension MLBaseModel {
+    /// Swap the given [MLType] to the cached array.
+    /// This only swaps models with the same VLCMLIdentifiers
+    /// - Parameter models: To be swapped models
+    /// - Returns: New array of `MLType` if changes have been made, else return a unchanged cached version.
+    func swapModels(with models: [MLType]) -> [MLType] {
+        var newFiles = files
+
+        // FIXME: This should be handled in a thread safe way
+        for var model in models {
+            for (currentMediaIndex, file) in files.enumerated()
+                where file.identifier() == model.identifier() {
+                    swap(&newFiles[currentMediaIndex], &model)
+                    break
+            }
+        }
+        return newFiles
+    }
+}
+
+extension VLCMLObject {
+    static func == (lhs: VLCMLObject, rhs: VLCMLObject) -> Bool {
+        return lhs.identifier() == rhs.identifier()
+    }
+}
+
+extension MediaCollectionModel {
+    func files(with criteria: VLCMLSortingCriteria = .alpha,
+               desc: Bool = false) -> [VLCMLMedia]? {
+        return files(with: criteria, desc: desc)
+    }
+
+    func thumbnail() -> UIImage? {
+        var image: UIImage? = nil
+        if image == nil {
+            for track in files() ?? [] where track.isThumbnailGenerated() {
+                image = UIImage(contentsOfFile: track.thumbnail()?.path ?? "")
+                break
+            }
+        }
+        if image == nil
+            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowThumbnails) && self is VLCMLVideoGroup)
+            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowArtworks) && !(self is VLCMLVideoGroup)) {
+            let isDarktheme = PresentationTheme.current == PresentationTheme.darkTheme
+            if self is VLCMLVideoGroup {
+                image = isDarktheme ? UIImage(named: "movie-placeholder-dark") : UIImage(named: "movie-placeholder-white")
+            } else {
+                image = isDarktheme ? UIImage(named: "album-placeholder-dark") : UIImage(named: "album-placeholder-white")
+            }
+        }
+        return image
+    }
 }

@@ -33,12 +33,17 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
     NSString *_humanReadableFilename;
     NSMutableArray *_currentDownloadFilename;
     NSTimeInterval _startDL;
+    NSString *_currentDownloadIdentifier;
+
+    NSLayoutConstraint *_contentViewHeight;
 
     VLCHTTPFileDownloader *_httpDownloader;
 
     WRRequestDownload *_FTPDownloadRequest;
     NSTimeInterval _lastStatsUpdate;
-    CGFloat _averageSpeed;
+    NSMutableArray *_lastSpeeds;
+    CGFloat _totalReceived;
+    CGFloat _lastReceived;
 
     UIBackgroundTaskIdentifier _backgroundTaskIdentifier;
 }
@@ -62,6 +67,7 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self){
+        _lastSpeeds = [[NSMutableArray alloc] init];
         _currentDownloads = [[NSMutableArray alloc] init];
         _currentDownloadFilename = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateForTheme) name:kVLCThemeDidChangeNotification object:nil];
@@ -76,12 +82,18 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
 
     [self.downloadButton setTitle:NSLocalizedString(@"BUTTON_DOWNLOAD", nil) forState:UIControlStateNormal];
     [self.downloadButton setAccessibilityIdentifier:@"Download"];
+    self.downloadButton.layer.cornerRadius = 4.0;
     self.whatToDownloadHelpLabel.text = [NSString stringWithFormat:NSLocalizedString(@"DOWNLOAD_FROM_HTTP_HELP", nil), [[UIDevice currentDevice] model]];
     self.urlField.delegate = self;
     self.urlField.keyboardType = UIKeyboardTypeURL;
     self.progressContainer.hidden = YES;
     self.downloadsTable.hidden = YES;
+    self.downloadsTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.whatToDownloadHelpLabel.backgroundColor = [UIColor clearColor];
+
+    _contentViewHeight = [_contentView.heightAnchor constraintEqualToConstant:0];
+    _contentViewHeight.active = YES;
+    [self updateContentViewHeightConstraint];
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self updateForTheme];
@@ -104,17 +116,19 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
 {
     NSAttributedString *coloredAttributedPlaceholder = [[NSAttributedString alloc] initWithString:@"http://myserver.com/file.mkv" attributes:@{NSForegroundColorAttributeName: PresentationTheme.current.colors.lightTextColor}];
     self.urlField.attributedPlaceholder = coloredAttributedPlaceholder;
-    self.urlField.backgroundColor = PresentationTheme.current.colors.cellBackgroundB;
+    self.urlField.backgroundColor = PresentationTheme.current.colors.background;
     self.urlField.textColor = PresentationTheme.current.colors.cellTextColor;
+    self.urlBorder.backgroundColor = PresentationTheme.current.colors.mediaCategorySeparatorColor;
     self.downloadsTable.backgroundColor = PresentationTheme.current.colors.background;
     self.view.backgroundColor = PresentationTheme.current.colors.background;
     self.downloadButton.backgroundColor = PresentationTheme.current.colors.orangeUI;
     self.whatToDownloadHelpLabel.textColor = PresentationTheme.current.colors.lightTextColor;
-    self.progressContainer.backgroundColor = PresentationTheme.current.colors.cellBackgroundB;
-    self.currentDownloadLabel.textColor =  PresentationTheme.current.colors.cellBackgroundB;
-    self.progressPercent.textColor =  PresentationTheme.current.colors.cellBackgroundB;
-    self.speedRate.textColor =  PresentationTheme.current.colors.cellBackgroundB;
-    self.timeDL.textColor = PresentationTheme.current.colors.cellTextColor;
+    self.progressContainer.backgroundColor = PresentationTheme.current.colors.background;
+    self.currentDownloadLabel.textColor =  PresentationTheme.current.colors.cellTextColor;
+    self.progressPercent.textColor =  PresentationTheme.current.colors.cellDetailTextColor;
+    self.speedRate.textColor =  PresentationTheme.current.colors.cellDetailTextColor;
+    self.timeDL.textColor = PresentationTheme.current.colors.cellDetailTextColor;
+    self.progressView.progressTintColor = PresentationTheme.current.colors.orangeUI;
     [self.downloadsTable reloadData];
     [self setNeedsStatusBarAppearanceUpdate];
 }
@@ -161,6 +175,7 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
         [_currentDownloadFilename addObject:@""];
         self.urlField.text = @"";
         [self.downloadsTable reloadData];
+        [self updateContentViewHeightConstraint];
         [self _triggerNextDownload];
 
     }
@@ -168,8 +183,16 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
 
 - (void)_updateUI
 {
-    _currentDownloadType != VLCDownloadSchemeNone ? [self downloadStarted] : [self downloadEnded];
+    _currentDownloadType != VLCDownloadSchemeNone ? [self downloadStartedWithIdentifier:_currentDownloadIdentifier] : [self downloadEndedWithIdentifier:_currentDownloadIdentifier];
     [self.downloadsTable reloadData];
+    [self updateContentViewHeightConstraint];
+}
+
+- (void)updateContentViewHeightConstraint
+{
+    _contentViewHeight.constant = _downloadFieldContainer.frame.size.height
+                                    + _progressContainer.frame.size.height
+                                    + _downloadsTable.contentSize.height;
 }
 
 - (VLCHTTPFileDownloader *)httpDownloader
@@ -199,20 +222,24 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
     [_currentDownloadFilename removeObjectAtIndex:0];
     [self _beginBackgroundDownload];
     [self _updateUI];
+    _startDL = [NSDate timeIntervalSinceReferenceDate];
+    [_lastSpeeds removeAllObjects];
+    _lastReceived = 0;
+    _totalReceived = 0;
 }
 
 - (void)_downloadSchemeHttp
 {
-    if (self.httpDownloader.downloadInProgress) {
+    if (_currentDownloadIdentifier) {
         return;
     }
     _currentDownloadType = VLCDownloadSchemeHTTP;
     if (![_currentDownloadFilename.firstObject isEqualToString:@""]) {
         _humanReadableFilename = [[_currentDownloadFilename firstObject] stringByRemovingPercentEncoding];
-        [self.httpDownloader downloadFileFromURL:_currentDownloads.firstObject withFileName:_humanReadableFilename];
+        _currentDownloadIdentifier = [self.httpDownloader downloadFileFromURL:_currentDownloads.firstObject withFileName:_humanReadableFilename];
     } else {
-        [self.httpDownloader downloadFileFromURL:_currentDownloads.firstObject];
-        _humanReadableFilename = self.httpDownloader.userReadableDownloadName;
+        _currentDownloadIdentifier = [self.httpDownloader downloadFileFromURL:_currentDownloads.firstObject];
+        _humanReadableFilename = [_currentDownloads.firstObject lastPathComponent];
     }
     [self _startDownload];
 }
@@ -256,7 +283,6 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
         return;
     }
 
-    [self.activityIndicator startAnimating];
     NSString *downloadScheme = [_currentDownloads.firstObject scheme];
 
     if ([downloadScheme isEqualToString:@"http"] || [downloadScheme isEqualToString:@"https"]) {
@@ -273,7 +299,7 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
 - (IBAction)cancelDownload:(id)sender
 {
     if (_currentDownloadType == VLCDownloadSchemeHTTP && self.httpDownloader.downloadInProgress) {
-        [self.httpDownloader cancelDownload];
+        [self.httpDownloader cancelDownloadWithIdentifier:_currentDownloadIdentifier];
     } else if (_currentDownloadType == VLCDownloadSchemeFTP && _FTPDownloadRequest) {
         NSURL *target = _FTPDownloadRequest.downloadLocation;
         [_FTPDownloadRequest destroy];
@@ -286,9 +312,9 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
 
 #pragma mark - VLC HTTP Downloader delegate
 
-- (void)downloadStarted
+- (void)downloadStartedWithIdentifier:(NSString *)identifier
 {
-    [self.activityIndicator stopAnimating];
+    _currentDownloadIdentifier = identifier;
 
     VLCActivityManager *activityManager = [VLCActivityManager defaultManager];
     [activityManager networkActivityStopped];
@@ -299,14 +325,14 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
     [self.progressPercent setText:@"0%"];
     [self.speedRate setText:@"0 Kb/s"];
     [self.timeDL setText:@"00:00:00"];
-    _startDL = [NSDate timeIntervalSinceReferenceDate];
     self.progressContainer.hidden = NO;
 
     APLog(@"download started");
 }
 
-- (void)downloadEnded
+- (void)downloadEndedWithIdentifier:(NSString *)identifier
 {
+    _currentDownloadIdentifier = nil;
     [[VLCActivityManager defaultManager] networkActivityStopped];
     _currentDownloadType = VLCDownloadSchemeNone;
     APLog(@"download ended");
@@ -315,47 +341,64 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
     [self _triggerNextDownload];
 }
 
-- (void)downloadFailedWithErrorDescription:(NSString *)description
+- (void)downloadFailedWithIdentifier:(NSString *)identifier errorDescription:(NSString *)description
 {
-    [VLCAlertViewController alertViewManagerWithTitle:NSLocalizedString(@"SCHEME_NOT_SUPPORTED", nil)
+    [VLCAlertViewController alertViewManagerWithTitle:NSLocalizedString(@"DOWNLOAD_FAILED", nil)
                                          errorMessage:description
                                        viewController:self];
 }
 
-- (void)progressUpdatedTo:(CGFloat)percentage receivedDataSize:(CGFloat)receivedDataSize  expectedDownloadSize:(CGFloat)expectedDownloadSize
+- (void)progressUpdatedTo:(CGFloat)percentage receivedDataSize:(CGFloat)receivedDataSize  expectedDownloadSize:(CGFloat)expectedDownloadSize identifier:(NSString *)identifier
 {
+    _totalReceived += receivedDataSize;
+    _lastReceived += receivedDataSize;
     if ((_lastStatsUpdate > 0 && ([NSDate timeIntervalSinceReferenceDate] - _lastStatsUpdate > .5)) || _lastStatsUpdate <= 0) {
+        CGFloat speed = [self getAverageSpeed:_lastReceived / ([NSDate timeIntervalSinceReferenceDate] - _lastStatsUpdate)];
         [self.progressPercent setText:[NSString stringWithFormat:@"%.1f%%", percentage*100]];
-        [self.timeDL setText:[self calculateRemainingTime:receivedDataSize expectedDownloadSize:expectedDownloadSize]];
-        [self.speedRate setText:[self calculateSpeedString:receivedDataSize]];
-            _lastStatsUpdate = [NSDate timeIntervalSinceReferenceDate];
+        [self.timeDL setText:[self getRemainingTimeString:speed expectedDownloadSize:expectedDownloadSize]];
+        [self.speedRate setText:[self getSpeedString:speed]];
+        _lastStatsUpdate = [NSDate timeIntervalSinceReferenceDate];
+        _lastReceived = 0;
     }
-
     [self.progressView setProgress:percentage animated:YES];
 }
 
-- (NSString*)calculateRemainingTime:(CGFloat)receivedDataSize expectedDownloadSize:(CGFloat)expectedDownloadSize
+- (CGFloat)getAverageSpeed:(CGFloat)speed
 {
-    CGFloat lastSpeed = receivedDataSize / ([NSDate timeIntervalSinceReferenceDate] - _startDL);
-    CGFloat smoothingFactor = 0.005;
-    _averageSpeed = isnan(_averageSpeed) ? lastSpeed : smoothingFactor * lastSpeed + (1 - smoothingFactor) * _averageSpeed;
-    CGFloat RemainingInSeconds = (expectedDownloadSize - receivedDataSize)/_averageSpeed;
+    [_lastSpeeds addObject:[NSNumber numberWithFloat:speed]];
+    if (_lastSpeeds.count > 10) {
+        [_lastSpeeds removeObjectAtIndex:0];
+    }
 
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:RemainingInSeconds];
+    CGFloat averageSpeed = 0;
+    int i = 0;
+    while (i < _lastSpeeds.count) {
+        averageSpeed += [_lastSpeeds[i] floatValue];
+        i += 1;
+    }
+    averageSpeed /= i;
+    return averageSpeed;
+}
+
+- (NSString *)getSpeedString:(CGFloat)speed
+{
+    NSString *string = [NSByteCountFormatter stringFromByteCount:speed
+                                                      countStyle:NSByteCountFormatterCountStyleDecimal];
+    string = [string stringByAppendingString:@"/s"];
+    return string;
+}
+
+- (NSString *)getRemainingTimeString:(CGFloat)speed expectedDownloadSize:(CGFloat)expectedDownloadSize
+{
+    CGFloat remainingInSeconds = (expectedDownloadSize - _totalReceived)/speed;
+
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:remainingInSeconds];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"HH:mm:ss"];
     [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
 
-    NSString  *remaingTime = [formatter stringFromDate:date];
+    NSString *remaingTime = [formatter stringFromDate:date];
     return remaingTime;
-}
-
-- (NSString*)calculateSpeedString:(CGFloat)receivedDataSize
-{
-    CGFloat speed = receivedDataSize / ([NSDate timeIntervalSinceReferenceDate] - _startDL);
-    NSString *string = [NSByteCountFormatter stringFromByteCount:speed countStyle:NSByteCountFormatterCountStyleDecimal];
-    string = [string stringByAppendingString:@"/s"];
-    return string;
 }
 
 #pragma mark - ftp networking
@@ -379,19 +422,19 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
 
 - (void)requestStarted:(WRRequest *)request
 {
-    [self downloadStarted];
+    [self downloadStartedWithIdentifier:request.fullURLString];
 }
 
 - (void)requestCompleted:(WRRequest *)request
 {
     _FTPDownloadRequest = nil;
-    [self downloadEnded];
+    [self downloadEndedWithIdentifier:request.fullURLString];
 }
 
 - (void)requestFailed:(WRRequest *)request
 {
     _FTPDownloadRequest = nil;
-    [self downloadEnded];
+    [self downloadEndedWithIdentifier:request.fullURLString];
     [VLCAlertViewController alertViewManagerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"ERROR_NUMBER", nil), request.error.errorCode]
                                          errorMessage:request.error.message
                                        viewController:self];
@@ -417,8 +460,6 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        cell.textLabel.textColor = PresentationTheme.current.colors.cellTextColor;
-        cell.detailTextLabel.textColor = PresentationTheme.current.colors.cellDetailTextColor;
     }
 
     NSInteger row = indexPath.row;
@@ -428,15 +469,22 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
         cell.textLabel.text = [[_currentDownloadFilename[row] lastPathComponent] stringByRemovingPercentEncoding];
 
     cell.detailTextLabel.text = [_currentDownloads[row] absoluteString];
+    cell.textLabel.textColor = PresentationTheme.current.colors.cellTextColor;
+    cell.detailTextLabel.textColor = PresentationTheme.current.colors.cellDetailTextColor;
 
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
 }
 
 #pragma mark - table view delegate
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.backgroundColor = (indexPath.row % 2 == 0)? PresentationTheme.current.colors.cellBackgroundA : PresentationTheme.current.colors.cellBackgroundB;
+    cell.backgroundColor = PresentationTheme.current.colors.cellBackgroundA;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -450,6 +498,7 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
         [_currentDownloads removeObjectAtIndex:indexPath.row];
         [_currentDownloadFilename removeObjectAtIndex:indexPath.row];
         [tableView reloadData];
+        [self updateContentViewHeightConstraint];
     }
 }
 
@@ -461,7 +510,9 @@ typedef NS_ENUM(NSUInteger, VLCDownloadScheme) {
         fileName = @"";
     [_currentDownloadFilename addObject:fileName];
     [self.downloadsTable reloadData];
-    [self _triggerNextDownload];
+    [self updateContentViewHeightConstraint];
+    if (_currentDownloadType == VLCDownloadSchemeNone)
+        [self _triggerNextDownload];
 }
 
 #pragma mark - text view delegate
