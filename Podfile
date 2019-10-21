@@ -10,7 +10,7 @@ def shared_pods
   pod 'VLC-WhiteRaccoon'
   pod 'ObjectiveDropboxOfficial', :git => 'git://github.com/Mikanbu/dropbox-sdk-obj-c.git' #update ios platform version
 
-  pod 'AppCenter', '~> 2.3.0'
+  pod 'AppCenter', '2.3.0'
   # debug
   pod 'SwiftLint', '~> 0.25.0', :configurations => ['Debug']
 end

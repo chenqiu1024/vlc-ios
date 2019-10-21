@@ -88,7 +88,7 @@ PODS:
     - "NSData+Base64 (~> 1.0.0)"
 
 DEPENDENCIES:
-  - AppCenter (~> 2.3.0)
+  - AppCenter (= 2.3.0)
   - box-ios-sdk-v2 (from `git://github.com/fkuehne/box-ios-sdk-v2.git`)
   - CocoaHTTPServer (from `git://github.com/fkuehne/CocoaHTTPServer.git`)
   - GoogleAPIClientForREST/Drive
@@ -200,6 +200,6 @@ SPEC CHECKSUMS:
   XKKeychain: 852ef663c56a7194c73d3c68e8d9d4f07b121d4f
   xmlrpc: 109bb21d15ed6d108b2c1ac5973a6a223a50f5f4
 
-PODFILE CHECKSUM: 3265905311d5f45470b414d7b2d64b86b3a15d92
+PODFILE CHECKSUM: 91706def71a9f548457a86dcf93ef302f3bfdd4f
 
 COCOAPODS: 1.6.1
