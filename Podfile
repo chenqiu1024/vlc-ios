@@ -5,7 +5,7 @@ inhibit_all_warnings!
 def shared_pods
   pod 'XKKeychain', '~>1.0'
   pod 'box-ios-sdk-v2', :git => 'git://github.com/fkuehne/box-ios-sdk-v2.git' #has a logout function added
-  pod 'upnpx', '~>1.4.0'
+  pod 'upnpx', '~>1.4.3'
   pod 'CocoaHTTPServer', :git => 'git://github.com/fkuehne/CocoaHTTPServer.git' # has our fixes
   pod 'VLC-WhiteRaccoon'
   pod 'ObjectiveDropboxOfficial', :git => 'git://github.com/Mikanbu/dropbox-sdk-obj-c.git' #update ios platform version
@@ -19,11 +19,11 @@ target 'VLC-iOS' do
   platform :ios, '9.0'
   shared_pods
   pod 'OBSlider', '1.1.0'
-  pod 'InAppSettingsKit', :git => 'git://github.com/fkuehne/InAppSettingsKit.git', :commit => '415ea6bb' #tvOS fix
+  pod 'InAppSettingsKit', :git => 'git://github.com/Mikanbu/InAppSettingsKit.git', :commit => 'f3ede15' #tvOS fix
   pod 'PAPasscode', '~>1.0'
   pod 'GoogleAPIClientForREST/Drive'
-  pod 'MobileVLCKit', '3.3.6'
-  pod 'VLCMediaLibraryKit', '0.6.1'
+  pod 'MobileVLCKit', '3.3.9'
+  pod 'VLCMediaLibraryKit', '0.6.3'
   pod 'MediaLibraryKit-prod'
   pod 'GTMAppAuth', '0.7.1'
   pod 'OneDriveSDK'
@@ -43,7 +43,7 @@ target 'VLC-tvOS' do
   pod 'MetaDataFetcherKit', '~>0.3.1'
   pod "OROpenSubtitleDownloader", :git => 'https://github.com/orta/OROpenSubtitleDownloader.git', :commit => '0509eac2'
   pod 'GRKArrayDiff', '~> 2.1'
-  pod 'TVVLCKit', '3.3.6'
+  pod 'TVVLCKit', '3.3.9'
 end
 
 post_install do |installer_representation|

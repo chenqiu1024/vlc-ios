@@ -12,7 +12,7 @@
 
 import UIKit
 
-class MediaViewController: VLCPagingViewController<VLCLabelCell>, MediaCategoryViewControllerDelegate {
+class MediaViewController: VLCPagingViewController<VLCLabelCell> {
 
     var services: Services
     private var rendererButton: UIButton
@@ -28,7 +28,7 @@ class MediaViewController: VLCPagingViewController<VLCLabelCell>, MediaCategoryV
     private lazy var editButton: UIBarButtonItem = {
         var editButton = UIBarButtonItem(image: UIImage(named: "edit"),
                                      style: .plain, target: self,
-                                     action: #selector(customSetEditing(button:)))
+                                     action: #selector(customSetEditing))
         editButton.tintColor = PresentationTheme.current.colors.orangeUI
         editButton.accessibilityLabel = NSLocalizedString("BUTTON_EDIT", comment: "")
         editButton.accessibilityHint = NSLocalizedString("BUTTON_EDIT_HINT", comment: "")
@@ -36,7 +36,7 @@ class MediaViewController: VLCPagingViewController<VLCLabelCell>, MediaCategoryV
     }()
 
     private lazy var doneButton: UIBarButtonItem = {
-        return UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(customSetEditing(button:)))
+        return UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(customSetEditing))
     }()
 
     private var rightBarButtons: [UIBarButtonItem]?
@@ -87,17 +87,6 @@ class MediaViewController: VLCPagingViewController<VLCLabelCell>, MediaCategoryV
         navigationController?.navigationBar.isTranslucent = false
         updateButtonsFor(viewControllers[currentIndex])
     }
-    // MARK: - MediaCatgoryViewControllerDelegate
-
-    func needsToUpdateNavigationbarIfNeeded(_ viewController: MediaCategoryViewController) {
-        if viewController == viewControllers[currentIndex] {
-            updateButtonsFor(viewController)
-        }
-    }
-
-    func enableCategorySwitching(for viewController: MediaCategoryViewController, enable: Bool) {
-        scrollingEnabled(enable)
-    }
 
     // MARK: - PagerTabStripDataSource
 
@@ -132,10 +121,28 @@ class MediaViewController: VLCPagingViewController<VLCLabelCell>, MediaCategoryV
     }
 }
 
+// MARK: - MediaCatgoryViewControllerDelegate
+
+extension MediaViewController: MediaCategoryViewControllerDelegate {
+    func needsToUpdateNavigationbarIfNeeded(_ viewController: MediaCategoryViewController) {
+        if viewController == viewControllers[currentIndex] {
+            updateButtonsFor(viewController)
+        }
+    }
+
+    func enableCategorySwitching(for viewController: MediaCategoryViewController, enable: Bool) {
+        scrollingEnabled(enable)
+    }
+
+    func setEditingStateChanged(for viewController: MediaCategoryViewController, editing: Bool) {
+        customSetEditing()
+    }
+}
+
 // MARK: - Edit
 
 extension MediaViewController {
-    @objc private func customSetEditing(button: UIButton) {
+    @objc private func customSetEditing() {
         isEditing = !isEditing
         rightBarButtons = isEditing ? [doneButton] : [editButton, UIBarButtonItem(customView: rendererButton)]
         leftBarButton = isEditing ? nil : sortButton
@@ -161,13 +168,8 @@ extension MediaViewController {
     }
 
     @objc func handleSortShortcut(sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            if #available(iOS 10.0, *) {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            }
-            if let mediaCategoryViewController = viewControllers[currentIndex] as? MediaCategoryViewController {
-                mediaCategoryViewController.handleSortShortcut()
-            }
+        if let mediaCategoryViewController = viewControllers[currentIndex] as? MediaCategoryViewController {
+            mediaCategoryViewController.handleSortLongPress(sender: sender)
         }
     }
 }

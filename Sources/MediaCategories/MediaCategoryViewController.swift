@@ -17,6 +17,7 @@ import Foundation
     func needsToUpdateNavigationbarIfNeeded(_ viewController: MediaCategoryViewController)
     func enableCategorySwitching(for viewController: MediaCategoryViewController,
                                  enable: Bool)
+    func setEditingStateChanged(for viewController: MediaCategoryViewController, editing: Bool)
 }
 
 class MediaCategoryViewController: UICollectionViewController, UISearchBarDelegate, IndicatorInfoProvider {
@@ -38,7 +39,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         return editController
     }()
 
-    private var editToolbarConstraint: NSLayoutConstraint?
     private var cachedCellSize = CGSize.zero
     private var toSize = CGSize.zero
     private var longPressGesture: UILongPressGestureRecognizer!
@@ -173,6 +173,12 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         if !isSearching {
             popViewIfNecessary()
         }
+
+        if isEditing {
+            if let editToolbar = tabBarController?.editToolBar() {
+                editToolbar.updateEditToolbar(for: model)
+            }
+        }
     }
 
     @available(*, unavailable)
@@ -184,7 +190,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         super.viewDidLoad()
         setupCollectionView()
         setupSearchBar()
-        setupEditToolbar()
         _ = (MLMediaLibrary.sharedMediaLibrary() as! MLMediaLibrary).libraryDidAppear()
     }
 
@@ -208,29 +213,12 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     @objc func themeDidChange() {
         collectionView?.backgroundColor = PresentationTheme.current.colors.background
         searchBar.backgroundColor = PresentationTheme.current.colors.background
-        editController.view.backgroundColor = PresentationTheme.current.colors.background
 
         if #available(iOS 13.0, *) {
             navigationController?.navigationBar.standardAppearance = AppearanceManager.navigationbarAppearance()
             navigationController?.navigationBar.scrollEdgeAppearance = AppearanceManager.navigationbarAppearance()
         }
         setNeedsStatusBarAppearanceUpdate()
-    }
-
-    func setupEditToolbar() {
-        editController.view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(editController.view)
-        var guide: LayoutAnchorContainer = view
-        if #available(iOS 11.0, *) {
-            guide = view.safeAreaLayoutGuide
-        }
-        editToolbarConstraint = editController.view.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: EditToolbar.height)
-        NSLayoutConstraint.activate([
-            editToolbarConstraint!,
-            editController.view.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
-            editController.view.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
-            editController.view.heightAnchor.constraint(equalToConstant: 50)
-        ])
     }
 
     func isEmptyCollectionView() -> Bool {
@@ -283,6 +271,10 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
+        guard editing != isEditing else {
+            // Guard in case where setEditing is called twice with the same state
+            return
+        }
         super.setEditing(editing, animated: animated)
         // might have an issue if the old datasource was search
         // Most of the edit logic is handled inside editController
@@ -294,14 +286,21 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
 
         PlaybackService.sharedInstance().setPlayerHidden(editing)
 
+        searchBar.resignFirstResponder()
         searchBarConstraint?.constant = -self.searchBarSize
         reloadData()
     }
 
     private func displayEditToolbar() {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            self?.editToolbarConstraint?.constant = self?.isEditing == true ? 0 : EditToolbar.height
-            self?.collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: self?.isEditing == true ? EditToolbar.height : 0, right: 0)
+        if isEditing {
+            tabBarController?.editToolBar()?.delegate = editController
+            tabBarController?.displayEditToolbar(with: model)
+            UIView.animate(withDuration: 0.2) {
+                [weak self] in
+                self?.collectionView.contentInset = .zero
+            }
+        } else {
+            tabBarController?.hideEditToolbar()
         }
     }
 
@@ -352,6 +351,78 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         }
     }
 
+    func objects(from modelContent: VLCMLObject) -> [VLCMLObject] {
+        if let media = modelContent as? VLCMLMedia {
+            return [media]
+        } else if let mediaCollection = modelContent as? MediaCollectionModel {
+            return mediaCollection.files() ?? [VLCMLObject]()
+        }
+        return [VLCMLObject]()
+    }
+
+    @available(iOS 13.0, *)
+    override func collectionView(_ collectionView: UICollectionView,
+                                 contextMenuConfigurationForItemAt indexPath: IndexPath,
+                                 point: CGPoint) -> UIContextMenuConfiguration? {
+        let cell = collectionView.cellForItem(at: indexPath)
+        var thumbnail: UIImage? = nil
+        if let cell = cell as? MovieCollectionViewCell {
+            thumbnail = cell.thumbnailView.image
+        } else if let cell = cell as? MediaCollectionViewCell {
+            thumbnail = cell.thumbnailView.image
+        }
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: {
+            if let thumbnail = thumbnail {
+                return CollectionViewCellPreviewController(thumbnail: thumbnail)
+            } else {
+                return nil
+            }
+        }) {
+                [weak self] action in
+                let modelContent = self?.isSearching ?? false ? self?.searchDataSource.objectAtIndex(index: indexPath.row) : self?.model.anyfiles[indexPath.row]
+
+                let actionList = EditButtonsFactory.buttonList(for: self?.model.anyfiles.first)
+                let actions = EditButtonsFactory.generate(buttons: actionList)
+                return UIMenu(title: "", image: nil, identifier: nil, children: actions.map {
+                    switch $0.identifier {
+                    case .addToPlaylist:
+                        return $0.action({
+                            [weak self] _ in
+                            if let modelContent = modelContent {
+                                self?.editController.editActions.objects = self?.objects(from: modelContent) ?? []
+                                self?.editController.editActions.addToPlaylist()
+                            }
+                        })
+                    case .rename:
+                        return $0.action({
+                            [weak self] _ in
+                            if let modelContent = modelContent {
+                                self?.editController.editActions.objects = [modelContent]
+                                self?.editController.editActions.rename()
+                            }
+                        })
+                    case .delete:
+                        return $0.action({
+                            [weak self] _ in
+                            if let modelContent = modelContent {
+                                self?.editController.editActions.objects = [modelContent]
+                                self?.editController.editActions.delete()
+                            }
+                        })
+                    case .share:
+                        return $0.action({
+                            [weak self] _ in
+                            if let modelContent = modelContent {
+                                self?.editController.editActions.objects = self?.objects(from: modelContent) ?? []
+                                self?.editController.editActions.share()
+                            }
+                        })
+                    }
+                })
+            }
+            return configuration
+    }
+
     func createSpotlightItem(media: VLCMLMedia) {
         if KeychainCoordinator.passcodeLockEnabled {
             return
@@ -388,7 +459,7 @@ extension MediaCategoryViewController {
                              for: .touchUpInside)
         sortButton
             .addGestureRecognizer(UILongPressGestureRecognizer(target: self,
-                                                               action: #selector(handleSortShortcut)))
+                                                               action: #selector(handleSortLongPress(sender:))))
 
         sortButton.tintColor = PresentationTheme.current.colors.orangeUI
         sortButton.accessibilityLabel = NSLocalizedString("BUTTON_SORT", comment: "")
@@ -424,13 +495,21 @@ extension MediaCategoryViewController {
         }
     }
 
+    @objc func handleSortLongPress(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            if #available(iOS 10.0, *) {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            }
+            handleSortShortcut()
+        }
+    }
+
     @objc func handleSortShortcut() {
         model.sort(by: model.sortModel.currentSort, desc: !model.sortModel.desc)
     }
 
     @objc func handleEditing() {
         isEditing = !isEditing
-        setEditing(isEditing, animated: true)
         navigationItem.rightBarButtonItems = isEditing ? [UIBarButtonItem(barButtonSystemItem: .done,
                                                                           target: self,
                                                                           action: #selector(handleEditing))]
@@ -576,6 +655,15 @@ extension MediaCategoryViewController: EditControllerDelegate {
                         present viewController: UIViewController) {
         let newNavigationController = UINavigationController(rootViewController: viewController)
         navigationController?.present(newNavigationController, animated: true, completion: nil)
+    }
+
+    func editControllerDidFinishEditing(editController: EditController?) {
+        // NavigationItems for Collections are create from the parent, there is no need to propagate the information.
+        if self is CollectionCategoryViewController {
+            handleEditing()
+        } else {
+            delegate?.setEditingStateChanged(for: self, editing: false)
+        }
     }
 }
 

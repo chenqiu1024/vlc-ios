@@ -20,7 +20,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bhw-Aa-3Q7">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="80"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="jwA-4O-tgL">
+                            <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="752" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="jwA-4O-tgL">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="80"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="249" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DpW-xo-rll" userLabel="Thumbnail">
@@ -56,7 +56,7 @@
                                     </stackView>
                                     <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list" translatesAutoresizingMaskIntoConstraints="NO" id="f9J-sb-sdM">
                                         <rect key="frame" x="480" y="28" width="24" height="24"/>
-                                        <color key="tintColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" systemColor="secondaryLabelColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="24" id="Cdn-hR-SHJ"/>
                                             <constraint firstAttribute="height" constant="24" id="EaV-Ae-GP2"/>
@@ -68,21 +68,25 @@
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="80"/>
                                 <color key="backgroundColor" red="0.94509803920000002" green="0.49019607840000001" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkboxEmpty" translatesAutoresizingMaskIntoConstraints="NO" id="Uhx-qs-Aow">
-                                <rect key="frame" x="16" y="28" width="24" height="24"/>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="249" verticalHuggingPriority="251" image="checkboxEmpty" translatesAutoresizingMaskIntoConstraints="NO" id="Uhx-qs-Aow">
+                                <rect key="frame" x="30" y="42" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="24" id="mjC-Gz-Bsh"/>
+                                    <constraint firstAttribute="height" constant="24" id="tJy-jX-8lt"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="jwA-4O-tgL" firstAttribute="leading" secondItem="bhw-Aa-3Q7" secondAttribute="leading" id="Bqr-pJ-cST"/>
                             <constraint firstItem="vQV-tE-gv0" firstAttribute="width" secondItem="bhw-Aa-3Q7" secondAttribute="width" id="Dqf-E3-sXZ"/>
-                            <constraint firstItem="Uhx-qs-Aow" firstAttribute="centerY" secondItem="DpW-xo-rll" secondAttribute="centerY" id="Nii-BJ-jmJ"/>
-                            <constraint firstItem="Uhx-qs-Aow" firstAttribute="centerX" secondItem="DpW-xo-rll" secondAttribute="centerX" id="Pid-97-YyF"/>
-                            <constraint firstItem="jwA-4O-tgL" firstAttribute="leading" secondItem="bhw-Aa-3Q7" secondAttribute="leading" id="YQR-FC-YG0"/>
-                            <constraint firstAttribute="bottom" secondItem="jwA-4O-tgL" secondAttribute="bottom" id="cPv-gK-orc"/>
-                            <constraint firstItem="jwA-4O-tgL" firstAttribute="top" secondItem="bhw-Aa-3Q7" secondAttribute="top" id="gXu-Td-kve"/>
+                            <constraint firstAttribute="trailing" secondItem="jwA-4O-tgL" secondAttribute="trailing" id="EFM-O1-f1k"/>
+                            <constraint firstItem="Uhx-qs-Aow" firstAttribute="trailing" secondItem="DpW-xo-rll" secondAttribute="trailing" constant="-2" id="Ic2-Yj-3BW"/>
+                            <constraint firstAttribute="bottom" secondItem="jwA-4O-tgL" secondAttribute="bottom" id="bdm-h2-NWy"/>
                             <constraint firstItem="vQV-tE-gv0" firstAttribute="height" secondItem="bhw-Aa-3Q7" secondAttribute="height" id="m5l-X4-Pqt"/>
-                            <constraint firstAttribute="trailing" secondItem="jwA-4O-tgL" secondAttribute="trailing" id="mtd-yR-U0o"/>
+                            <constraint firstItem="jwA-4O-tgL" firstAttribute="top" secondItem="bhw-Aa-3Q7" secondAttribute="top" id="pbM-QT-pZI"/>
                             <constraint firstItem="vQV-tE-gv0" firstAttribute="centerY" secondItem="bhw-Aa-3Q7" secondAttribute="centerY" id="pcz-sz-DBh"/>
+                            <constraint firstItem="Uhx-qs-Aow" firstAttribute="bottom" secondItem="DpW-xo-rll" secondAttribute="bottom" constant="-2" id="sWq-8P-s07"/>
                             <constraint firstItem="vQV-tE-gv0" firstAttribute="centerX" secondItem="bhw-Aa-3Q7" secondAttribute="centerX" id="xBV-Z6-LrT"/>
                         </constraints>
                     </view>

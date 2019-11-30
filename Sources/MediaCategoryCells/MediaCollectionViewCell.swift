@@ -14,7 +14,7 @@ import Foundation
 
 class MediaCollectionViewCell: BaseCollectionViewCell {
 
-    @IBOutlet private weak var thumbnailView: UIImageView!
+    @IBOutlet weak var thumbnailView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var descriptionLabel: UILabel!
     @IBOutlet private weak var newLabel: UILabel!
@@ -82,18 +82,19 @@ class MediaCollectionViewCell: BaseCollectionViewCell {
     }
 
     func update(audiotrack: VLCMLMedia) {
-        var title = audiotrack.title
-        if  UserDefaults.standard.bool(forKey: kVLCOptimizeItemNamesForDisplay) == true {
-            title = (title as NSString).deletingPathExtension
-        }
-        titleLabel.text = title
+        titleLabel.text = audiotrack.title()
         accessibilityLabel = audiotrack.accessibilityText(editing: false)
-        descriptionLabel.text = audiotrack.albumTrackArtistName()
+        var descriptionText = audiotrack.albumTrackArtistName()
+        if let albumTitle = audiotrack.albumTrack?.album?.title, !albumTitle.isEmpty {
+            descriptionText += " - " + albumTitle
+        }
+        descriptionLabel.text = descriptionText
         newLabel.isHidden = !audiotrack.isNew
         thumbnailView.image = audiotrack.thumbnailImage()
     }
 
     func update(album: VLCMLAlbum) {
+        newLabel.isHidden = true
         titleLabel.text = album.albumName()
         accessibilityLabel = album.accessibilityText(editing: false)
         descriptionLabel.text = album.albumArtistName()
@@ -101,6 +102,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell {
     }
 
     func update(artist: VLCMLArtist) {
+        newLabel.isHidden = true
         thumbnailView.layer.masksToBounds = true
         thumbnailView.layer.cornerRadius = thumbnailView.frame.size.width / 2.0
         titleLabel.text = artist.artistName()
@@ -110,11 +112,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell {
     }
 
     func update(movie: VLCMLMedia) {
-        var title = movie.title
-        if  UserDefaults.standard.bool(forKey: kVLCOptimizeItemNamesForDisplay) == true {
-            title = (title as NSString).deletingPathExtension
-        }
-        titleLabel.text = title
+        titleLabel.text = movie.title()
         accessibilityLabel = movie.accessibilityText(editing: false)
         descriptionLabel.text = movie.mediaDuration()
         thumbnailView.image = movie.thumbnailImage()

@@ -30,6 +30,8 @@ extension MediaModel {
         catch let error as NSError {
             assertionFailure("MediaModel: Delete failed: \(error.localizedDescription)")
         }
+
+        filterFilesFromDeletion(of: items)
     }
 }
 
@@ -65,6 +67,15 @@ extension VLCMLMedia {
             return title + " " + mediaDuration() + " " + formatSize()
         }
         return title + " " + albumTrackArtistName() + " " + (isNew ? NSLocalizedString("NEW", comment: "") : "")
+    }
+
+    func title() -> String {
+        if UserDefaults.standard.bool(forKey: kVLCOptimizeItemNamesForDisplay) == true
+            && ((subtype() == .albumTrack && title.isSupportedAudioMediaFormat())
+                || (subtype() != .albumTrack && title.isSupportedMediaFormat())) {
+            return (title as NSString).deletingPathExtension
+        }
+        return title
     }
 }
 

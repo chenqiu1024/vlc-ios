@@ -98,14 +98,18 @@ extension AlbumModel: MediaLibraryObserver {
         }
         updateView?()
     }
+
+    func medialibraryDidStartRescan() {
+        files.removeAll()
+    }
 }
 
 extension VLCMLAlbum: MediaCollectionModel {
     func sortModel() -> SortModel? {
-        return nil
+        return SortModel([.alpha, .album, .duration, .releaseDate])
     }
 
-    func files(with criteria: VLCMLSortingCriteria = .alpha,
+    func files(with criteria: VLCMLSortingCriteria,
                desc: Bool = false) -> [VLCMLMedia]? {
         return tracks(with: criteria, desc: desc)
     }

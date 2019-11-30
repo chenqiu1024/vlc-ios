@@ -40,11 +40,24 @@ class PlaylistModel: MLBaseModel {
     }
 
     func delete(_ items: [VLCMLObject]) {
-        for playlist in items where playlist is VLCMLPlaylist {
+        for case let playlist as VLCMLPlaylist in items {
             if !(medialibrary.deletePlaylist(with: playlist.identifier())) {
                 assertionFailure("PlaylistModel: Failed to delete playlist: \(playlist.identifier())")
             }
+            if playlist.isReadOnly {
+                do {
+                    if let path = playlist.mrl?.path, !path.isEmpty {
+                        try FileManager.default.removeItem(atPath: path)
+                    }
+                } catch let error as NSError {
+                    assertionFailure("PlaylistModel: Delete failed: \(error.localizedDescription)")
+                }
+            }
         }
+
+        // Update directly the UI without waiting the delegate to avoid showing 'ghost' items
+        filterFilesFromDeletion(of: items)
+        updateView?()
     }
 
     // Creates a VLCMLPlaylist appending it and updates linked view
@@ -106,6 +119,10 @@ extension PlaylistModel: MediaLibraryObserver {
             return true
         }
         updateView?()
+    }
+
+    func medialibraryDidStartRescan() {
+        files.removeAll()
     }
 }
 

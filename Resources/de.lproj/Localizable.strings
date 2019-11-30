@@ -1,6 +1,6 @@
 "STORE_DESCRIPTION" = "VLC für iOS ist eine Portierung des freien VLC media player auf iPad, iPhone und iPod touch.\nEs kann sämtliche Ihrer Filme, TV Sendungen und Musikstücke in den meisten Formaten direkt ohne Konvertierung wiedergeben.\nEs erlaubt die Dateisynchronisation mittels Dropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes, direkten Downloads und über eine WLAN Freigabe als auch Streaming von SMB, FTP, UPnP/DLNA Multimedia Servern und dem Web.\nVLC bietet Unterstützung für komplexe Untertitel einschließlich voller SSA-Kompatibilität, Mehr-Spur-Audio und Kontrolle der Wiedergabegeschwindigkeit.\n\nVLC für iOS ist komplett frei und quelloffen.";
 
-"STORE_DESCRIPTION_TV" = "VLC media player ist ein freier und quelloffener cross-platform Multimediaplayer.\nEs kann sämtliche Ihrer Filme, TV Sendungen und Musikstücke in den meisten Formaten direkt ohne Konvertierung wiedergeben.\nEs erlaubt Streaming von Cloud-Diensten (Dropbox, OneDrive, Box), Entfernte Wiedergabe von Ihrem Mac oder PC über eine Web-Oberfläche als auch Streaming von SMB, FTP, UPnP/DLNA Mediaservern und dem Web.\nVLC bietet Unterstützung für komplexe Untertitel einschließlich voller SSA-Kompatibilität, Mehr-Spur-Audio und Kontrolle der Wiedergabegeschwindigkeit.\n\nVLC für iOS ist komplett frei und duelloffen.\n\nMetadaten und Bebilderung werden durch TMDb und Hatchet zur Verfügung gestellt, welches durch Communities gewartete Film- und Musikdatenbanken sind.";
+"STORE_DESCRIPTION_TV" = "VLC media player ist ein freier und quelloffener cross-platform Multimediaplayer.\nEs kann sämtliche Ihrer Filme, TV Sendungen und Musikstücke in den meisten Formaten direkt ohne Konvertierung wiedergeben.\nEs erlaubt Streaming von Cloud-Diensten (Dropbox, OneDrive, Box), Entfernte Wiedergabe von Ihrem Mac oder PC über eine Web-Oberfläche als auch Streaming von SMB, FTP, UPnP/DLNA Mediaservern und dem Web.\nVLC bietet Unterstützung für komplexe Untertitel einschließlich voller SSA-Kompatibilität, Mehr-Spur-Audio und Kontrolle der Wiedergabegeschwindigkeit.\n\nVLC für iOS ist komplett frei und duelloffen.\n\nMetadaten und Cover werden durch TMDb und Hatchet zur Verfügung gestellt, welches durch Communities gewartete Film- und Musikdatenbanken sind.";
 
 "CHOOSE_AUDIO_TRACK" = "Audiospur wählen";
 "CHOOSE_SUBTITLE_TRACK" = "Untertitelspur wählen";
@@ -39,7 +39,7 @@
 "DB_FORMAT" = "%i dB";
 "CHOOSE_EQUALIZER_PROFILES" = "Equalizer-Profil wählen";
 
-"PLAYBACK_FAILED" = "Wiedergabefehler";
+"PLAYBACK_FAILED" = "Wiedergabe fehlgeschlagen";
 "PLEASE_WAIT" = "Bitte warten";
 "AR_CHANGED" = "Seitenverhältnis: %@";
 "DEFAULT" = "Standard";
@@ -290,7 +290,8 @@
 "DELETE_ITEM_HINT" = "%@ zum Löschen drücken"; /* Insert %@ where play-pause-glyph should be placed */
 
 "DELETE_MESSAGE" = "Bitte das Löschen der Auswahl bestätigen";
-"DELETE_MESSAGE_PLAYLIST" = "Bitte das Löschen der Auswahl der Medieneinträge in der Wiedergabeliste bestätigen,\ndie Einträge sind noch nicht gelöscht";
+"DELETE_MESSAGE_PLAYLIST" = "Sind Sie sicher, dass Sie die ausgewählte Wiedergabeliste löschen möchten?\nAssoziierte Medien werden nicht gelöscht.";
+"DELETE_MESSAGE_PLAYLIST_CONTENT" = "Sind Sie sicher, dass Sie die ausgewählten Medien aus der Wiedergabeliste löschen möchten?\nDie Dateien werden nicht gelöscht.";
 "DELETE_TITLE" = "Auswahl löschen";
 
 //Drag and Drop
@@ -316,7 +317,7 @@
 "MOVIES" = "Filme";
 "SONGS" = "Lieder";
 "PLAYLISTS" = "Wiedergabelisten";
-"VIDEO_GROUPS" = "Video groups";
+"VIDEO_GROUPS" = "Videogruppen";
 
 "MODIFIED_DATE" = "Änderungsdatum";
 "NAME" = "Name";
@@ -366,9 +367,9 @@
 "ALBUM" = "Album";
 "FILENAME" = "Dateiname";
 "TRACK_NUMBER" = "Titelnummer";
-"NB_AUDIO" = "Number of audio";
-"NB_MEDIA" = "Number of media";
-"NB_VIDEO" = "Number of video";
+"NB_AUDIO" = "Anzahl von Audiodateien";
+"NB_MEDIA" = "Anzahl von Mediendateien";
+"NB_VIDEO" = "Anzahl von Videodateien";
 
 // VLCNetworkLoginTVViewController
 
@@ -394,4 +395,11 @@
 
 /* Settings - Force rescan alert */
 "FORCE_RESCAN_TITLE" = "Medienbibliothek erneut durchsuchen";
-"FORCE_RESCAN_MESSAGE" = "Möchten Sie VLC veranlassen, Ihre Medienbibliothek erneut zu durchsuchen?\nEs könnte einige Zeit dauern.";
+"FORCE_RESCAN_MESSAGE" = "Möchten Sie VLC veranlassen, Ihre Medienbibliothek erneut zu durchsuchen?\nDies könnte einige Zeit dauern.";
+
+// Local Network
+
+"SMBV1_WARN_TITLE" = "SMBv1 Verbindungswarnung";
+"SMBV1_WARN_DESCRIPTION" = "Wir haben ein altes Protokoll (SMBv1) festgestellt.\nSind Sie wirklich sicher, dass Sie mit SMBv1 fortfahren möchten?\nWir empfehlen eine Aktualisierung Ihres Servers oder Änderung der Serverkonfiguration.";
+"SMBV1_CONTINUE" = "Fortfahren mit SMBv1";
+"SMBV1_NEXT_PROTOCOL" = "SMBv2/v3 probieren";

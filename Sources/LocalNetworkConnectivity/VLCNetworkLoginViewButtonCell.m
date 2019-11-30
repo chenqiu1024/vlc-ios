@@ -22,9 +22,10 @@ NSString * const kVLCNetworkLoginViewButtonCellIdentifier = @"VLCNetworkLoginVie
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.backgroundColor = PresentationTheme.current.colors.background;
-        self.textLabel.backgroundColor = [UIColor clearColor];
-        self.textLabel.textColor = [UIColor whiteColor];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeDidChange) name:kVLCThemeDidChangeNotification object:nil];
+        [self themeDidChange];
+        self.textLabel.backgroundColor = UIColor.clearColor;
+        self.textLabel.textColor = UIColor.whiteColor;
         self.textLabel.textAlignment = NSTextAlignmentCenter;
         self.accessibilityTraits = UIAccessibilityTraitButton;
 
@@ -57,6 +58,11 @@ NSString * const kVLCNetworkLoginViewButtonCellIdentifier = @"VLCNetworkLoginVie
 - (NSString *)titleString
 {
     return self.textLabel.text;
+}
+
+- (void)themeDidChange
+{
+    self.backgroundColor = PresentationTheme.current.colors.background;
 }
 
 @end

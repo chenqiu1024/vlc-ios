@@ -35,6 +35,17 @@ class CollectionModel: MLBaseModel {
     required init(mediaService: MediaLibraryService, mediaCollection: MediaCollectionModel) {
         self.medialibrary = mediaService
         self.mediaCollection = mediaCollection
+        self.sortModel = mediaCollection.sortModel() ?? self.sortModel
+
+        var sortingCriteria: VLCMLSortingCriteria = .default
+
+        if mediaCollection is VLCMLArtist
+            || mediaCollection is VLCMLGenre
+            || mediaCollection is VLCMLAlbum {
+            sortingCriteria = .album
+        }
+
+        self.sortModel.currentSort = sortingCriteria
         files = mediaCollection.files() ?? []
         medialibrary.addObserver(self)
     }
@@ -62,6 +73,7 @@ class CollectionModel: MLBaseModel {
             catch let error as NSError {
                 assertionFailure("CollectionModel: Delete failed: \(error.localizedDescription)")
             }
+            filterFilesFromDeletion(of: items)
         }
     }
 
@@ -84,12 +96,17 @@ extension CollectionModel: MediaLibraryObserver {
     }
 
     func medialibrary(_ medialibrary: MediaLibraryService, didModifyTracks tracks: [VLCMLMedia]) {
+        files = mediaCollection.files() ?? []
         updateView?()
     }
 
     func medialibrary(_ medialibrary: MediaLibraryService, didDeleteMediaWithIds ids: [NSNumber]) {
         files = mediaCollection.files() ?? []
         updateView?()
+    }
+
+    func medialibraryDidStartRescan() {
+        files.removeAll()
     }
 }
 

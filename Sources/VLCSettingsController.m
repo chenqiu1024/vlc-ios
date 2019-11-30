@@ -133,7 +133,7 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
 
 - (void)settingDidChange:(NSNotification*)notification
 {
-    if ([notification.object isEqual:kVLCSettingPasscodeOnKey]) {
+    if ([notification.userInfo objectForKey: kVLCSettingPasscodeOnKey]) {
         BOOL passcodeOn = [[notification.userInfo objectForKey:kVLCSettingPasscodeOnKey] boolValue];
 
         [self updateForPasscode:nil];
@@ -144,6 +144,18 @@ NSString * const kVLCSectionTableHeaderViewIdentifier = @"VLCSectionTableHeaderV
             // Specify modal presentation style due to iOS 13 behaviour
             navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
             [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+        }
+    } else if ([notification.userInfo objectForKey:kVLCSettingBackupMediaLibrary]) {
+        BOOL backupMediaLibrary = [[notification.userInfo objectForKey:kVLCSettingBackupMediaLibrary] boolValue];
+        NSNumber *excludeMediaLibrary = [NSNumber numberWithBool:!backupMediaLibrary];
+        NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentPath = [searchPaths firstObject];
+
+        if (documentPath) {
+            NSURL *documentURL = [NSURL fileURLWithPath:documentPath];
+            [documentURL setResourceValue:excludeMediaLibrary forKey:NSURLIsExcludedFromBackupKey error:nil];
+        } else {
+            [self.settingsStore setBool:!backupMediaLibrary forKey:kVLCSettingBackupMediaLibrary];
         }
     }
 }

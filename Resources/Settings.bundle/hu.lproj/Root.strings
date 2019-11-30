@@ -89,11 +89,13 @@
 "SETTINGS_MEDIA_LIBRARY" = "Médiatár";
 "SETTINGS_MEDIA_LIBRARY_RESCAN" = "A VLC kényszerítése, hogy újra átvizsgálja a médiatárat";
 "SETTINGS_DECRAPIFY" = "Elemnevek kijelzőhöz igazítása";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Video groups detection length";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Video groups dectection short";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Video groups detection default";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Video groups detection long";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Video groups detection extra long";
+"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Videocsoportok észlelési hossza";
+"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Rövid";
+"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Alapértelmezett";
+"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Hosszú";
+"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Extra hosszú";
+"SETTINGS_SHOW_THUMBNAILS" = "Videó bélyegképek megjelenítése";
+"SETTINGS_SHOW_ARTWORKS" = "Hang grafikák megjelenítése";
 
 "SETTINGS_FILE_SYNC" = "Fájlszinkronizáció";
 "SETTINGS_WIFISHARING_IPv6" = "IPv6 támogatás a WiFi megosztáshoz";

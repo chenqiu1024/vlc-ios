@@ -290,7 +290,8 @@
 "DELETE_ITEM_HINT" = "Presione %@ para eliminar"; /* Insert %@ where play-pause-glyph should be placed */
 
 "DELETE_MESSAGE" = "Confirmar la eliminación de la selección";
-"DELETE_MESSAGE_PLAYLIST" = "Confirmar la eliminación de la selección desde la lista de reproducción\nLos medios no son eliminados";
+"DELETE_MESSAGE_PLAYLIST" = "¿Desea eliminar la lista de reproducción seleccionada?\nLos archivos de medio asociados no serán eliminados.";
+"DELETE_MESSAGE_PLAYLIST_CONTENT" = "¿Desea eliminar el medio seleccionado de la lista de reproducción?\nNo serán eliminados del disco.";
 "DELETE_TITLE" = "Eliimnar selección";
 
 //Drag and Drop
@@ -316,7 +317,7 @@
 "MOVIES" = "Películas";
 "SONGS" = "Canciones";
 "PLAYLISTS" = "Listas de reproducción";
-"VIDEO_GROUPS" = "Video groups";
+"VIDEO_GROUPS" = "Grupos de vídeo";
 
 "MODIFIED_DATE" = "Fecha modificada";
 "NAME" = "Nombre";
@@ -366,9 +367,9 @@
 "ALBUM" = "Álbum";
 "FILENAME" = "Nombre de archivo";
 "TRACK_NUMBER" = "Número de pista";
-"NB_AUDIO" = "Number of audio";
-"NB_MEDIA" = "Number of media";
-"NB_VIDEO" = "Number of video";
+"NB_AUDIO" = "Número de audio";
+"NB_MEDIA" = "Número de medio";
+"NB_VIDEO" = "Número de vídeo";
 
 // VLCNetworkLoginTVViewController
 
@@ -395,3 +396,10 @@
 /* Settings - Force rescan alert */
 "FORCE_RESCAN_TITLE" = "Forzar búsqueda en la librería de medios";
 "FORCE_RESCAN_MESSAGE" = "¿Desea forzar que VLC vuelva a buscar en su librería de medios?\nPuede tomar algo de tiempo.";
+
+// Local Network
+
+"SMBV1_WARN_TITLE" = "Advertencia de conexión SMBv1";
+"SMBV1_WARN_DESCRIPTION" = "Hemos detectado un protocolo antiguo (SMBv1).\n¿Desea continuar con SMBv1?\nAconsejamos actualizar o cambiar sus preferencias de servidor.";
+"SMBV1_CONTINUE" = "Continuar con SMBv1";
+"SMBV1_NEXT_PROTOCOL" = "Intentar con SMBv2/v3";

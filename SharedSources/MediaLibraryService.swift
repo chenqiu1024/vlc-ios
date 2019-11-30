@@ -40,7 +40,8 @@ extension NSNotification {
 
     // Tumbnail
     @objc optional func medialibrary(_ medialibrary: MediaLibraryService,
-                                     thumbnailReady media: VLCMLMedia)
+                                     thumbnailReady media: VLCMLMedia,
+                                     type: VLCMLThumbnailSizeType, success: Bool)
 
     // Tracks
     @objc optional func medialibrary(_ medialibrary: MediaLibraryService,
@@ -92,6 +93,9 @@ extension NSNotification {
 
     @objc optional func medialibrary(_ medialibrary: MediaLibraryService,
                                      didDeletePlaylistsWithIds playlistsIds: [NSNumber])
+
+    // Force Rescan
+    @objc optional func medialibraryDidStartRescan()
 }
 
 // MARK: -
@@ -147,6 +151,22 @@ private extension MediaLibraryService {
             assertionFailure("MediaLibraryService: Medialibrary failed to start.")
             return
         }
+
+        /* exclude Document directory from backup (QA1719) */
+        if let documentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+            var excludeURL = URL(fileURLWithPath: documentPath)
+            var resourceValue = URLResourceValues()
+            let excludeMediaLibrary = !UserDefaults.standard.bool(forKey: kVLCSettingBackupMediaLibrary)
+
+            resourceValue.isExcludedFromBackup = excludeMediaLibrary
+
+            do {
+                try excludeURL.setResourceValues(resourceValue)
+            } catch let error {
+                assertionFailure("MediaLibraryService: start: \(error.localizedDescription)")
+            }
+        }
+
         medialib.reload()
         medialib.discover(onEntryPoint: "file://" + path)
     }
@@ -369,7 +389,6 @@ extension MediaLibraryService {
     }
 
     func savePlaybackState(from player: PlaybackService) {
-
         let media: VLCMedia? = player.currentlyPlayingMedia
         guard let mlMedia = fetchMedia(with: media?.url.absoluteURL) else {
             // we opened a url and not a local file
@@ -472,17 +491,6 @@ extension MediaLibraryService: VLCMediaFileDiscovererDelegate {
         guard !isLoading else {
             return
         }
-        /* exclude media files from backup (QA1719) */
-        var excludeURL = URL(fileURLWithPath: filePath)
-        var resourceValue = URLResourceValues()
-
-        resourceValue.isExcludedFromBackup = true
-
-        do {
-            try excludeURL.setResourceValues(resourceValue)
-        } catch let error {
-            assertionFailure("MediaLibraryService: VLCMediaFileDiscovererDelegate: \(error.localizedDescription)")
-        }
 
         reload()
     }
@@ -544,9 +552,11 @@ extension MediaLibraryService: VLCMediaLibraryDelegate {
         }
     }
 
-    func medialibrary(_ medialibrary: VLCMediaLibrary, thumbnailReadyFor media: VLCMLMedia, withSuccess success: Bool) {
+    func medialibrary(_ medialibrary: VLCMediaLibrary, thumbnailReadyFor media: VLCMLMedia,
+                      of type: VLCMLThumbnailSizeType, withSuccess success: Bool) {
         for observer in observers {
-            observer.value.observer?.medialibrary?(self, thumbnailReady: media)
+            observer.value.observer?.medialibrary?(self, thumbnailReady: media,
+                                                   type: type, success: success)
         }
     }
 }
@@ -598,6 +608,7 @@ extension MediaLibraryService {
 }
 
 // MARK: - VLCMediaLibraryDelegate - Genres
+
 extension MediaLibraryService {
     func medialibrary(_ medialibrary: VLCMediaLibrary, didAdd genres: [VLCMLGenre]) {
         for observer in observers {
@@ -659,6 +670,31 @@ extension MediaLibraryService {
     func medialibrary(_ medialibrary: VLCMediaLibrary, didUpdateParsingStatsWithPercent percent: UInt32) {
         if didFinishDiscovery && percent == 100 {
              startMigrationIfNeeded()
+        }
+    }
+}
+
+// MARK: - VLCMediaLibraryDelegate - Exception handling
+
+extension MediaLibraryService {
+    func medialibrary(_ medialibrary: VLCMediaLibrary,
+                      unhandledExceptionWithContext context: String,
+                      errorMessage: String, clearSuggested: Bool) -> Bool {
+        if clearSuggested {
+            medialib.clearDatabase(restorePlaylists: true)
+            setupMediaLibrary()
+            return true
+        }
+        return false
+    }
+}
+
+// MARK: - VLCMLMediaLibraryDelegate - Force rescan
+
+extension MediaLibraryService {
+    func medialibraryDidStartRescan(_ medialibrary: VLCMediaLibrary) {
+        for observer in observers {
+            observer.value.observer?.medialibraryDidStartRescan?()
         }
     }
 }

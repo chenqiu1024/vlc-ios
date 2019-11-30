@@ -95,6 +95,15 @@ extension MLBaseModel {
         }
         return newFiles
     }
+
+    func filterFilesFromDeletion(of items: [VLCMLObject]) {
+        files = files.filter() {
+            for item in items where $0.identifier() == item.identifier() {
+                return false
+            }
+            return true
+        }
+    }
 }
 
 extension VLCMLObject {
@@ -104,7 +113,7 @@ extension VLCMLObject {
 }
 
 extension MediaCollectionModel {
-    func files(with criteria: VLCMLSortingCriteria = .alpha,
+    func files(with criteria: VLCMLSortingCriteria = .default,
                desc: Bool = false) -> [VLCMLMedia]? {
         return files(with: criteria, desc: desc)
     }

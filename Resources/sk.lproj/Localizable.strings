@@ -290,7 +290,8 @@
 "DELETE_ITEM_HINT" = "Pre vymazanie stlačte %@"; /* Insert %@ where play-pause-glyph should be placed */
 
 "DELETE_MESSAGE" = "Potvrďte vymazanie výberu";
-"DELETE_MESSAGE_PLAYLIST" = "Potvrďte vymazanie výberu z playlistu\nMediálne položky sa nevymažú";
+"DELETE_MESSAGE_PLAYLIST" = "Naozaj chcete vymazať vybraný playlist?\nAsociované súbory s médiami sa nevymažú.";
+"DELETE_MESSAGE_PLAYLIST_CONTENT" = "Naozaj chcete odstrániť vybrané médium z playlistu?\nTým nedôjde k vymazaniu z disku.";
 "DELETE_TITLE" = "Vymazať výber";
 
 //Drag and Drop
@@ -316,6 +317,7 @@
 "MOVIES" = "Filmy";
 "SONGS" = "Skladby";
 "PLAYLISTS" = "Playlisty";
+"VIDEO_GROUPS" = "Skupiny videí";
 
 "MODIFIED_DATE" = "Upravený dátum";
 "NAME" = "Meno";
@@ -365,6 +367,9 @@
 "ALBUM" = "Album";
 "FILENAME" = "Názov súboru";
 "TRACK_NUMBER" = "Číslo stopy";
+"NB_AUDIO" = "Číslo zvuku";
+"NB_MEDIA" = "Číslo média";
+"NB_VIDEO" = "Číslo videa";
 
 // VLCNetworkLoginTVViewController
 
@@ -391,3 +396,10 @@
 /* Settings - Force rescan alert */
 "FORCE_RESCAN_TITLE" = "Vynútiť si opätovné skenovanie knižnice médií";
 "FORCE_RESCAN_MESSAGE" = "Chcete si vynútiť opätovné preskenovanie knižnice médií aplikáciou VLC? Zrejme to bude chvíľu trvať.";
+
+// Local Network
+
+"SMBV1_WARN_TITLE" = "Výstraha pre pripojenie SMBv1";
+"SMBV1_WARN_DESCRIPTION" = "Bol detegovaný starý protokol (SMBv1).\nNaozaj chcete pokračovať s SMBv1?\nOdporúčame vykonať aktualizáciu alebo zmenu nastavení servera.";
+"SMBV1_CONTINUE" = "Pokračovať s SMBv1";
+"SMBV1_NEXT_PROTOCOL" = "Vyskúšať SMBv2/v3";

@@ -83,11 +83,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
     }
 
     func update(movie: VLCMLMedia) {
-        var title = movie.title
-        if UserDefaults.standard.bool(forKey: kVLCOptimizeItemNamesForDisplay) == true {
-            title = (title as NSString).deletingPathExtension
-        }
-        titleLabel.text = title
+        titleLabel.text = movie.title()
         accessibilityLabel = movie.accessibilityText(editing: false)
         descriptionLabel.text = movie.mediaDuration()
         thumbnailView.image = movie.thumbnailImage()
@@ -105,6 +101,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
         descriptionLabel.text = playlist.numberOfTracksString()
         thumbnailView.image = playlist.thumbnail()
         progressView.isHidden = true
+        newLabel.isHidden = true
     }
 
     func update(videoGroup: VLCMLVideoGroup) {
@@ -115,6 +112,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
         descriptionLabel.text = videoGroup.numberOfTracksString()
         thumbnailView.image = videoGroup.thumbnail()
         progressView.isHidden = true
+        newLabel.isHidden = true
     }
 
     override class func numberOfColumns(for width: CGFloat) -> CGFloat {
