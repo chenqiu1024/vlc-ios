@@ -108,10 +108,10 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
         // appkit because we neeed to know when we go to background in order to stop the video, so that we don't crash
         [defaultCenter addObserver:self selector:@selector(applicationWillResignActive:)
                               name:UIApplicationWillResignActiveNotification object:nil];
-        [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:)
-                              name:UIApplicationDidBecomeActiveNotification object:nil];
         [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:)
                               name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [defaultCenter addObserver:self selector:@selector(applicationWillEnterForeground:)
+                              name:UIApplicationWillEnterForegroundNotification object:nil];
 
         _metadata = [VLCMetaData new];
         _dialogProvider = [[VLCDialogProvider alloc] initWithLibrary:[VLCLibrary sharedLibrary] customUI:YES];
@@ -667,8 +667,7 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
             _sessionWillRestart = NO;
             [self stopPlayback];
         } break;
-        case VLCMediaPlayerStateEnded:
-        case VLCMediaPlayerStateStopped: {
+        case VLCMediaPlayerStateEnded: {
             NSInteger nextIndex = [self nextMediaIndex];
 
             if (nextIndex == -1) {
@@ -678,6 +677,17 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
                 [_listPlayer playItemAtNumber:@(nextIndex)];
                 [[NSNotificationCenter defaultCenter]
                  postNotificationName:VLCPlaybackServicePlaybackMetadataDidChange object:self];
+            }
+        } break;
+        case VLCMediaPlayerStateStopped: {
+            [_listPlayer.mediaList lock];
+            NSUInteger listCount = _listPlayer.mediaList.count;
+            [_listPlayer.mediaList unlock];
+
+            if ([_listPlayer.mediaList indexOfMedia:_mediaPlayer.media] == listCount - 1
+                && self.repeatMode == VLCDoNotRepeat) {
+                _sessionWillRestart = NO;
+                [self stopPlayback];
             }
         } break;
         default:
@@ -768,6 +778,11 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
     NSInteger nextIndex = [self nextMediaIndex];
 
     if (nextIndex < 0) {
+        if (self.repeatMode == VLCRepeatAllItems) {
+            [_listPlayer next];
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:VLCPlaybackServicePlaybackMetadataDidChange object:self];
+        }
         return;
     }
 
@@ -1215,7 +1230,7 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 {
     _preBackgroundWrapperView = _videoOutputViewWrapper;
 
-    if (!_renderer && _mediaPlayer.audioTrackIndexes.count > 0)
+    if (!_renderer && _mediaPlayer.audioTrackIndexes.count > 0 && [_mediaPlayer isPlaying])
         [self setVideoTrackEnabled:false];
 
     if (_renderer) {
@@ -1223,7 +1238,7 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
     }
 }
 
-- (void)applicationDidBecomeActive:(NSNotification *)notification
+- (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     if (_preBackgroundWrapperView) {
         [self setVideoOutputView:_preBackgroundWrapperView];
@@ -1234,13 +1249,16 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
         [_backgroundDummyPlayer stop];
     }
 
-    [self setVideoTrackEnabled:true];
+    if (_mediaPlayer.currentVideoTrackIndex == -1) {
+        [self setVideoTrackEnabled:true];
+    }
 
     if (_shouldResumePlaying) {
         _shouldResumePlaying = NO;
         [_listPlayer play];
     }
 }
+
 #pragma mark - remoteControlDelegate
 
 - (void)remoteControlServiceHitPause:(VLCRemoteControlService *)rcs

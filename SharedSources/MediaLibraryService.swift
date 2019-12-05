@@ -401,7 +401,11 @@ extension MediaLibraryService {
         mlMedia.subtitleTrackIndex = Int64(player.indexOfCurrentSubtitleTrack)
         mlMedia.chapterIndex = Int64(player.indexOfCurrentChapter)
         mlMedia.titleIndex = Int64(player.indexOfCurrentTitle)
-        //create a new thumbnail
+
+        if mlMedia.type() == .video {
+            mlMedia.requestThumbnail(of: .thumbnail, desiredWidth: 320,
+                                     desiredHeight: 200, atPosition: player.playbackPosition)
+        }
     }
 }
 
@@ -442,8 +446,15 @@ extension MediaLibraryService {
 
 extension MediaLibraryService {
     func requestThumbnail(for media: VLCMLMedia) {
-        if media.isThumbnailGenerated() || media.thumbnail() != nil {
+        let thumbnailStatus = media.isThumbnailGenerated()
+
+        switch thumbnailStatus {
+        case .missing, .failure:
+            break
+        case .available, .persistentFailure, .crash:
             return
+        @unknown default:
+            assertionFailure("MediaLibraryService: requestThumbnail: Unknown thumbnail status.")
         }
 
         if !media.requestThumbnail(of: .thumbnail, desiredWidth: 320, desiredHeight: 200, atPosition: 0.03) {
