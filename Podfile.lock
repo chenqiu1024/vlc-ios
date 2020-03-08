@@ -44,6 +44,7 @@ PODS:
   - GTMSessionFetcher/Full (1.2.2):
     - GTMSessionFetcher/Core (= 1.2.2)
   - InAppSettingsKit (2.14)
+  - MarqueeLabel (4.0.2)
   - MediaLibraryKit-prod (2.6.9):
     - MobileVLCKit (~> 3.3.0)
   - MetaDataFetcherKit (0.3.1):
@@ -81,7 +82,7 @@ PODS:
   - TVVLCKit (3.3.9)
   - upnpx (1.4.3)
   - VLC-WhiteRaccoon (1.0.0)
-  - VLCMediaLibraryKit (0.7.0):
+  - VLCMediaLibraryKit (0.6.3):
     - MobileVLCKit
   - XKKeychain (1.0.1)
   - xmlrpc (2.3.4):
@@ -94,7 +95,8 @@ DEPENDENCIES:
   - GoogleAPIClientForREST/Drive
   - GRKArrayDiff (~> 2.1)
   - GTMAppAuth (= 0.7.1)
-  - InAppSettingsKit (from `git://github.com/Mikanbu/InAppSettingsKit.git`, commit `f3ede15`)
+  - InAppSettingsKit (from `git://github.com/Mikanbu/InAppSettingsKit.git`, commit `a429840`)
+  - MarqueeLabel (= 4.0.2)
   - MediaLibraryKit-prod
   - MetaDataFetcherKit (~> 0.3.1)
   - MobileVLCKit (= 3.3.9)
@@ -108,7 +110,7 @@ DEPENDENCIES:
   - TVVLCKit (= 3.3.9)
   - upnpx (~> 1.4.3)
   - VLC-WhiteRaccoon
-  - VLCMediaLibraryKit (= 0.7.0)
+  - VLCMediaLibraryKit (= 0.6.3)
   - XKKeychain (~> 1.0)
 
 SPEC REPOS:
@@ -122,6 +124,7 @@ SPEC REPOS:
     - GRKArrayDiff
     - GTMAppAuth
     - GTMSessionFetcher
+    - MarqueeLabel
     - MediaLibraryKit-prod
     - MetaDataFetcherKit
     - MobileVLCKit
@@ -144,7 +147,7 @@ EXTERNAL SOURCES:
   CocoaHTTPServer:
     :git: git://github.com/fkuehne/CocoaHTTPServer.git
   InAppSettingsKit:
-    :commit: f3ede15
+    :commit: a429840
     :git: git://github.com/Mikanbu/InAppSettingsKit.git
   ObjectiveDropboxOfficial:
     :git: git://github.com/Mikanbu/dropbox-sdk-obj-c.git
@@ -160,7 +163,7 @@ CHECKOUT OPTIONS:
     :commit: a73589dbb4c67a3a6e6441e1981ba1b5b70a77ad
     :git: git://github.com/fkuehne/CocoaHTTPServer.git
   InAppSettingsKit:
-    :commit: f3ede15
+    :commit: a429840
     :git: git://github.com/Mikanbu/InAppSettingsKit.git
   ObjectiveDropboxOfficial:
     :commit: e07b5aa5bc41879ac664b73e03a2d2c162d89b5b
@@ -181,7 +184,8 @@ SPEC CHECKSUMS:
   GRKArrayDiff: 7522e374edcc55c1731a219e428847164b04cfab
   GTMAppAuth: c5e41aaf039ac1ccc41543e6ea2ef7abd255ad41
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
-  InAppSettingsKit: 800853da39388780c15191846688c0974c5b13b5
+  InAppSettingsKit: 3887d126d00a4ae468692deaaa7a8989e6b97fb7
+  MarqueeLabel: f762aa681ae201f66c1d511858b171f75d83013a
   MediaLibraryKit-prod: 718b52b55cb40b479eeae29fb5cc0cfbbbce0191
   MetaDataFetcherKit: d1d61b061bf74268aaffb6bf08a70396672163df
   MobileVLCKit: cf10c4a138d89f3843b6290f94823609b34215a1
@@ -196,10 +200,10 @@ SPEC CHECKSUMS:
   TVVLCKit: 14fd438326828e1681e11d809c9592f190e82552
   upnpx: ad8791295befdc0a0702089daf067d21c76194fc
   VLC-WhiteRaccoon: 1e7e59b0568959135a89d09c416d1e11a5d9a986
-  VLCMediaLibraryKit: 8653e78b90477a61b8f6deb70287f0720df850f0
+  VLCMediaLibraryKit: 7811e1da3a30c357908e13e8861a03d8238e1c7c
   XKKeychain: 852ef663c56a7194c73d3c68e8d9d4f07b121d4f
   xmlrpc: 109bb21d15ed6d108b2c1ac5973a6a223a50f5f4
 
-PODFILE CHECKSUM: 52a9b559afad3c2bbfd246aaa8d7911ee340d560
+PODFILE CHECKSUM: 5397725717f22b3a85e81e4e946906538ad65e3e
 
 COCOAPODS: 1.6.1

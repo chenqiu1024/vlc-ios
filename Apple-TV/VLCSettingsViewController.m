@@ -29,6 +29,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    if (@available(tvOS 13.0, *)) {
+        self.navigationController.navigationBarHidden = YES;
+    }
+
     self.userDefaults = [NSUserDefaults standardUserDefaults];
     self.settingsReader = [[IASKSettingsReader alloc] init];
 
@@ -71,11 +75,11 @@
         NSUInteger selectedIndex = [values indexOfObject:[self.userDefaults objectForKey:[specifier key]]];
         NSUInteger titlesCount = titles.count;
         if (selectedIndex < titlesCount)
-            cell.detailTextLabel.text = [self.settingsReader titleForStringId:titles[selectedIndex]];
+            cell.detailTextLabel.text = [_settingsReader titleForId:titles[selectedIndex]];
         else {
             selectedIndex = [values indexOfObject:[specifier defaultValue]];
             if (selectedIndex < titlesCount)
-                cell.detailTextLabel.text = [self.settingsReader titleForStringId:titles[selectedIndex]];
+                cell.detailTextLabel.text = [_settingsReader titleForId:titles[selectedIndex]];
         }
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if ([specifierType isEqualToString:kIASKPSToggleSwitchSpecifier]) {
@@ -109,7 +113,7 @@
         NSUInteger indexOfPreferredAction = [[specifier multipleValues] indexOfObject:currentValue];
         for (NSUInteger i = 0; i < count; i++) {
             id value = [[specifier multipleValues][i] copy];
-            UIAlertAction *action = [UIAlertAction actionWithTitle:[self.settingsReader titleForStringId:titles[i]]
+            UIAlertAction *action = [UIAlertAction actionWithTitle:[_settingsReader titleForId:titles[i]]
                                                              style:UIAlertActionStyleDefault
                                                            handler:^(UIAlertAction * _Nonnull action) {
                                                                [self.userDefaults setObject:value forKey:[specifier key]];

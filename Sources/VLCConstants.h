@@ -24,6 +24,7 @@
 #define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
 #define kVLCSettingAbout @"about"
 #define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
+#define kVLCSettingEnableMediaCellTextScrolling @"EnableMediaCellTextScrolling"
 #define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
 #define kVLCSettingStretchAudio @"audio-time-stretch"
 #define kVLCSettingStretchAudioOnValue @"1"
@@ -120,6 +121,11 @@
 #define kVLCApplicationShortcutLocalAudio @"ApplicationShortcutLocalAudio"
 #define kVLCApplicationShortcutNetwork @"ApplicationShortcutNetwork"
 #define kVLCApplicationShortcutPlaylist @"ApplicationShortcutPlaylist"
+
+#define kVLCWifiAuthentificationMaxAttempts 5
+#define kVLCWifiAuthentificationSuccess 0
+#define kVLCWifiAuthentificationFailure 1
+#define kVLCWifiAuthentificationBanned 2
 
 /* LEGACY KEYS, DO NOT USE IN NEW CODE */
 #define kVLCFTPServer @"ftp-server"

@@ -73,6 +73,7 @@ protocol MediaCollectionModel {
                desc: Bool) -> [VLCMLMedia]?
     func sortModel() -> SortModel?
     func title() -> String
+    func numberOfTracksString() -> String
 }
 
 // MARK: - Helper methods
@@ -121,7 +122,7 @@ extension MediaCollectionModel {
     func thumbnail() -> UIImage? {
         var image: UIImage? = nil
         if image == nil {
-            for track in files() ?? [] where track.isThumbnailGenerated() == .available {
+            for track in files() ?? [] where track.isThumbnailGenerated() {
                 image = UIImage(contentsOfFile: track.thumbnail()?.path ?? "")
                 break
             }

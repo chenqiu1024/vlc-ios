@@ -170,7 +170,7 @@ extension EditController: EditToolbarDelegate {
         }
         editActions.objects.removeAll()
         getSelectedObjects()
-        editActions.share({
+        editActions.share(origin: editToolbar.shareButton, {
             [weak self] state in
             if state == .success || state == .fail {
                 self?.resetSelections(resetUI: false)
@@ -235,6 +235,10 @@ extension EditController: UICollectionViewDataSource {
             if let cell = cell as? MediaCollectionViewCell,
                 let collectionModel = model as? CollectionModel, collectionModel.mediaCollection is VLCMLPlaylist {
                 cell.dragIndicatorImageView.isHidden = false
+            }
+            if cell.media is VLCMLMedia {
+                cell.secondDescriptionLabelView?.isHidden = false
+                cell.descriptionSeparatorLabel?.isHidden = false
             }
 
             if cell.isSelected {

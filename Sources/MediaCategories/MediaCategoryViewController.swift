@@ -21,7 +21,7 @@ import Foundation
 }
 
 class MediaCategoryViewController: UICollectionViewController, UISearchBarDelegate, IndicatorInfoProvider {
-
+    // MARK: - Properties
     var model: MediaLibraryBaseModel
     private var services: Services
 
@@ -78,7 +78,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         return UIBarButtonItem(customView: rendererButton)
     }()
 
-    lazy var emptyView: VLCEmptyLibraryView = {
+    private lazy var emptyView: VLCEmptyLibraryView = {
         let name = String(describing: VLCEmptyLibraryView.self)
         let nib = Bundle.main.loadNibNamed(name, owner: self, options: nil)
         guard let emptyView = nib?.first as? VLCEmptyLibraryView else { fatalError("Can't find nib for \(name)") }
@@ -92,6 +92,12 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         return emptyView
     }()
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return PresentationTheme.current.colors.statusBarStyle
+    }
+
+    // MARK: - Initializers
+
     @available(*, unavailable)
     init() {
         fatalError()
@@ -104,14 +110,17 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         self.searchDataSource = LibrarySearchDataSource(model: model)
 
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
+        let marqueeTitle = VLCMarqueeLabel()
         if let collection = model as? CollectionModel {
             title = collection.mediaCollection.title()
         }
+        marqueeTitle.text = title
+        self.navigationItem.titleView = marqueeTitle
         NotificationCenter.default.addObserver(self, selector: #selector(themeDidChange),
                                                name: .VLCThemeDidChangeNotification, object: nil)
     }
 
-    func setupSearchBar() {
+    private func setupSearchBar() {
         searchBar.delegate = self
         searchBar.searchBarStyle = .minimal
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -135,28 +144,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             searchBar.heightAnchor.constraint(equalToConstant: searchBarSize)
-            ])
-    }
-
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return PresentationTheme.current.colors.statusBarStyle
-    }
-
-    private func popViewIfNecessary() {
-        // Inside a collection without files
-        if let collectionModel = model as? CollectionModel, collectionModel.anyfiles.isEmpty {
-            // Pop view if collection is not a playlist since a playlist is user created
-            if !(collectionModel.mediaCollection is VLCMLPlaylist) {
-                navigationController?.popViewController(animated: true)
-            }
-        }
-    }
-
-    private func updateVideoGroups() {
-        // Manually update video groups since there is no callbacks for it
-        if let videoGroupViewModel = model as? VideoGroupViewModel {
-            videoGroupViewModel.updateVideoGroups()
-        }
+        ])
     }
 
     @objc func reloadData() {
@@ -196,6 +184,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let manager = services.rendererDiscovererManager
+        manager.delegate = self
         if manager.discoverers.isEmpty {
             // Either didn't start or stopped before
             manager.start()
@@ -221,24 +210,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         setNeedsStatusBarAppearanceUpdate()
     }
 
-    func isEmptyCollectionView() -> Bool {
-        return collectionView?.numberOfItems(inSection: 0) == 0
-    }
-
-    func updateUIForContent() {
-        if isSearching {
-            return
-        }
-
-        let isEmpty = isEmptyCollectionView()
-        if isEmpty {
-            collectionView?.setContentOffset(.zero, animated: false)
-        }
-        searchBar.isHidden = isEmpty || isEditing
-        collectionView?.backgroundView = isEmpty ? emptyView : nil
-    }
-
-    // MARK: Renderer
+    // MARK: - Renderer
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -308,50 +280,46 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         let uiTestAccessibilityIdentifier = model is TrackModel ? VLCAccessibilityIdentifier.songs : nil
         return IndicatorInfo(title: model.indicatorName, accessibilityIdentifier: uiTestAccessibilityIdentifier)
     }
+}
 
-    // MARK: - UICollectionViewDataSource
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return isSearching ? searchDataSource.searchData.count : model.anyfiles.count
-    }
+// MARK: - MediaCategoryViewController - Private Helpers
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mediaCell = collectionView.dequeueReusableCell(withReuseIdentifier:model.cellType.defaultReuseIdentifier, for: indexPath) as? BaseCollectionViewCell else {
-            assertionFailure("you forgot to register the cell or the cell is not a subclass of BaseCollectionViewCell")
-            return UICollectionViewCell()
-        }
-        let mediaObject = isSearching ? searchDataSource.objectAtIndex(index: indexPath.row) : model.anyfiles[indexPath.row]
-        if let media = mediaObject as? VLCMLMedia {
-            // FIXME: This should be done in the VModel, workaround for the release.
-            if media.type() == .video {
-                services.medialibraryService.requestThumbnail(for: media)
+private extension MediaCategoryViewController {
+    private func popViewIfNecessary() {
+        // Inside a collection without files
+        if let collectionModel = model as? CollectionModel, collectionModel.anyfiles.isEmpty {
+            // Pop view if collection is not a playlist since a playlist is user created
+            if !(collectionModel.mediaCollection is VLCMLPlaylist) {
+                navigationController?.popViewController(animated: true)
             }
-            assert(media.mainFile() != nil, "The mainfile is nil")
-            mediaCell.media = media.mainFile() != nil ? media : nil
-        } else {
-            mediaCell.media = mediaObject
-        }
-        mediaCell.isAccessibilityElement = true
-        return mediaCell
-    }
-
-    // MARK: - UICollectionViewDelegate
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let modelContent = isSearching ? searchDataSource.objectAtIndex(index: indexPath.row) : model.anyfiles[indexPath.row]
-
-        if let media = modelContent as? VLCMLMedia {
-            play(media: media, at: indexPath)
-            createSpotlightItem(media: media)
-        } else if let mediaCollection = modelContent as? MediaCollectionModel {
-            let collectionViewController = CollectionCategoryViewController(services,
-                                                                            mediaCollection: mediaCollection)
-
-            collectionViewController.navigationItem.rightBarButtonItems = collectionViewController.rightBarButtonItems()
-
-            navigationController?.pushViewController(collectionViewController, animated: true)
         }
     }
 
-    func objects(from modelContent: VLCMLObject) -> [VLCMLObject] {
+    private func updateVideoGroups() {
+        // Manually update video groups since there is no callbacks for it
+        if let videoGroupViewModel = model as? VideoGroupViewModel {
+            videoGroupViewModel.updateVideoGroups()
+        }
+    }
+
+    private func isEmptyCollectionView() -> Bool {
+        return collectionView?.numberOfItems(inSection: 0) == 0
+    }
+
+    private func updateUIForContent() {
+        if isSearching {
+            return
+        }
+
+        let isEmpty = isEmptyCollectionView()
+        if isEmpty {
+            collectionView?.setContentOffset(.zero, animated: false)
+        }
+        searchBar.isHidden = isEmpty || isEditing
+        collectionView?.backgroundView = isEmpty ? emptyView : nil
+    }
+
+    private func objects(from modelContent: VLCMLObject) -> [VLCMLObject] {
         if let media = modelContent as? VLCMLMedia {
             return [media]
         } else if let mediaCollection = modelContent as? MediaCollectionModel {
@@ -360,70 +328,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         return [VLCMLObject]()
     }
 
-    @available(iOS 13.0, *)
-    override func collectionView(_ collectionView: UICollectionView,
-                                 contextMenuConfigurationForItemAt indexPath: IndexPath,
-                                 point: CGPoint) -> UIContextMenuConfiguration? {
-        let cell = collectionView.cellForItem(at: indexPath)
-        var thumbnail: UIImage? = nil
-        if let cell = cell as? MovieCollectionViewCell {
-            thumbnail = cell.thumbnailView.image
-        } else if let cell = cell as? MediaCollectionViewCell {
-            thumbnail = cell.thumbnailView.image
-        }
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: {
-            if let thumbnail = thumbnail {
-                return CollectionViewCellPreviewController(thumbnail: thumbnail)
-            } else {
-                return nil
-            }
-        }) {
-                [weak self] action in
-                let modelContent = self?.isSearching ?? false ? self?.searchDataSource.objectAtIndex(index: indexPath.row) : self?.model.anyfiles[indexPath.row]
-
-                let actionList = EditButtonsFactory.buttonList(for: self?.model.anyfiles.first)
-                let actions = EditButtonsFactory.generate(buttons: actionList)
-                return UIMenu(title: "", image: nil, identifier: nil, children: actions.map {
-                    switch $0.identifier {
-                    case .addToPlaylist:
-                        return $0.action({
-                            [weak self] _ in
-                            if let modelContent = modelContent {
-                                self?.editController.editActions.objects = self?.objects(from: modelContent) ?? []
-                                self?.editController.editActions.addToPlaylist()
-                            }
-                        })
-                    case .rename:
-                        return $0.action({
-                            [weak self] _ in
-                            if let modelContent = modelContent {
-                                self?.editController.editActions.objects = [modelContent]
-                                self?.editController.editActions.rename()
-                            }
-                        })
-                    case .delete:
-                        return $0.action({
-                            [weak self] _ in
-                            if let modelContent = modelContent {
-                                self?.editController.editActions.objects = [modelContent]
-                                self?.editController.editActions.delete()
-                            }
-                        })
-                    case .share:
-                        return $0.action({
-                            [weak self] _ in
-                            if let modelContent = modelContent {
-                                self?.editController.editActions.objects = self?.objects(from: modelContent) ?? []
-                                self?.editController.editActions.share()
-                            }
-                        })
-                    }
-                })
-            }
-            return configuration
-    }
-
-    func createSpotlightItem(media: VLCMLMedia) {
+    private func createSpotlightItem(media: VLCMLMedia) {
         if KeychainCoordinator.passcodeLockEnabled {
             return
         }
@@ -475,7 +380,9 @@ extension MediaCategoryViewController {
         if let model = model as? CollectionModel, !(model.mediaCollection is VLCMLPlaylist) {
             rightBarButtonItems.append(sortBarButton)
         }
-        rightBarButtonItems.append(rendererBarButton)
+        if !rendererButton.isHidden {
+            rightBarButtonItems.append(rendererBarButton)
+        }
         return rightBarButtonItems
     }
 
@@ -518,6 +425,24 @@ extension MediaCategoryViewController {
     }
 }
 
+// MARK: - VLCRendererDiscovererManagerDelegate
+
+extension MediaCategoryViewController: VLCRendererDiscovererManagerDelegate {
+    private func updateRightbarButtonItems() {
+        if !isEditing {
+            navigationItem.rightBarButtonItems = rightBarButtonItems()
+        }
+    }
+
+    @objc func addedRendererItem() {
+        updateRightbarButtonItems()
+    }
+
+    @objc func removedRendererItem() {
+        updateRightbarButtonItems()
+    }
+}
+
 // MARK: - UISearchBarDelegate
 
 extension MediaCategoryViewController {
@@ -550,6 +475,155 @@ extension MediaCategoryViewController {
         if searchText.isEmpty {
             self.searchBar.resignFirstResponder()
         }
+    }
+}
+
+// MARK: - UICollectionViewDelegate - Private Helpers
+
+private extension MediaCategoryViewController {
+    @available(iOS 13.0, *)
+    private func generateUIMenuForContent(at indexPath: IndexPath) -> UIMenu {
+        let modelContentArray = isSearching ? searchDataSource.searchData : model.anyfiles
+        let index = indexPath.row
+        let modelContent = modelContentArray.objectAtIndex(index: index)
+
+        let actionList = EditButtonsFactory.buttonList(for: model.anyfiles.first)
+        let actions = EditButtonsFactory.generate(buttons: actionList)
+
+        return UIMenu(title: "", image: nil, identifier: nil, children: actions.map {
+            switch $0.identifier {
+            case .addToPlaylist:
+                return $0.action({
+                    [weak self] _ in
+                    if let modelContent = modelContent {
+                        self?.editController.editActions.objects = self?.objects(from: modelContent) ?? []
+                        self?.editController.editActions.addToPlaylist()
+                    }
+                })
+            case .rename:
+                return $0.action({
+                    [weak self] _ in
+                    if let modelContent = modelContent {
+                        self?.editController.editActions.objects = [modelContent]
+                        self?.editController.editActions.rename()
+                    }
+                })
+            case .delete:
+                return $0.action({
+                    [weak self] _ in
+                    if let modelContent = modelContent {
+                        self?.editController.editActions.objects = [modelContent]
+                        self?.editController.editActions.delete()
+                    }
+                })
+            case .share:
+                return $0.action({
+                    [weak self] _ in
+                    if let modelContent = modelContent {
+                        self?.editController.editActions.objects = self?.objects(from: modelContent) ?? []
+                        if let cell = self?.collectionView.cellForItem(at: indexPath) {
+                            self?.editController.editActions.share(origin: cell)
+                        }
+                    }
+                })
+            }
+        })
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension MediaCategoryViewController {
+    private func selectedItem(at indexPath: IndexPath) {
+        let mediaObjectArray = isSearching ? searchDataSource.searchData : model.anyfiles
+        let modelContent = mediaObjectArray.objectAtIndex(index: indexPath.row)
+
+        if let media = modelContent as? VLCMLMedia {
+            play(media: media, at: indexPath)
+            createSpotlightItem(media: media)
+        } else if let mediaCollection = modelContent as? MediaCollectionModel {
+            let collectionViewController = CollectionCategoryViewController(services,
+                                                                            mediaCollection: mediaCollection)
+
+            collectionViewController.navigationItem.rightBarButtonItems = collectionViewController.rightBarButtonItems()
+
+            navigationController?.pushViewController(collectionViewController, animated: true)
+        }
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedItem(at: indexPath)
+    }
+
+    @available(iOS 13.0, *)
+    override func collectionView(_ collectionView: UICollectionView,
+                                 contextMenuConfigurationForItemAt indexPath: IndexPath,
+                                 point: CGPoint) -> UIContextMenuConfiguration? {
+        let modelContent = self.isSearching ? self.searchDataSource.searchData.objectAtIndex(index: indexPath.row) : self.model.anyfiles[indexPath.row]
+        let cell = collectionView.cellForItem(at: indexPath)
+        var thumbnail: UIImage? = nil
+        if let cell = cell as? MovieCollectionViewCell {
+            thumbnail = cell.thumbnailView.image
+        } else if let cell = cell as? MediaCollectionViewCell {
+            thumbnail = cell.thumbnailView.image
+        }
+        let configuration = UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: {
+            guard let thumbnail = thumbnail else {
+                return nil
+            }
+            return CollectionViewCellPreviewController(thumbnail: thumbnail, with: modelContent)
+        }, actionProvider: {
+            [weak self] action in
+            return self?.generateUIMenuForContent(at: indexPath)
+        })
+        return configuration
+    }
+
+    @available(iOS 13.0, *)
+    override func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        if let indexPath = configuration.identifier as? IndexPath {
+            if let cell = collectionView.cellForItem(at: indexPath) as? BaseCollectionViewCell {
+                if !(cell.media is VLCMLMedia) {
+                    self.selectedItem(at: indexPath)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension MediaCategoryViewController {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return isSearching ? searchDataSource.searchData.count : model.anyfiles.count
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let mediaCell = collectionView.dequeueReusableCell(withReuseIdentifier:model.cellType.defaultReuseIdentifier, for: indexPath) as? BaseCollectionViewCell else {
+            assertionFailure("you forgot to register the cell or the cell is not a subclass of BaseCollectionViewCell")
+            return UICollectionViewCell()
+        }
+
+        let mediaObjectArray = isSearching ? searchDataSource.searchData : model.anyfiles
+        let mediaObject = mediaObjectArray.objectAtIndex(index: indexPath.row)
+
+        guard mediaObject != nil else {
+            assertionFailure("MediaCategoryViewController: Failed to fetch media object.")
+            return mediaCell
+        }
+
+        if let media = mediaObject as? VLCMLMedia {
+            // FIXME: This should be done in the VModel, workaround for the release.
+            if media.type() == .video {
+                services.medialibraryService.requestThumbnail(for: media)
+            }
+            assert(media.mainFile() != nil, "The mainfile is nil")
+            mediaCell.media = media.mainFile() != nil ? media : nil
+        } else {
+            mediaCell.media = mediaObject
+        }
+        mediaCell.isAccessibilityElement = true
+        return mediaCell
     }
 }
 
@@ -588,7 +662,7 @@ extension MediaCategoryViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// MARK: VLCActionSheetDelegate
+// MARK: - VLCActionSheetDelegate
 
 extension MediaCategoryViewController: ActionSheetDelegate {
     func headerViewTitle() -> String? {
@@ -607,7 +681,7 @@ extension MediaCategoryViewController: ActionSheetDelegate {
     }
 }
 
-// MARK: VLCActionSheetDataSource
+// MARK: - VLCActionSheetDataSource
 
 extension MediaCategoryViewController: ActionSheetDataSource {
     func numberOfRows() -> Int {

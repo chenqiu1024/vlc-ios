@@ -113,6 +113,7 @@ protocol MediaLibraryMigrationDelegate: class {
 class MediaLibraryService: NSObject {
     private static let databaseName: String = "medialibrary.db"
     private static let migrationKey: String = "MigratedToVLCMediaLibraryKit"
+    private static let didForceRescan: String = "MediaLibraryDidForceRescan"
 
     private var didMigrate = UserDefaults.standard.bool(forKey: MediaLibraryService.migrationKey)
     private var didFinishDiscovery = false
@@ -150,6 +151,11 @@ private extension MediaLibraryService {
         guard medialib.start() else {
             assertionFailure("MediaLibraryService: Medialibrary failed to start.")
             return
+        }
+
+        if UserDefaults.standard.bool(forKey: MediaLibraryService.didForceRescan) == false {
+            medialib.forceRescan()
+            UserDefaults.standard.set(true, forKey: MediaLibraryService.didForceRescan)
         }
 
         /* exclude Document directory from backup (QA1719) */
@@ -446,15 +452,8 @@ extension MediaLibraryService {
 
 extension MediaLibraryService {
     func requestThumbnail(for media: VLCMLMedia) {
-        let thumbnailStatus = media.isThumbnailGenerated()
-
-        switch thumbnailStatus {
-        case .missing, .failure:
-            break
-        case .available, .persistentFailure, .crash:
+        if media.isThumbnailGenerated() || media.thumbnail() != nil {
             return
-        @unknown default:
-            assertionFailure("MediaLibraryService: requestThumbnail: Unknown thumbnail status.")
         }
 
         if !media.requestThumbnail(of: .thumbnail, desiredWidth: 320, desiredHeight: 200, atPosition: 0.03) {
