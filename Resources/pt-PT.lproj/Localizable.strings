@@ -1,4 +1,4 @@
-"STORE_DESCRIPTION" = "VLC para iOS é uma versão do VLC media player gratuito para iPad, iPhone e iPod touch.\nEste pode reproduzir diretamente todos os seus filmes, músicas e programas de TV na maioria dos formatos sem conversão.\nEste permite-lhe sincronizar ficheiros com Box, Dropbox, Google Drive, iCloud Drive, iTunes e OneDrive, transferências diretas e via partilha em Wi-Fi, bem como reproduzir através de servidores de multimédia FTP, SMB, UPnP/DLNA e na Web.\nVLC é compatível com legendas avançadas, incluindo compatibilidade total com SSA, múltiplas faixas de áudio, e controlo de velocidade da reprodução.\n\nVLC para iOS é totalmente gratuito e de código aberto.";
+"STORE_DESCRIPTION" = "VLC for iOS is a port of the free VLC media player to iPad, iPhone and iPod touch.\nIt can play all your movies, shows and music in most formats directly without conversion.\nIt allows file synchronization with Dropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes, direct downloads and through Wi-Fi sharing as well as streaming from SMB, FTP, UPnP/DLNA media servers and the web.\nVLC offers support for advanced subtitles including full SSA compatibility, multi-track audio, and playback speed control.\n\nVLC for iOS is completely free and open source.";
 
 "STORE_DESCRIPTION_TV" = "VLC media player é um reprodutor de multimédia multiplataforma de código aberto e gratuito.\nEste pode reproduzir diretamente todos os seus filmes, programas e músicas sem conversão.\nEste permite a transmissão através dos serviços da nuvem (Box, Dropbox, OnerDrive), reprodução remota a partir do seu computador Mac ou PC através de uma interface do utilizador da Web, bem como a transmissão através de servidores FTP, SMB, UPnP/DLNA e da Web.\nO VLC oferece suporte avançado para legendas, incluindo compatibilidade total com SSA, múltiplas faixas de áudio, e controlo de velocidade da reprodução.\n\nO VLC para iOS é de código livre e completamente gratuito.\n\nOs metadados e as capas são disponibilizados por Hatchet e TMDb, que são bases de dados de filmes e músicas geridas por uma comunidade.";
 
@@ -75,14 +75,17 @@
 "BUTTON_RENDERER" = "Dispositivos de transmissão";
 "BUTTON_RENDERER_HINT" = "Mostrar um menu de dispositivos de transmissão disponíveis";
 
+
+"BUTTON_PLAY_QUEUE" = "Play queue";
+"BUTTON_PLAY_QUEUE_HINT" = "Show the play queue view";
+
 "UPGRADING_LIBRARY" = "Atualização da Mediateca";
-"UNKNOWN" = "Desconhecido";
 
 "OPEN_NETWORK" = "Abrir transmissão em rede";
 "NETWORK_TITLE" = "Transmissão em rede";
 "OPEN_NETWORK_HELP" = "Digite qualquer endereço HTTP, RTSP, RTMP, MMS, FTP ou UDP/RTP para abrir diretamente a transmissão.";
 "HTTP_UPLOAD_SERVER_OFF" = "Servidor Inativo";
-"HTTP_UPLOAD_NO_CONNECTIVITY" = "Nenhuma ligação Wi-Fi ativa";
+"HTTP_UPLOAD_NO_CONNECTIVITY" = "No active Wi-Fi connection";
 "OPEN_STREAM_OR_DOWNLOAD" = "Gostaria de transferir ou reproduzir este URL?";
 "SHARED_VLC_IOS_LIBRARY" = "Biblioteca partilhada do VLC para iOS";
 "SMB_CIFS_FILE_SERVERS" = "Servidores de ficheiros (SMB)";
@@ -111,7 +114,7 @@
 "SHARING_SUCCESS_CAMERA_ROLL" = "O ficheiro foi guardado com sucesso no Rolo da câmara.";
 
 "STREAMVC_DETAILTEXT" = "Reproduzir diretamente transmissões sem transferir";
-"DOWNLOADVC_DETAILTEXT" = "Transferir diretamente ficheiros para o seu dispositivo";
+"DOWNLOADVC_DETAILTEXT" = "Transferir os ficheiros diretamente para o seu dispositivo";
 "HEADER_TITLE_RENDERER" = "Selecionar dispositivo de transmissão";
 
 "NETWORK" = "Rede";
@@ -128,13 +131,16 @@
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "A LIGAÇÃO AO SERVIDOR FALHOU";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "Por favor, verifique o endereço do servidor e os detalhes de início de sessão.";
 
+"FILES_APP_CELL_TITLE" = "Local files";
+"FILES_APP_CELL_SUBTITLE" = "Open a file without copying it to VLC";
+
 "CLOUD_SERVICES" = "Serviços na nuvem";
 "LOGIN" = "Iniciar sessão";
 "LOGGED_IN" = "Sessão iniciada";
 "LOGGED_IN_SERVICES" = "%d com sessão iniciada nos serviços";
 "LOGGED_IN_SERVICE" = "1 com sessão iniciada no serviço";
 
-"DROPBOX_DOWNLOAD" = "Transferir  o ficheiro?";
+"DROPBOX_DOWNLOAD" = "Transferir o ficheiro?";
 "DROPBOX_DL_LONG" = "Gostaria de transferir “%@” para o seu %@?";
 "DROPBOX_LOGIN" = "Iniciar sessão";
 
@@ -176,12 +182,12 @@
 "OFF" = "Não";
 
 "EMPTY_LIBRARY" = "Mediateca Vazia";
-"EMPTY_LIBRARY_LONG" = "Para reproduzir, pode transmitir os ficheiros de um servidor na sua rede local, da nuvem ou sincronizar os ficheiros para o seu dispositivo, utilizando o iTunes, Envio por Wi-Fi ou serviços da Nuvem.";
+"EMPTY_LIBRARY_LONG" = "For playback, you can stream media from a server on your local network, from the cloud or synchronize media to your device using iTunes, Wi-Fi Upload or Cloud services.";
 
 "EMPTY_PLAYLIST" = "Lista de reprodução vazia";
 "EMPTY_PLAYLIST_DESCRIPTION" = "Adicione média durante a edição nas respectivas categorias.";
 
-"PLAYBACK_SCRUB_HELP" = "Passe o dedo para baixo para ajustar a velocidade do avanço.";
+"PLAYBACK_SCRUB_HELP" = "Deslize o dedo para baixo para ajustar a velocidade do avanço.";
 "PLAYBACK_SCRUB_HIGH" = "Avanço rápido";
 "PLAYBACK_SCRUB_HALF" = "Avanço médio";
 "PLAYBACK_SCRUB_QUARTER" = "Avanço lento";
@@ -189,14 +195,18 @@
 "PLAYBACK_POSITION" = "Posição da reprodução";
 "VIDEO_FILTER" = "Filtros de vídeos";
 "VIDEO_FILTER_RESET_BUTTON" = "Repor os filtros de vídeos";
-"VIDEO_ASPECT_RATIO_BUTTON" = "Alterar formato do vídeo";
-"PLAY_PAUSE_BUTTON" = "Reproduzir ou pausar a reprodução";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video aspect ratio";
 "BWD_BUTTON" = "Ir para trás";
 "FWD_BUTTON" = "Ir para a frente";
 "PLAY_BUTTON" = "Reproduzir";
 "NEXT_BUTTON" = "Seguinte";
 "PREV_BUTTON" = "Anterior";
 "PLAY_ALL_BUTTON" = "Reproduzir tudo";
+
+"RESET_VIDEO_FILTERS" = "Do you want to reset the video filters?";
+"RESET_PLAYBACK_SPEED" = "Do you want to reset the playback speed?";
+"RESET_EQUALIZER" = "Do you want to reset the equalizer's settings?";
+"RESET_SLEEP_TIMER" = "Do you want to reset the sleep timer?";
 
 "VERSION_FORMAT" = "Versão: %@";
 "BASED_ON_FORMAT" = "Baseado no:<br />%@";
@@ -213,11 +223,11 @@
 "FIRST_STEPS_ITUNES" = "Sincronização através do iTunes";
 "FIRST_STEPS_ITUNES_TITLE" = "Sincronizar com o seu computador";
 "FIRST_STEPS_ITUNES_DETAILS" = "Ligue o seu dispositivo ao iTunes e selecione o seu dispositivo. Selecione \"Partilha de ficheiro\" do menu lateral do iTunes e procure pelo VLC para transferir os ficherios";
-"FIRST_STEPS_WIFI_TITLE" = "Partilhar via Wi-Fi";
+"FIRST_STEPS_WIFI_TITLE" = "Share via Wi-Fi";
 "FIRST_STEPS_WIFI_DETAILS" = "Introduza o seu URL gerado no seu navegador de Internet favorito enquanto estiver ligado à mesma rede do seu telemóvel";
 "FIRST_STEPS_CLOUDS" = "Nuvens";
 "FIRST_STEPS_CLOUD_TITLE" = "Nuvem";
-"FIRST_STEPS_CLOUD_DETAILS" = "Envie os seus ficheiros multimédia para um serviço da nuvem, como o Google Drive ou o Dropbox para os descarregar ou transmitir remotamente.";
+"FIRST_STEPS_CLOUD_DETAILS" = "Envie a sua mediateca para um serviço da nuvem, tais como Dropbox ou Google Drive para a transferir ou transmitir remotamente.";
 
 
 "PLEX_CHECK_ACCOUNT" = "Verifique a sua conta Plex nas definições";
@@ -230,16 +240,19 @@
 "NO_SERVER_FOUND" = "Nenhum servidor encontrado";
 "NO_RECENT_STREAMS" = "Não foi reproduzida nenhuma transmissão recentemente";
 
-"WEBINTF_TITLE" = "Partilha por Wi-Fi";
+"WEBINTF_TITLE" = "Sharing via Wi-Fi";
 "WEBINTF_DROPFILES" = "Solte os ficheiros";
 "WEBINTF_DROPFILES_LONG" = "Solte os ficheiros na janela para os adicionar ao seu %@.<br>Ou clique no botão \"+\" para utilizar o seletor de ficheiros.";
-"WEBINTF_DOWNLOADFILES" = "Transferir ficheiros";
+"WEBINTF_DOWNLOADFILES" = "Transferir Ficheiros";
 "WEBINTF_DOWNLOADFILES_LONG" = "Basta clicar no ficheiro que pretende transferir do seu %@.";
 "WEBINTF_TITLE_ATV" = "Reprodução remota";
 "WEBINTF_DROPFILES_LONG_ATV" = "Solte os ficheiros na janela para os reproduzir no seu %@.<br>Ou clique no botão “+” para utilizar o seletor de ficheiros.";
 "WEBINTF_URL_SENT" = "URL enviado com sucesso.";
 "WEBINTF_URL_EMPTY" = "O URL não pode estar vazio.";
 "WEBINTF_URL_INVALID" = "Não é um URL válido.";
+"WEBINTF_AUTH_REQUIRED" = "Introduza o código de acesso que definiu no VLC iOS:";
+"WEBINTF_AUTH_WRONG_PASSCODE" = "Palavra-passe errada.<br> Tentativas restantes: ";
+"WEBINTF_AUTH_BANNED" = "Introduziu muitas palavras-passe erradas.<br>Reinicie o VLC iOS e tente novamente.";
 
 
 
@@ -260,7 +273,7 @@
 "HTTP_SERVER_ON" = "Desativar reprodução remota";
 "HTTP_SERVER_OFF" = "Ativar reprodução remota";
 "CACHED_MEDIA" = "Multimédia em cache";
-"CACHED_MEDIA_LONG" = "Os ficheiros mostrados nesta página estão armazenados na sua Apple TV. Estes conteúdos poderão ser removidos pelo sistema operativo, sem aviso prévio e enquanto o VLC não estiver aberto, se ficar sem armazenamento disponível.";
+"CACHED_MEDIA_LONG" = "Os ficheiros mostrados nesta página são guardados localmente na sua Apple TV. Estes conteúdos podem ser removidos pelo sistema operativo, sem aviso prévio quanto o VLC não está aberto, no caso do seu dispositivo ficar sem espaço de armazenamento.";
 "DOWNLOAD_SUBS_FROM_OSO" = "Transferir legendas de OpenSubtitles.org...";
 "FOUND_SUBS" = "Legendas encontradas";
 "USE_SPDIF" = "Usar passagem (S/PDIF)";
@@ -278,8 +291,11 @@
 "PLEX_LONG" = "Plex Media Server (via Bonjour)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "File Transfer Protocol (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "Sistema de Ficheiros de Rede (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "Servidor BONJOUR";
 "DSM_WORKGROUP" = "Grupo de trabalho";
@@ -314,7 +330,7 @@
 "ARTISTS" = "Artistas";
 "EPISODES" = "Episódios";
 "GENRES" = "Géneros";
-"MOVIES" = "Filmes";
+"ALL_VIDEOS" = "Todos os vídeos";
 "SONGS" = "Músicas";
 "PLAYLISTS" = "Listas de reprodução";
 "VIDEO_GROUPS" = "Grupos de vídeo";
@@ -353,6 +369,7 @@
 "DESCENDING_LABEL" = "Ordem descendente";
 "DESCENDING_SWITCH_LABEL" = "Ordem ascendente ou descendente";
 "DESCENDING_SWITCH_HINT" = "Contexto de ordenação ascendente ou descendente";
+"GRID_LAYOUT" = "Grid Layout";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -381,13 +398,38 @@
 "VARIOUS_ARTIST" = "Vários artistas";
 "UNKNOWN_ALBUM" = "Álbum desconhecido";
 
-/* VideoOptionsControlBar */
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Subtitles and audio tracks";
+"SUBTITLE_AND_TRACK_HINT" = "Choose subtitle or audio tracks";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "DVD interface";
+
+"ROTATION_LOCK_BUTTON" = "Rotation lock";
+"ROTATION_LOCK_HINT" = "Lock video to current orientation";
+
+"BACKWARD_BUTTON" = "Backward";
+"BACKWARD_HINT" = "Jump Backwards";
+
+"PREVIOUS_BUTTON" = "Previous";
+"PREVIOUS_HINT" = "Previous media";
+
+"PLAY_PAUSE_BUTTON" = "Play or pause";
+"PLAY_PAUSE_HINT" = "Play or Pause current playback";
+
+"NEXT_HINT" = "Next media";
+
+"FORWARD_BUTTON" = "Forward";
+"FORWARD_HINT" = "Jump forwards";
+
 "INTERFACE_LOCK_BUTTON" = "Bloquear interface";
-"INTERFACE_LOCK_HINT" = "Desativar controlos da interface";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video aspect ratio";
+"VIDEO_ASPECT_RATIO_HINT" = "Alterar a proporção do vídeo atual";
+
 "MORE_OPTIONS_BUTTON" = "Mais";
 "MORE_OPTIONS_HINT" = "Ver mais opções de controlos";
-"REPEAT_MODE_HINT" = "Alterar o modo de repetição do item atual";
-"VIDEO_ASPECT_RATIO_HINT" = "Alterar a proporção do vídeo atual";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "Equalizador";
@@ -403,3 +445,52 @@
 "SMBV1_WARN_DESCRIPTION" = "Detetámos um protocolo antigo (SMBv1).\nTem a certeza que deseja continuar com o SMBv1?\nAconselhamos a fazer o upgrade ou a alterar as definições do seu servidor.";
 "SMBV1_CONTINUE" = "Continuar com SMBv1";
 "SMBV1_NEXT_PROTOCOL" = "Experimentar SMBv2/v3";
+
+/* Preview labels */
+
+"ENCODING" = "A codificar";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "Add to media group";
+"ADD_TO_MEDIA_GROUP_HINT" = "Open the add to media group menu";
+
+"MEDIA_GROUPS" = "Media groups";
+"MEDIA_GROUPS_DESCRIPTION" = "Choose a title for your new media group";
+"MEDIA_GROUPS_PLACEHOLDER" = "Media group title";
+
+"REMOVE_FROM_MEDIA_GROUP" = "Remove from media group";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "Remove selection from the media group";
+
+"MEDIA_GROUP_CREATION" = "New media group";
+"MEDIA_GROUP_CREATION_HINT" = "Show alert to create a playlist";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "Move content to top level";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "Moves the content of the selection to the top level";
+
+"BUTTON_REGROUP" = "Reagrupar";
+"BUTTON_REGROUP_TITLE" = "Reagrupar seleção";
+"BUTTON_REGROUP_HINT" = "Attempt to regroup automatically single media.";
+"BUTTON_REGROUP_DESCRIPTION" = "Are you sure to attempt to regroup automatically single media?\nThis can take some time.";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "Place media here to add them";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "A adicionar...";
+
+/* tip jar */
+"GIVE_TIP" = "Dar uma dica";
+"CANNOT_MAKE_PAYMENTS" = "You are not allowed to make payments on this device.";
+"PURCHASE_FAILED" = "A compra falhou";
+"SEND_GIFT" = "Enviar o seu presente";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "Play";
+"PLAY_LABEL" = "Play";
+"PLAY_NEXT_IN_QUEUE_HINT" = "Play next in queue";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "Play next in queue";
+"APPEND_TO_QUEUE_HINT" = "Append to queue";
+"APPEND_TO_QUEUE_LABEL" = "Append to queue";
+
+"DISABLE_GROUPS" = "Disable groups";
+"DISABLE_GROUPS_SWITCH_HINT" = "Disable groups layout";
+"DISPLAY_AS" = "Display as";

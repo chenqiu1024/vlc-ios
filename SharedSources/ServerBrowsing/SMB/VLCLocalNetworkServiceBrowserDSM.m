@@ -50,7 +50,6 @@ static NSString *const VLCLocalNetworkServiceDSMWorkgroupIdentifier = @"VLCLocal
 
 @implementation VLCLocalNetworkServiceDSM
 
-
 + (void)registerLoginInformation
 {
     VLCNetworkServerLoginInformation *login = [[VLCNetworkServerLoginInformation alloc] init];
@@ -68,6 +67,7 @@ static NSString *const VLCLocalNetworkServiceDSMWorkgroupIdentifier = @"VLCLocal
 - (UIImage *)icon {
     return [UIImage imageNamed:@"serverIcon"];
 }
+
 - (VLCNetworkServerLoginInformation *)loginInformation {
 
     VLCMedia *media = self.mediaItem;
@@ -86,9 +86,9 @@ static NSString *const VLCLocalNetworkServiceDSMWorkgroupIdentifier = @"VLCLocal
 
 + (instancetype)SMBNetworkServerBrowserWithLogin:(VLCNetworkServerLoginInformation *)login
 {
-    NSURLComponents *components = [[NSURLComponents alloc] init];
+    NSString *path = [NSString stringWithFormat:@"//%@", login.address];
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:path];
     components.scheme = @"smb";
-    components.host = login.address;
     components.port = login.port;
     NSURL *url = components.URL;
 
@@ -111,7 +111,8 @@ static NSString *const VLCLocalNetworkServiceDSMWorkgroupIdentifier = @"VLCLocal
 	VLCMedia *media = [VLCMedia mediaWithURL:url];
 	NSDictionary *mediaOptions = @{@"smb-user" : username ?: @"",
 								   @"smb-pwd" : password ?: @"",
-								   @"smb-domain" : workgroup?: @"WORKGROUP"};
+                                   @"smb-domain" : workgroup?: @"WORKGROUP",
+                                   kVLCForceSMBV1 : @([[NSUserDefaults standardUserDefaults] boolForKey:kVLCForceSMBV1])};
 	[media addOptions:mediaOptions];
 	return [[self alloc] initWithMedia:media options:mediaOptions];
 }

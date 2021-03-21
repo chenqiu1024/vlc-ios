@@ -9,6 +9,7 @@
 "SETTINGS_THEME_SYSTEM" = "אוטומטית";
 "SETTINGS_PRIVACY_SUBTITLE" = "פתיחה בהגדרות";
 "SETTINGS_PASSCODE_LOCK_SUBTITLE" = "גישה מאובטחת לתוכן שלך";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE" = "המדיה שלך תוסתר ביישומון הקבצים";
 
 "SETTINGS_DARKTHEME" = "מראה";
 "SETTINGS_TIME_STRETCH_AUDIO" = "מתיחת זמן השמע";
@@ -17,6 +18,7 @@
 "SETTINGS_PASSCODE_LOCK" = "נעילה בצופן";
 "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID" = "אפשר Touch ID לפתיחת נעילה";
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "לאפשר זיהוי פנים לשחרור";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "הסתרת ספריית המדיה בקבצים";
 "SETTINGS_VIDEO_FULLSCREEN" = "נגן סרט במסך מלא";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "המשך נגינת סרט";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "המשך נגינת שמע";
@@ -24,6 +26,7 @@
 "SETTINGS_CONTINUE_PLAYBACK_ASK" = "שאל";
 "SETTINGS_CONTINUE_PLAYBACK_ALWAYS" = "תמיד";
 "SETTINGS_NETWORK_PLAY_ALL" = "לנגן אוטומטית את הפריט הבא";
+"SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING" = "הפעלת גלילת טקסט ברשימת המדיה";
 
 "SETTINGS_SKIP_LOOP_FILTER" = "דיבלוק (Deblocking) פילטר";
 "SETTINGS_SKIP_LOOP_FILTER_NONE" = "ללא טשטוש גבולות ריבועים (הכי מהיר)";
@@ -81,6 +84,9 @@
 "SETTINGS_HWDECODING" = "פענוח חומרה";
 "SETTINGS_HWDECODING_ON" = "פעיל";
 "SETTINGS_HWDECODING_OFF" = "כבוי";
+"SETTINGS_CASTING" = "שידור";
+"SETTINGS_PTCASTING" = "מסירת שמע";
+"SETTINGS_PTCASTINGLONG" = "לאפשר לטלוויזיה שלך לנהל את עיבוד השמע";
 
 "SETTINGS_FEEDBACK" = "משוב";
 "SETTINGS_SEND_FEEDBACK" = "שלח משוב";
@@ -89,23 +95,17 @@
 "SETTINGS_MEDIA_LIBRARY" = "ספריית מדיה";
 "SETTINGS_MEDIA_LIBRARY_RESCAN" = "אילוץ סריקת ספריית המדיה מחדש על ידי VLC";
 "SETTINGS_DECRAPIFY" = "התאמת השמות לתצוגה";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "זיהוי קבוצות וידאו אורך";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "קצר";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "בררת מחדל";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "ארוך";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "ארוך במיוחד";
 "SETTINGS_SHOW_THUMBNAILS" = "הצגת תמונות ממוזערות של סרטונים";
 "SETTINGS_SHOW_ARTWORKS" = "הצגת מיצג אומנותי של מקטע שמע";
 "SETTINGS_BACKUP_MEDIA_LIBRARY" = "לכלול את תיקיות המדיה בגיבוי המכשיר";
 
 "SETTINGS_FILE_SYNC" = "סנכרון קבצים";
-"SETTINGS_WIFISHARING_IPv6" = "תמיכה ב IPv6 לשיתוף באמצעות WiFi";
-"SETTINGS_UNLINK_DROPBOX" = "ביטול הקישור לדרופבוקס";
-"SETTINGS_UNLINK_GOOGLEDRIVE" = "ניתוק מ־Google Drive";
-"SETTINGS_UNLINK_ONEDRIVE" = "נתק חיבור ל OneDrive";
-"SETTINGS_FTP_TEXT_ENCODING" = "קידוד טקסט לחיבורי FTP";
+"SETTINGS_WIFISHARING_IPv6" = "תמיכה ב־IPv6 לשיתוף באמצעות Wi-Fi";
 
 "SETTINGS_ARTWORK" = "עטיפת אלבום";
 "SETTINGS_DOWNLOAD_ARTWORK" = "הורדת עטיפת האלבום";
+
+"SETTINGS_LAB" = "מעבדה";
+"SETTINGS_NEW_PLAYER" = "נגן חדש";
 
 "ABOUT_APP_TV" = "אודות VLC ל tvOS";

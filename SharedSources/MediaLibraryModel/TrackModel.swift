@@ -14,19 +14,23 @@ class TrackModel: MediaModel {
 
     var sortModel = SortModel([.alpha, .album, .duration, .fileSize])
 
-    var updateView: (() -> Void)?
+    var observable = Observable<MediaLibraryBaseModelObserver>()
 
     var files = [VLCMLMedia]()
 
-    var cellType: BaseCollectionViewCell.Type { return MediaCollectionViewCell.self }
+    var cellType: BaseCollectionViewCell.Type {
+        return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(name)") ? MediaGridCollectionCell.self : MediaCollectionViewCell.self
+    }
 
     var medialibrary: MediaLibraryService
+
+    var name: String = "SONGS"
 
     var indicatorName: String = NSLocalizedString("SONGS", comment: "")
 
     required init(medialibrary: MediaLibraryService) {
         self.medialibrary = medialibrary
-        medialibrary.addObserver(self)
+        medialibrary.observable.addObserver(self)
         files = medialibrary.media(ofType: .audio)
     }
 }
@@ -41,7 +45,9 @@ extension TrackModel {
                                    desc: desc)
         sortModel.currentSort = criteria
         sortModel.desc = desc
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 }
 
@@ -50,13 +56,17 @@ extension TrackModel {
 extension TrackModel: MediaLibraryObserver {
     func medialibrary(_ medialibrary: MediaLibraryService, didAddTracks tracks: [VLCMLMedia]) {
         tracks.forEach({ append($0) })
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 
     func medialibrary(_ medialibrary: MediaLibraryService, didModifyTracks tracks: [VLCMLMedia]) {
         if !tracks.isEmpty {
             files = swapModels(with: tracks)
-            updateView?()
+            observable.observers.forEach() {
+                $0.value.observer?.mediaLibraryBaseModelReloadView()
+            }
         }
     }
 
@@ -67,6 +77,8 @@ extension TrackModel: MediaLibraryObserver {
             }
             return true
         }
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 }

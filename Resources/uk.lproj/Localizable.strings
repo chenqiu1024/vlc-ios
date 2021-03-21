@@ -1,4 +1,4 @@
-"STORE_DESCRIPTION" = "VLC для iOS — це порт вільного медіапрогравача VLC на iPad, iPhone та iPod touch.\nВін може відтворювати усі фільми, відео та музику у більшості відомих форматів безпосередньо без перетворення.\nТакож VLC дозволяє синхронізацію файлів через Dropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes, прямі завантаження та через WiFi, а також потоковий перегляд із  SMB, FTP, UPnP/DLNA медіасерверів чи інтернету.\n\nVLC для iOS — повністю вільний із відритим вихідним кодом.";
+"STORE_DESCRIPTION" = "VLC для iOS — це порт вільного медіапрогравача VLC на iPad, iPhone та iPod touch.\nВін може відтворювати усі фільми, відео та музику у більшості відомих форматів безпосередньо без перетворення.\nТакож VLC дозволяє синхронізацію файлів через Dropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes, прямі завантаження та через Wi-Fi, а також потоковий перегляд із  SMB, FTP, UPnP/DLNA медіасерверів чи інтернету.\n\nVLC для iOS — повністю вільний із відритим джерельним кодом.";
 
 "STORE_DESCRIPTION_TV" = "Медіапрогравач VLC — це вільний із відкритим вихідним кодом багатоплатформовий мультимедійний програвач.\nВін може відтворювати усі фільми, відео та музику у більшості відомих форматів безпосередньо без перетворення.\nТакож VLC дозволяє синхронізацію файлів через хмарні служби (Dropbox, OneDrive, Box), віддалене відтворення через ваш Mac або ПК, а також через веб-інтерфейс разом із потоковим переглядом із  SMB, FTP, UPnP/DLNA медіасерверів чи інтернету.\nVLC пропонує підтримку для розширених субтитрів, включаючи повну сумісність із SSA, багато-доріжкове аудіо та керування швидкістю відтворення.\n\nVLC для iOS — повністю вільний із відритим вихідним кодом.\n\nМетадані та художні роботи надані TMDb та Hatchet, які є підтримуваними громадськістю базами даних кіно та музики.";
 
@@ -35,9 +35,11 @@
 "VFILTER_SATURATION" = "Насиченість";
 "VFILTER_GAMMA" = "Гама";
 
+"PRESETS" = "Переднабори";
 "PREAMP" = "Попередній підсилювач";
 "DB_FORMAT" = "%i дБ";
 "CHOOSE_EQUALIZER_PROFILES" = "Вибрати профіль еквалайзера";
+"SNAP_BANDS" = "Вхопити смуги";
 
 "PLAYBACK_FAILED" = "Відтворення провалилося";
 "PLEASE_WAIT" = "Будь ласка, зачекайте";
@@ -75,8 +77,11 @@
 "BUTTON_RENDERER" = "Пристрої для трансляції";
 "BUTTON_RENDERER_HINT" = "Показати меню доступних пристроїв для трансляції";
 
+
+"BUTTON_PLAY_QUEUE" = "Відтворити чергу";
+"BUTTON_PLAY_QUEUE_HINT" = "Показати перегляд черги відтворення";
+
 "UPGRADING_LIBRARY" = "Оновлюється медіабібліотека";
-"UNKNOWN" = "Невідомо";
 
 "OPEN_NETWORK" = "Відкрити мережевий потік";
 "NETWORK_TITLE" = "Мережевий потік";
@@ -128,6 +133,9 @@
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "ЗБІЙ З'ЄДНАННЯ З СЕРВЕРОМ";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "Перевірте адресу сервера та ваші облікові дані";
 
+"FILES_APP_CELL_TITLE" = "Локальні файли";
+"FILES_APP_CELL_SUBTITLE" = "Відкрити файл без копіювання його на VLC";
+
 "CLOUD_SERVICES" = "Хмарні служби";
 "LOGIN" = "Вхід";
 "LOGGED_IN" = "Увійшов (ла)";
@@ -176,7 +184,7 @@
 "OFF" = "Вимкн.";
 
 "EMPTY_LIBRARY" = "Порожня бібліотека медіа";
-"EMPTY_LIBRARY_LONG" = "Для відтворення ви можете пустити медіапотік від сервера на вашу локальну мережу, від хмари або синхронізувати медіафайли з вашим пристроєм через iTunes, WiFi Upload або хмарні служби.";
+"EMPTY_LIBRARY_LONG" = "Для відтворення ви можете пустити медіапотік від сервера на вашу локальну мережу, від хмари або синхронізувати медіафайли з вашим пристроєм через iTunes, вивантаження Wi-Fi  або хмарні служби.";
 
 "EMPTY_PLAYLIST" = "Порожній список відтворення";
 "EMPTY_PLAYLIST_DESCRIPTION" = "Додати медіа під час редагування у відповідні категорії.";
@@ -189,14 +197,18 @@
 "PLAYBACK_POSITION" = "Позиція відтворення";
 "VIDEO_FILTER" = "Відеофільтри";
 "VIDEO_FILTER_RESET_BUTTON" = "Очистити відеофільтри";
-"VIDEO_ASPECT_RATIO_BUTTON" = "Перемкнути співвідношення сторін відео";
-"PLAY_PAUSE_BUTTON" = "Грати або зупинити поточне відтворення";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Співвідношення сторін відео";
 "BWD_BUTTON" = "Стрибок назад";
 "FWD_BUTTON" = "Стрибок вперед";
 "PLAY_BUTTON" = "Відтворити";
 "NEXT_BUTTON" = "Наступний";
 "PREV_BUTTON" = "Попередній";
 "PLAY_ALL_BUTTON" = "Відтворити все";
+
+"RESET_VIDEO_FILTERS" = "Ви хочете очистити фільтри відео?";
+"RESET_PLAYBACK_SPEED" = "Ви хочете вернути швидкість відтворення?";
+"RESET_EQUALIZER" = "Ви хочете очистити налаштування еквалайзера?";
+"RESET_SLEEP_TIMER" = "Ви хочете очистити параметри таймера сну?";
 
 "VERSION_FORMAT" = "Версія: %@";
 "BASED_ON_FORMAT" = "На основі:<br />%@";
@@ -213,7 +225,7 @@
 "FIRST_STEPS_ITUNES" = "Синхронізація файлів через iTunes";
 "FIRST_STEPS_ITUNES_TITLE" = "Синхронізувати з вашим комп'ютером";
 "FIRST_STEPS_ITUNES_DETAILS" = "Під'єднайте пристрій до iTunes і виберіть свій пристрій. Виберіть \"Поширення файлу\" у меню з лівого боку iTunes і знайдіть VLC для передачі файлів";
-"FIRST_STEPS_WIFI_TITLE" = "Поділитися через Wifi";
+"FIRST_STEPS_WIFI_TITLE" = "Поширити через Wi-Fi";
 "FIRST_STEPS_WIFI_DETAILS" = "Введіть згенеровану URL-адресу у вашому улюбленому веб-переглядачі під час під'єднання до тієї ж мережі, що й ваш телефон";
 "FIRST_STEPS_CLOUDS" = "Хмари";
 "FIRST_STEPS_CLOUD_TITLE" = "Хмара";
@@ -281,8 +293,11 @@
 "PLEX_LONG" = "Медіа сервер Plex (через Bonjour)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "Протокол обміну файлів (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "Мережева файлова система (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "Сервер файлів BONJOUR";
 "DSM_WORKGROUP" = "Робоча група";
@@ -317,7 +332,7 @@
 "ARTISTS" = "Виконавці";
 "EPISODES" = "Епізоди";
 "GENRES" = "Жанри";
-"MOVIES" = "Фільми";
+"ALL_VIDEOS" = "Усі відео";
 "SONGS" = "Пісні";
 "PLAYLISTS" = "Списки відтворення";
 "VIDEO_GROUPS" = "Групи відео";
@@ -356,6 +371,7 @@
 "DESCENDING_LABEL" = "Спадний порядок";
 "DESCENDING_SWITCH_LABEL" = "Зростальний чи спадний порядок";
 "DESCENDING_SWITCH_HINT" = "Упорядкувати вміст за порядком зростанням чи спадання";
+"GRID_LAYOUT" = "Макет сітки";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -384,13 +400,38 @@
 "VARIOUS_ARTIST" = "Різні виконавці";
 "UNKNOWN_ALBUM" = "Невідомий альбом";
 
-/* VideoOptionsControlBar */
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Субтитри та доріжки аудіо";
+"SUBTITLE_AND_TRACK_HINT" = "Виберіть субтитри або доріжку аудіо";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "Інтерфейс DVD";
+
+"ROTATION_LOCK_BUTTON" = "Блокування повороту";
+"ROTATION_LOCK_HINT" = "Блокувати поточну орієнтацію на відео";
+
+"BACKWARD_BUTTON" = "Назад";
+"BACKWARD_HINT" = "Стрибок назад";
+
+"PREVIOUS_BUTTON" = "Попередній";
+"PREVIOUS_HINT" = "Наступне медіа";
+
+"PLAY_PAUSE_BUTTON" = "Відтворити або призупинити";
+"PLAY_PAUSE_HINT" = "Відтворити або зупинити поточне відтворення";
+
+"NEXT_HINT" = "Наступне медіа";
+
+"FORWARD_BUTTON" = "Вперед";
+"FORWARD_HINT" = "Стрибок вперед";
+
 "INTERFACE_LOCK_BUTTON" = "Заблокувати інтерфейс";
-"INTERFACE_LOCK_HINT" = "Вимкнути управління інтерфейсом";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Співвідношення сторін відео";
+"VIDEO_ASPECT_RATIO_HINT" = "Змінити співвідношення сторін поточного відео";
+
 "MORE_OPTIONS_BUTTON" = "Більше";
 "MORE_OPTIONS_HINT" = "Переглянути більше параметрів управління";
-"REPEAT_MODE_HINT" = "Змінити режим повторення поточного елемента";
-"VIDEO_ASPECT_RATIO_HINT" = "Змінити співвідношення сторін поточного відео";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "Еквалайзер";
@@ -410,3 +451,48 @@
 /* Preview labels */
 
 "ENCODING" = "Кодування";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "Додати до групи медіа";
+"ADD_TO_MEDIA_GROUP_HINT" = "Відкрити пункт меню „Додати до групи медіа“";
+
+"MEDIA_GROUPS" = "Групи медіа";
+"MEDIA_GROUPS_DESCRIPTION" = "Виберіть заголовок для вашої нової групи медіа";
+"MEDIA_GROUPS_PLACEHOLDER" = "Назва групи медіа";
+
+"REMOVE_FROM_MEDIA_GROUP" = "Вилучити з групи медіа";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "Вилучити обране з групи медіа";
+
+"MEDIA_GROUP_CREATION" = "Нова група медіа";
+"MEDIA_GROUP_CREATION_HINT" = "Показувати попередження при створенні списку відтворення";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "Перемістити матеріали на верхній рівень";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "Переміщує матеріали з обраного на верхній рівень";
+
+"BUTTON_REGROUP" = "Перегрупувати";
+"BUTTON_REGROUP_TITLE" = "Перегрупувати обране";
+"BUTTON_REGROUP_HINT" = "Спроба автоматично перегрупувати одне медіа.";
+"BUTTON_REGROUP_DESCRIPTION" = "Ви справді хочете перегрупувати автоматично одне медіа?\nЦе може зайняти деякий час.";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "Розмістіть медіа тут, щоб додати їх";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "Додавання...";
+
+/* tip jar */
+"GIVE_TIP" = "Дати пораду";
+"CANNOT_MAKE_PAYMENTS" = "Вам не дозволено робити платежі на цьому пристрої.";
+"PURCHASE_FAILED" = "Купівля невдала";
+"SEND_GIFT" = "Надіслати ваш подарунок";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "Відтворити";
+"PLAY_LABEL" = "Відтворити";
+"PLAY_NEXT_IN_QUEUE_HINT" = "Відтворити наступне у черзі";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "Відтворити наступне у черзі";
+"APPEND_TO_QUEUE_HINT" = "Додати до черги";
+"APPEND_TO_QUEUE_LABEL" = "Додати до черги";
+
+"DISABLE_GROUPS" = "Вимкнути групи";
+"DISABLE_GROUPS_SWITCH_HINT" = "Вимкнути макет груп";
+"DISPLAY_AS" = "Показувати як";

@@ -35,9 +35,11 @@
 "VFILTER_SATURATION" = "Sättigung";
 "VFILTER_GAMMA" = "Gamma";
 
+"PRESETS" = "Voreinstellung";
 "PREAMP" = "Preamp";
 "DB_FORMAT" = "%i dB";
 "CHOOSE_EQUALIZER_PROFILES" = "Equalizer-Profil wählen";
+"SNAP_BANDS" = "Bänder mitziehen";
 
 "PLAYBACK_FAILED" = "Wiedergabe fehlgeschlagen";
 "PLEASE_WAIT" = "Bitte warten";
@@ -75,8 +77,11 @@
 "BUTTON_RENDERER" = "Casting-Geräte";
 "BUTTON_RENDERER_HINT" = "Menü mit verfügbaren Casting-Geräten anzeigen";
 
+
+"BUTTON_PLAY_QUEUE" = "Warteschlange wiedergeben";
+"BUTTON_PLAY_QUEUE_HINT" = "Wiedergabewarteschlange anzeigen";
+
 "UPGRADING_LIBRARY" = "Mediathek aktualisieren";
-"UNKNOWN" = "Unbekannt";
 
 "OPEN_NETWORK" = "Netzwerkstream öffnen";
 "NETWORK_TITLE" = "Netzwerk-Stream";
@@ -127,6 +132,9 @@
 "LOCAL_SERVER_LAST_UPDATE" = "Zuletzt aktualisiert am %@";
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "SERVERVERBINDUNG FEHLGESCHLAGEN";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "Bitte überprüfen Sie Ihre Servereinstellungen und Voraussetzungen";
+
+"FILES_APP_CELL_TITLE" = "Lokale Dateien";
+"FILES_APP_CELL_SUBTITLE" = "Datei öffnen, ohne diese zu VLC zu kopieren ";
 
 "CLOUD_SERVICES" = "Cloud-Dienste";
 "LOGIN" = "Anmelden";
@@ -189,14 +197,18 @@
 "PLAYBACK_POSITION" = "Wiedergabeposition";
 "VIDEO_FILTER" = "Videofilter";
 "VIDEO_FILTER_RESET_BUTTON" = "Videofilter zurück setzen";
-"VIDEO_ASPECT_RATIO_BUTTON" = "Video-Seitenverhältnis ändern";
-"PLAY_PAUSE_BUTTON" = "Aktuelle Wiedergabe pausieren oder fortsetzen";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video-Seitenverhältnis";
 "BWD_BUTTON" = "Sprung zurück";
 "FWD_BUTTON" = "Sprung vorwärts";
 "PLAY_BUTTON" = "Wiedergabe";
 "NEXT_BUTTON" = "Nächster";
 "PREV_BUTTON" = "Vorheriger";
 "PLAY_ALL_BUTTON" = "Alle wiedergeben";
+
+"RESET_VIDEO_FILTERS" = "Möchten Sie die Videofilter zurücksetzen?";
+"RESET_PLAYBACK_SPEED" = "Möchten Sie die Wiedergabegeschwindigkeit zurücksetzen?";
+"RESET_EQUALIZER" = "Möchten Sie die Equalizer-Einstellungen zurücksetzen?";
+"RESET_SLEEP_TIMER" = "Möchten Sie die Schlummerfunktion zurücksetzen?";
 
 "VERSION_FORMAT" = "Version: %@";
 "BASED_ON_FORMAT" = "Basiert auf:<br />%@";
@@ -281,8 +293,11 @@
 "PLEX_LONG" = "Plex Medienserver (über Bonjour)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "File Transfer Protocol (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "Netzwerk-Dateisytem (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "BONJOUR-Dateiserver";
 "DSM_WORKGROUP" = "Arbeitsgruppe";
@@ -317,7 +332,7 @@
 "ARTISTS" = "Künstler";
 "EPISODES" = "Episoden";
 "GENRES" = "Genres";
-"MOVIES" = "Filme";
+"ALL_VIDEOS" = "Alle Videos";
 "SONGS" = "Lieder";
 "PLAYLISTS" = "Wiedergabelisten";
 "VIDEO_GROUPS" = "Videogruppen";
@@ -356,6 +371,7 @@
 "DESCENDING_LABEL" = "Absteigende Sortierung";
 "DESCENDING_SWITCH_LABEL" = "Aufsteigende oder Absteigende Sortierung";
 "DESCENDING_SWITCH_HINT" = "Inhalt aufsteigend oder absteigend sortieren";
+"GRID_LAYOUT" = "Gitterstruktur";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -384,13 +400,38 @@
 "VARIOUS_ARTIST" = "Verschiedene Künstler";
 "UNKNOWN_ALBUM" = "Unbekanntes Album";
 
-/* VideoOptionsControlBar */
-"INTERFACE_LOCK_BUTTON" = "Schnittstelle sperren";
-"INTERFACE_LOCK_HINT" = "Schnittstellensteuerung deaktivieren";
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Untertitel und Audiospuren";
+"SUBTITLE_AND_TRACK_HINT" = "Wählen Sie Untertitel oder Audiospuren aus";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "DVD-Schnittstelle";
+
+"ROTATION_LOCK_BUTTON" = "Drehsperre";
+"ROTATION_LOCK_HINT" = "Video auf aktuelle Ausrichtung sperren";
+
+"BACKWARD_BUTTON" = "Rückwärts";
+"BACKWARD_HINT" = "Sprung zurück";
+
+"PREVIOUS_BUTTON" = "Vorheriger";
+"PREVIOUS_HINT" = "Vorheriger Titel";
+
+"PLAY_PAUSE_BUTTON" = "Wiedergabe oder Pause";
+"PLAY_PAUSE_HINT" = "Aktuelle Wiedergabe pausieren oder fortsetzen";
+
+"NEXT_HINT" = "Nächster Titel";
+
+"FORWARD_BUTTON" = "Vorwärts";
+"FORWARD_HINT" = "Sprung vorwärts";
+
+"INTERFACE_LOCK_BUTTON" = "Oberfläche sperren";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video-Seitenverhältnis";
+"VIDEO_ASPECT_RATIO_HINT" = "Seitenverhältnis des aktuellen Videos ändern";
+
 "MORE_OPTIONS_BUTTON" = "Mehr";
 "MORE_OPTIONS_HINT" = "Weitere Optionen der Steuerelemente anzeigen";
-"REPEAT_MODE_HINT" = "Wiederholungsmodus des aktuellen Elements ändern";
-"VIDEO_ASPECT_RATIO_HINT" = "Seitenverhältnis des aktuellen Videos ändern";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "Equalizer";
@@ -410,3 +451,48 @@
 /* Preview labels */
 
 "ENCODING" = "Codierung";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "Zur Mediengruppe hinzufügen";
+"ADD_TO_MEDIA_GROUP_HINT" = "Menü zur Mediengruppe hinzufügen öffnen";
+
+"MEDIA_GROUPS" = "Mediengruppen";
+"MEDIA_GROUPS_DESCRIPTION" = "Wählen Sie einen Titel für die neue Mediengruppe";
+"MEDIA_GROUPS_PLACEHOLDER" = "Titel der Mediengruppe";
+
+"REMOVE_FROM_MEDIA_GROUP" = "Aus Mediengruppe entfernen";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "Auswahl aus der Mediengruppe entfernen";
+
+"MEDIA_GROUP_CREATION" = "Neue Mediengruppe";
+"MEDIA_GROUP_CREATION_HINT" = "Warnung anzeigen, um eine Wiedergabeliste zu erstellen";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "Inhalt auf die oberste Ebene verschieben";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "Verschiebt den Inhalt der Auswahl auf die oberste Ebene";
+
+"BUTTON_REGROUP" = "Umgruppieren";
+"BUTTON_REGROUP_TITLE" = "Auswahl umgruppieren";
+"BUTTON_REGROUP_HINT" = "Einzelne Medien werden automatisch versucht, neu gruppiert zu werden.";
+"BUTTON_REGROUP_DESCRIPTION" = "Sind Sie sicher, es zu versuchen, einzelne Medien automatisch neu zu gruppieren?\nDies kann einige Zeit dauern.";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "Medien hier plazieren, um sie hinzuzufügen";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "Füge hinzu....";
+
+/* tip jar */
+"GIVE_TIP" = "Trinkgeld geben";
+"CANNOT_MAKE_PAYMENTS" = "Sie dürfen auf diesem Gerät keine Zahlungen tätigen.";
+"PURCHASE_FAILED" = "Kauf gescheitert";
+"SEND_GIFT" = "Ihr Geschenk senden";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "Wiedergabe";
+"PLAY_LABEL" = "Wiedergabe";
+"PLAY_NEXT_IN_QUEUE_HINT" = "Nächstes aus der Wiedergabewarteschlange wiedergeben";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "Nächstes aus der Wiedergabewarteschlange wiedergeben";
+"APPEND_TO_QUEUE_HINT" = "An Wiedergabewarteschlange anhängen";
+"APPEND_TO_QUEUE_LABEL" = "An Wiedergabewarteschlange anhängen";
+
+"DISABLE_GROUPS" = "Gruppierung deaktivieren";
+"DISABLE_GROUPS_SWITCH_HINT" = "Deaktivierung des Gruppenlayouts";
+"DISPLAY_AS" = "Anzeigen als";

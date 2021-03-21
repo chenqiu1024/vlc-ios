@@ -11,8 +11,6 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-#define kVLCVersionCodename @"All Along the Watchtower"
-
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"
 #define kVLCStoreDropboxCredentials @"kVLCStoreDropboxCredentials"
@@ -33,7 +31,7 @@
 #define kVLCSettingSkipLoopFilterNonRef @(1)
 #define kVLCSettingSkipLoopFilterNonKey @(3)
 #define kVLCSettingDeinterlace @"deinterlace"
-#define kVLCSettingDeinterlaceDefaultValue @(0)
+#define kVLCSettingDeinterlaceDefaultValue @(-1)
 #define kVLCSettingHardwareDecoding @"codec"
 #define kVLCSettingHardwareDecodingDefault @""
 #define kVLCSettingSubtitlesFont @"quartztext-font"
@@ -58,12 +56,12 @@
 #define kVLCSettingPlaybackForwardSkipLengthDefaultValue @(60)
 #define kVLCSettingPlaybackBackwardSkipLength @"playback-forward-skip-length"
 #define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(60)
-#define kVLCSettingFTPTextEncoding @"ftp-text-encoding"
-#define kVLCSettingFTPTextEncodingDefaultValue @(5) // ISO Latin 1
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
 #define kVLCSettingDownloadArtwork @"download-artwork"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"
+#define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
+#define kVLCSettingBackupMediaLibraryDefaultValue @NO
 
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
@@ -74,5 +72,7 @@
 #define kVLCStoredServerList @"kVLCStoredServerList"
 
 #define kVLCHTTPUploadDirectory @"Upload"
+
+#define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
 
 #define kVLCForceSMBV1 @"smb-force-v1"

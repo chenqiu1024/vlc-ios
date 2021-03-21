@@ -1,4 +1,4 @@
-"STORE_DESCRIPTION" = "O VLC para iOS é uma versão do reprodutor de mídias VLC para iPad, iPhone e iPod touch. Ele pode reproduzir seus filmes, espetáculos e músicas em muitos formatos diretamente, sem conversão. Ele permite a sincronização com Dropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes, ou baixar diretamente e através de compartilhamentos WiFi, bem como fluxos de rede de servidores SMB, FTP, UPnP/DLNA e servidores de mídia da Web. O VLC oferece suporte legendas avançadas, incluindo compatibilidade total com SSA, áudio de múltiplas faixas e controle de velocidade de reprodução.\n\nO VLC para iOS é completamente livre e de código aberto.";
+"STORE_DESCRIPTION" = "O VLC para iOS é uma versão do reprodutor de mídias VLC para iPad, iPhone e iPod touch. Ele pode reproduzir seus filmes, espetáculos e músicas em muitos formatos diretamente, sem conversão. Ele permite a sincronização com Dropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes, ou baixar diretamente e através de compartilhamentos Wi-Fi, bem como fluxos de rede de servidores SMB, FTP, UPnP/DLNA e servidores de mídia da Web. O VLC oferece suporte legendas avançadas, incluindo compatibilidade total com SSA, áudio de múltiplas faixas e controle de velocidade de reprodução.\n\nO VLC para iOS é completamente livre e de código aberto.";
 
 "STORE_DESCRIPTION_TV" = "O Reprodutor de Mídias VLC é um reprodutor de mídias livre e para múltiplas plataformas.\nEle pode reproduzir seus filmes, espetáculos e músicas em muitos formatos diretamente, sem conversão.\nEle permite fluxos de rede de serviços na nuvem (Dropbox, OneDrive, Box), Reprodução Remota do seu Mac ou PC via uma interface Web, bem como fluxos de servidores de mídia SMB, FTP, UPnP/DLNA e a Web.\nO VLC oferece suporte a legendas avançadas, incluindo compatibilidade total com SSA, áudio de múltiplas faixas e controle de velocidade de reprodução. O VLC para iOS é completamente livre e de código aberto.\n\nO VLC para iOS é completamente livre e de código aberto.\n\nOs metadados e as capas são providos pela TMDb e pelo Hatchet, que são bancos de dados de filmes e músicas mantidas por comunidades.";
 
@@ -35,9 +35,11 @@
 "VFILTER_SATURATION" = "Saturação";
 "VFILTER_GAMMA" = "Gama";
 
+"PRESETS" = "Padrões";
 "PREAMP" = "Pré amplificador";
 "DB_FORMAT" = "%i dB";
 "CHOOSE_EQUALIZER_PROFILES" = "Escolha o Perfil do Equalizador";
+"SNAP_BANDS" = "Braceletes";
 
 "PLAYBACK_FAILED" = "Falha na reprodução";
 "PLEASE_WAIT" = "Por favor, aguarde";
@@ -47,8 +49,8 @@
 "PLAYBACK_SPEED" = "Velocidade de reprodução";
 "SPU_DELAY" = "Atraso da legenda";
 "AUDIO_DELAY" = "Atraso de áudio";
-"BUTTON_SLEEP_TIMER" = "Despertador";
-"SLEEP_TIMER_UPDATED" = "Despertador Atualizado";
+"BUTTON_SLEEP_TIMER" = "Temporizador de Suspensão";
+"SLEEP_TIMER_UPDATED" = "Temporizador de Suspensão Atualizado";
 "CONTINUE_PLAYBACK" = "Continuar a reprodução?";
 "CONTINUE_PLAYBACK_LONG" = "Deseja retomar a reprodução de \"%@\" de onde parou?";
 
@@ -75,14 +77,17 @@
 "BUTTON_RENDERER" = "Dispositivos de conversão";
 "BUTTON_RENDERER_HINT" = "Mostrar um menu de dispositivos de conversão disponíveis";
 
+
+"BUTTON_PLAY_QUEUE" = "Fila de reprodução";
+"BUTTON_PLAY_QUEUE_HINT" = "Exibir a visão de fila de reprodução";
+
 "UPGRADING_LIBRARY" = "Atualizando a Biblioteca de Mídias";
-"UNKNOWN" = "Desconhecido";
 
 "OPEN_NETWORK" = "Abrir Fluxo de Rede";
 "NETWORK_TITLE" = "Fluxo de Rede";
 "OPEN_NETWORK_HELP" = "Digite um endereço HTTP, RTSP, RTMP, MMS, FTP ou UDP/RTP para abrir o fluxo diretamente.";
 "HTTP_UPLOAD_SERVER_OFF" = "Servidor inativo";
-"HTTP_UPLOAD_NO_CONNECTIVITY" = "Não há conexão WiFi ativa";
+"HTTP_UPLOAD_NO_CONNECTIVITY" = "Não há conexão Wi-Fi ativa";
 "OPEN_STREAM_OR_DOWNLOAD" = "Gostaria de baixar ou reproduzir esta URL?";
 "SHARED_VLC_IOS_LIBRARY" = "VLC Compartilhado para a Biblioteca iOS";
 "SMB_CIFS_FILE_SERVERS" = "Servidores de Arquivos (SMB)";
@@ -127,6 +132,9 @@
 "LOCAL_SERVER_LAST_UPDATE" = "Atualizado pela última vez em %@";
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "FALHA AO CONECTAR AO SERVIDOR";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "Por favor, verifique o endereço do servidor e suas credenciais";
+
+"FILES_APP_CELL_TITLE" = "Arquivos locais";
+"FILES_APP_CELL_SUBTITLE" = "Abre um arquivo sem copiá-lo para o VLC";
 
 "CLOUD_SERVICES" = "Serviços da Nuvem";
 "LOGIN" = "Ingressar";
@@ -176,7 +184,7 @@
 "OFF" = "Desligado";
 
 "EMPTY_LIBRARY" = "Biblioteca de Mídias Vazia";
-"EMPTY_LIBRARY_LONG" = "Para reprodução, você pode iniciar um fluxo de mídia de uma servidor da sua rede local, da nuvem, ou sincronizar mídias para o seu dispositivo usando o iTunes, Wifi Upload ou os serviços Cloud.";
+"EMPTY_LIBRARY_LONG" = "Para reprodução, você pode iniciar um fluxo de mídia de uma servidor da sua rede local, da nuvem, ou sincronizar mídias para o seu dispositivo usando o iTunes, Wi-Fi Upload ou os serviços Cloud.";
 
 "EMPTY_PLAYLIST" = "Lista de reprodução vazia";
 "EMPTY_PLAYLIST_DESCRIPTION" = "Adiciona mídias enquanto estiver editando as respectivas categorias";
@@ -189,14 +197,18 @@
 "PLAYBACK_POSITION" = "Posição da Reprodução";
 "VIDEO_FILTER" = "Filtros de Vídeo";
 "VIDEO_FILTER_RESET_BUTTON" = "Restaurar Filtros de Vídeo";
-"VIDEO_ASPECT_RATIO_BUTTON" = "Alternar Proporções de Vídeo";
-"PLAY_PAUSE_BUTTON" = "Reproduzir ou Pausar a Mídia";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Proporção do vídeo";
 "BWD_BUTTON" = "Retroceder a um Ponto";
 "FWD_BUTTON" = "Avançar a um Ponto";
 "PLAY_BUTTON" = "Reproduzir";
 "NEXT_BUTTON" = "Próximo";
 "PREV_BUTTON" = "Anterior";
 "PLAY_ALL_BUTTON" = "Reproduzir tudo";
+
+"RESET_VIDEO_FILTERS" = "Deseja restaurar os filtros de vídeo?";
+"RESET_PLAYBACK_SPEED" = "Deseja restaurar a velocidade de reprodução?";
+"RESET_EQUALIZER" = "Deseja restaurar as configurações de equalização?";
+"RESET_SLEEP_TIMER" = "Deseja restaurar o temporizador de suspensão?";
 
 "VERSION_FORMAT" = "Versão: %@";
 "BASED_ON_FORMAT" = "Baseado em:<br />%@";
@@ -213,7 +225,7 @@
 "FIRST_STEPS_ITUNES" = "Seincronizador de Arquivos do iTunes ";
 "FIRST_STEPS_ITUNES_TITLE" = "Sincronizar com Seu Computador";
 "FIRST_STEPS_ITUNES_DETAILS" = "Conecte seu dispositivo ao iTunes e selecione seu dispositivo. Selecione \"Compartilhamento de Arquivos\" no menu do lado esquerdo do iTunes e procure por VLC para transferir arquivos";
-"FIRST_STEPS_WIFI_TITLE" = "Compartilhar via Wifi";
+"FIRST_STEPS_WIFI_TITLE" = "Compartilhar via Wi-fi";
 "FIRST_STEPS_WIFI_DETAILS" = "Digite a URL gerada em seu navegador preferido enquanto estiver conectado à mesma rede que seu telefone";
 "FIRST_STEPS_CLOUDS" = "Nuvem";
 "FIRST_STEPS_CLOUD_TITLE" = "Nuvem";
@@ -230,7 +242,7 @@
 "NO_SERVER_FOUND" = "Nenhum servidor encontrado";
 "NO_RECENT_STREAMS" = "Nenhum fluxo foi reproduzido recentemente";
 
-"WEBINTF_TITLE" = "Compartilhando via WiFi";
+"WEBINTF_TITLE" = "Compartilhando via Wi-Fi";
 "WEBINTF_DROPFILES" = "Soltar Arquivos";
 "WEBINTF_DROPFILES_LONG" = "Solte arquivos na janela para adicioná-los ao seu %@.<br>Ou clique no botão \"+\" para usar a janela de escolha de arquivos.";
 "WEBINTF_DOWNLOADFILES" = "Baixar Arquivos";
@@ -281,8 +293,11 @@
 "PLEX_LONG" = "Servidor de Mídia Plex (via Bonjour)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "Protocolo de Transferência de Arquivos (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "Network File System (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "Servidor de Arquivos BONJOUR";
 "DSM_WORKGROUP" = "Grupo de Trabalho";
@@ -317,7 +332,7 @@
 "ARTISTS" = "Artistas";
 "EPISODES" = "Episódios";
 "GENRES" = "Gêneros";
-"MOVIES" = "Filmes";
+"ALL_VIDEOS" = "Todos os vídeos";
 "SONGS" = "Músicas";
 "PLAYLISTS" = "Listas de Reprodução";
 "VIDEO_GROUPS" = "Grupos de vídeo";
@@ -331,7 +346,7 @@
 "BUTTON_EDIT_HINT" = "Modo de edição";
 
 "ADD_TO_PLAYLIST" = "Adicionar à Lista de Reprodução";
-"ADD_TO_PLAYLIST_HINT" = "Abrir o menu para inserir na lista de reprodução";
+"ADD_TO_PLAYLIST_HINT" = "Abrir o menu para adicionar à lista de reprodução";
 
 "PLAYLIST_PLACEHOLDER" = "Título da lista de Reprodução";
 "PLAYLIST_DESCRIPTION" = "Digite um título para a sua nova lista de reprodução";
@@ -356,6 +371,7 @@
 "DESCENDING_LABEL" = "Ordem Decrescente";
 "DESCENDING_SWITCH_LABEL" = "Ordem Crescente ou Decrescente";
 "DESCENDING_SWITCH_HINT" = "Ordena o contexto em ordem crescente ou decrescente";
+"GRID_LAYOUT" = "Leiaute da Grade";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -384,13 +400,38 @@
 "VARIOUS_ARTIST" = "Vários Artistas";
 "UNKNOWN_ALBUM" = "Álbum Desconhecido";
 
-/* VideoOptionsControlBar */
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Legendas e trilhas de áudio";
+"SUBTITLE_AND_TRACK_HINT" = "Escolha legendas ou trilhas de áudio";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "Interface do DVD";
+
+"ROTATION_LOCK_BUTTON" = "Trava de rotação";
+"ROTATION_LOCK_HINT" = "Travar vídeo na orientação atual";
+
+"BACKWARD_BUTTON" = "Retroceder";
+"BACKWARD_HINT" = "Retroceder a um Ponto";
+
+"PREVIOUS_BUTTON" = "Anterior";
+"PREVIOUS_HINT" = "Mídia anterior";
+
+"PLAY_PAUSE_BUTTON" = "Reproduzir ou pausar";
+"PLAY_PAUSE_HINT" = "Reproduz ou Pausa a reprodução atual";
+
+"NEXT_HINT" = "Próxima mídia";
+
+"FORWARD_BUTTON" = "Avançar";
+"FORWARD_HINT" = "Avançar a um ponto";
+
 "INTERFACE_LOCK_BUTTON" = "Prender interface";
-"INTERFACE_LOCK_HINT" = "Desabilitar controles da interface";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Proporção do vídeo";
+"VIDEO_ASPECT_RATIO_HINT" = "Modificar a proporção de altura e laegura do vídeo atual";
+
 "MORE_OPTIONS_BUTTON" = "Mais";
 "MORE_OPTIONS_HINT" = "Exibe mais controles de opções";
-"REPEAT_MODE_HINT" = "Modificar o modo de repetição do item atual";
-"VIDEO_ASPECT_RATIO_HINT" = "Modificar a proporção de altura e laegura do vídeo atual";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "Equalizador";
@@ -410,3 +451,48 @@
 /* Preview labels */
 
 "ENCODING" = "Codificando";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "Adicionar ao grupo de mídias";
+"ADD_TO_MEDIA_GROUP_HINT" = "Abrir o menu adicionar ao grupo de mídias";
+
+"MEDIA_GROUPS" = "Grupos de mídias";
+"MEDIA_GROUPS_DESCRIPTION" = "Escolha um título para o seu novo grupo de mídias";
+"MEDIA_GROUPS_PLACEHOLDER" = "Título do grupo de mídias";
+
+"REMOVE_FROM_MEDIA_GROUP" = "Excluir do grupo de mídias";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "Excluir seleção do grupo de mídias";
+
+"MEDIA_GROUP_CREATION" = "Novo grupo de mídias";
+"MEDIA_GROUP_CREATION_HINT" = "Exibir alerta para criar uma lista de reprodução";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "Mover conteúdo para o nível mais alto";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "Move o conteúdo da seleção para o nível mais alto";
+
+"BUTTON_REGROUP" = "Reagrupar";
+"BUTTON_REGROUP_TITLE" = "Reagrupar seleção";
+"BUTTON_REGROUP_HINT" = "Tenta reagrupar automaticamente uma mídia.";
+"BUTTON_REGROUP_DESCRIPTION" = "Tem certeza de que deseja reagrupar automaticamente mídias individuais?\nPode levar algum tempo.";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "Coloque mídias aqui para adicioná-las";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "Adicionando...";
+
+/* tip jar */
+"GIVE_TIP" = "Dar uma Gorjeta";
+"CANNOT_MAKE_PAYMENTS" = "Você não está autorizado a realizar pagamentos neste dispositivo.";
+"PURCHASE_FAILED" = "Falha na Aquisição";
+"SEND_GIFT" = "Enviar o seu presente";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "Reproduzir";
+"PLAY_LABEL" = "Reproduzir";
+"PLAY_NEXT_IN_QUEUE_HINT" = "Reproduzir o proximo da fila";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "Reproduzir o proximo da fila";
+"APPEND_TO_QUEUE_HINT" = "Anexar à fila";
+"APPEND_TO_QUEUE_LABEL" = "Anexar à fila";
+
+"DISABLE_GROUPS" = "Desabilitar grupos";
+"DISABLE_GROUPS_SWITCH_HINT" = "Desabilitar leiaute de grupos";
+"DISPLAY_AS" = "Exibir como";

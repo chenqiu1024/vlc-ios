@@ -9,28 +9,22 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
+import CoreSpotlight
+
 protocol MediaModel: MLBaseModel where MLType == VLCMLMedia { }
 
 extension MediaModel {
     func append(_ item: VLCMLMedia) {
-        if !files.contains { $0 == item } {
+        if !files.contains(where: { $0 == item }) {
             files.append(item)
         }
     }
 
-    func delete(_ items: [VLCMLObject]) {
-        do {
-            for case let media as VLCMLMedia in items {
-                if let mainFile = media.mainFile() {
-                    try FileManager.default.removeItem(atPath: mainFile.mrl.path)
-                }
-            }
-            medialibrary.reload()
+    func delete(_ items: [VLCMLMedia]) {
+        for case let media in items {
+            media.deleteMainFile()
         }
-        catch let error as NSError {
-            assertionFailure("MediaModel: Delete failed: \(error.localizedDescription)")
-        }
-
+        medialibrary.reload()
         filterFilesFromDeletion(of: items)
     }
 }
@@ -38,6 +32,16 @@ extension MediaModel {
 // MARK: - ViewModel
 
 extension VLCMLMedia {
+    func deleteMainFile() {
+        do {
+            if let mainFile = mainFile() {
+                try FileManager.default.removeItem(atPath: mainFile.mrl.path)
+            }
+        } catch let error as NSError {
+            assertionFailure("VLCMLMedia: Delete failed: \(error.localizedDescription)")
+        }
+    }
+
     @objc func mediaDuration() -> String {
         return String(format: "%@", VLCTime(int: Int32(duration())))
     }
@@ -92,7 +96,7 @@ extension VLCMLMedia {
         attributeSet.deliveryType = 0
         attributeSet.local = 1
         attributeSet.playCount = NSNumber(value: playCount())
-        if isThumbnailGenerated() {
+        if thumbnailStatus() == .available {
             let image = UIImage(contentsOfFile: thumbnail()?.path ?? "")
             attributeSet.thumbnailData = image?.jpegData(compressionQuality: 0.9)
         }

@@ -106,7 +106,7 @@
     }
 
     if (duration > 0) {
-        VLCTime *time = [VLCTime timeWithNumber:[NSNumber numberWithLong:duration]];
+        VLCTime *time = [VLCTime timeWithNumber:[NSNumber numberWithLongLong:duration]];
         [subtitle appendString:[time verboseStringValue]];
     }
 
@@ -115,7 +115,7 @@
                                                       stringFromByteCount:_oneDriveFile.size
                                                       countStyle:NSByteCountFormatterCountStyleFile]];
         if (duration > 0) {
-            VLCTime *time = [VLCTime timeWithNumber:[NSNumber numberWithLong:duration]];
+            VLCTime *time = [VLCTime timeWithNumber:[NSNumber numberWithLongLong:duration]];
             [subtitle appendFormat:@" — %@", [time verboseStringValue]];
         }
     }
@@ -238,7 +238,7 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
         return 80.;
 
-    return 48.;
+    return 52.;
 #else
     return 107.;
 #endif

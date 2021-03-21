@@ -51,36 +51,66 @@ class MediaPlayerActionSheet: ActionSheet {
     @objc weak var mediaPlayerActionSheetDelegate: MediaPlayerActionSheetDelegate?
     @objc weak var mediaPlayerActionSheetDataSource: MediaPlayerActionSheetDataSource?
     
-    var offScreenFrame: CGRect {
-        let y = collectionView.frame.origin.y + headerView.cellHeight
-        let w = collectionView.frame.size.width
-        let h = collectionView.frame.size.height
-        return CGRect(x: w, y: y, width: w, height: h)
-    }
-    
     private var leftToRightGesture: UIPanGestureRecognizer {
         let leftToRight = UIPanGestureRecognizer(target: self, action: #selector(draggedRight(panGesture:)))
         return leftToRight
     }
 
     // MARK: Private Methods
+    private func getTitle(of childView: UIView) -> String {
+        // FIXME: Add the case where childView is the EqualizerView
+        if let view = childView as? VideoFiltersView {
+            view.resetSlidersIfNeeded()
+            return MediaPlayerActionSheetCellIdentifier.filter.description
+        } else if childView is NewPlaybackSpeedView {
+            return MediaPlayerActionSheetCellIdentifier.playback.description
+        } else if childView is SleepTimerView {
+            return MediaPlayerActionSheetCellIdentifier.sleepTimer.description
+        } else if childView is EqualizerView {
+            return MediaPlayerActionSheetCellIdentifier.equalizer.description
+        } else {
+            return NSLocalizedString("MORE_OPTIONS_HEADER_TITLE", comment: "")
+        }
+    }
+
+    private func changeBackground(alpha: CGFloat) {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.backgroundView.backgroundColor = UIColor.black.withAlphaComponent(alpha)
+        })
+    }
+
     private func add(childView child: UIView) {
         UIView.animate(withDuration: 0.3, animations: {
             child.frame = self.collectionView.frame
             self.addChildToStackView(child)
+            self.headerView.previousButton.isHidden = false
         }) {
             (completed) in
             child.addGestureRecognizer(self.leftToRightGesture)
             self.currentChildView = child
+            self.headerView.title.text = self.getTitle(of: child)
+
+            if child is VideoFiltersView {
+                self.changeBackground(alpha: 0)
+            }
+
+            self.headerView.previousButton.addTarget(self, action: #selector(self.removeCurrentChild), for: .touchUpInside)
         }
     }
 
     private func remove(childView child: UIView) {
         UIView.animate(withDuration: 0.3, animations: {
             child.frame = self.offScreenFrame
+            self.headerView.previousButton.isHidden = true
         }) { (completed) in
             child.removeFromSuperview()
             child.removeGestureRecognizer(self.leftToRightGesture)
+
+            if child is VideoFiltersView {
+                self.changeBackground(alpha: 0.6)
+            }
+
+            self.headerView.title.text = NSLocalizedString("MORE_OPTIONS_HEADER_TITLE", comment: "")
         }
     }
 
@@ -151,13 +181,6 @@ class MediaPlayerActionSheet: ActionSheet {
             }
         }
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Remove the themeDidChangeNotification set in the superclass
-        // MovieViewController Video Options should be dark at all times
-        NotificationCenter.default.removeObserver(self, name: .VLCThemeDidChangeNotification, object: nil)
-    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -172,7 +195,15 @@ class MediaPlayerActionSheet: ActionSheet {
         modalPresentationStyle = .custom
         setAction { (item) in
             if let item = item as? UIView {
-                self.add(childView: item)
+                if let equalizerView = item as? EqualizerView {
+                    if let actionSheet = self as? MediaMoreOptionsActionSheet {
+                        equalizerView.willShow()
+                        actionSheet.moreOptionsDelegate?.mediaMoreOptionsActionSheetPresentPopupView(withChild: equalizerView)
+                        self.removeActionSheet()
+                    }
+                } else {
+                    self.add(childView: item)
+                }
             } else {
                 preconditionFailure("MediaMoreOptionsActionSheet: Action:: Item's could not be cased as UIView")
             }

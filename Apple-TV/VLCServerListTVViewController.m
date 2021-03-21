@@ -1,7 +1,7 @@
 /*****************************************************************************
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2015 VideoLAN. All rights reserved.
+ * Copyright (c) 2015, 2020 VideoLAN. All rights reserved.
  * $Id$
  *
  * Authors: Tobias Conradi <videolan # tobias-conradi.de>
@@ -15,12 +15,13 @@
 
 #import "VLCNetworkServerBrowserPlex.h"
 #import "VLCNetworkServerBrowserVLCMedia.h"
-#import "VLCNetworkServerBrowserFTP.h"
+#import "VLCNetworkServerBrowserVLCMedia+FTP.h"
+#import "VLCNetworkServerBrowserVLCMedia+SFTP.h"
 
 #import "VLCLocalNetworkServiceBrowserManualConnect.h"
 #import "VLCLocalNetworkServiceBrowserPlex.h"
-#import "VLCLocalNetworkServiceBrowserFTP.h"
 #import "VLCLocalNetworkServiceBrowserUPnP.h"
+#import "VLCLocalNetworkServiceBrowserNFS.h"
 #ifndef NDEBUG
 #import "VLCLocalNetworkServiceBrowserSAP.h"
 #endif
@@ -61,7 +62,7 @@
     self.edgesForExtendedLayout = UIRectEdgeAll ^ UIRectEdgeTop;
 
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionViewLayout;
-    flowLayout.itemSize = CGSizeMake(250.0, 300.0);
+    flowLayout.itemSize = CGSizeMake(250.0, 340.0);
     flowLayout.minimumInteritemSpacing = 48.0;
     flowLayout.minimumLineSpacing = 100.0;
 
@@ -95,7 +96,8 @@
                          [VLCLocalNetworkServiceBrowserUPnP class],
                          [VLCLocalNetworkServiceBrowserDSM class],
                          [VLCLocalNetworkServiceBrowserPlex class],
-                         [VLCLocalNetworkServiceBrowserFTP class],
+                         [VLCLocalNetworkServiceBrowserNFS class],
+                         [VLCLocalNetworkServiceBrowserBonjour class],
 #ifndef NDEBUG
                          [VLCLocalNetworkServiceBrowserSAP class],
 #endif
@@ -172,6 +174,16 @@
     if ([service respondsToSelector:@selector(loginInformation)]) {
         VLCNetworkServerLoginInformation *login = service.loginInformation;
         if (!login) return;
+
+        /* UPnP does not support authentication, so skip this step */
+        if ([login.protocolIdentifier isEqualToString:VLCNetworkServerProtocolIdentifierUPnP]) {
+            VLCNetworkServerBrowserVLCMedia *serverBrowser = [VLCNetworkServerBrowserVLCMedia UPnPNetworkServerBrowserWithLogin:login];
+                        VLCServerBrowsingTVViewController *browsingViewController = [[VLCSearchableServerBrowsingTVViewController alloc] initWithServerBrowser:serverBrowser];
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:browsingViewController]
+                               animated:YES
+                             completion:nil];
+            return;
+        }
 
         NSError *error = nil;
         if ([login loadLoginInformationFromKeychainWithError:&error])
@@ -339,11 +351,13 @@
     NSString *identifier = login.protocolIdentifier;
 
     if ([identifier isEqualToString:VLCNetworkServerProtocolIdentifierFTP]) {
-        serverBrowser = [[VLCNetworkServerBrowserFTP alloc] initWithLogin:login];
+        serverBrowser = [VLCNetworkServerBrowserVLCMedia FTPNetworkServerBrowserWithLogin:login];
     } else if ([identifier isEqualToString:VLCNetworkServerProtocolIdentifierPlex]) {
         serverBrowser = [[VLCNetworkServerBrowserPlex alloc] initWithLogin:login];
     } else if ([identifier isEqualToString:VLCNetworkServerProtocolIdentifierSMB]) {
         serverBrowser = [VLCNetworkServerBrowserVLCMedia SMBNetworkServerBrowserWithLogin:login];
+    } else if ([identifier isEqualToString:VLCNetworkServerProtocolIdentifierSFTP]) {
+        serverBrowser = [VLCNetworkServerBrowserVLCMedia SFTPNetworkServerBrowserWithLogin:login];
     }
 
     if (serverBrowser) {

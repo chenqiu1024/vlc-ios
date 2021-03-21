@@ -52,11 +52,19 @@ currentMediaHasTrackToChooseFrom:(BOOL)currentMediaHasTrackToChooseFrom
 - (void)displayMetadataForPlaybackService:(VLCPlaybackService *)playbackService
                                  metadata:(VLCMetaData *)metadata;
 - (void)playbackServiceDidSwitchAspectRatio:(VLCAspectRatio)aspectRatio;
+- (void)playbackService:(VLCPlaybackService *)playbackService
+              nextMedia:(VLCMedia *)media;
 
 @end
 
+#if TARGET_OS_IOS
+@protocol EqualizerViewDelegate;
 NS_SWIFT_NAME(PlaybackService)
-@interface VLCPlaybackService : NSObject <VLCEqualizerViewDelegate>
+@interface VLCPlaybackService : NSObject <EqualizerViewDelegate>
+#else
+NS_SWIFT_NAME(PlaybackService)
+@interface VLCPlaybackService : NSObject
+#endif
 
 @property (nonatomic, strong, nullable) UIView *videoOutputView;
 
@@ -113,6 +121,10 @@ NS_SWIFT_NAME(PlaybackService)
 
 @property (nonatomic, readonly) VLCAspectRatio currentAspectRatio;
 
+@property (nonatomic, readonly) VLCPlayerDisplayController *playerDisplayController;
+
+@property (nonatomic) NSMutableArray *openedLocalURLs;
+
 + (VLCPlaybackService *)sharedInstance;
 - (VLCTime *)playedTime;
 #pragma mark - playback
@@ -121,8 +133,8 @@ NS_SWIFT_NAME(PlaybackService)
 - (void)playPause;
 - (void)play;
 - (void)pause;
-- (void)next;
-- (void)previous;
+- (BOOL)next;
+- (BOOL)previous;
 - (void)jumpForward:(int)interval;
 - (void)jumpBackward:(int)interval;
 - (void)toggleRepeatMode;
@@ -139,6 +151,9 @@ NS_SWIFT_NAME(PlaybackService)
 - (void)selectChapterAtIndex:(NSInteger)index;
 - (void)setAudioPassthrough:(BOOL)shouldPass;
 - (void)switchAspectRatio:(BOOL)toggleFullScreen;
+- (NSString *)stringForAspectRatio:(VLCAspectRatio)ratio;
+
+- (void)playItemAtIndex:(NSUInteger)index;
 
 #if !TARGET_OS_TV
 - (BOOL)updateViewpoint:(CGFloat)yaw pitch:(CGFloat)pitch roll:(CGFloat)roll fov:(CGFloat)fov absolute:(BOOL)absolute;

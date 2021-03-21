@@ -17,6 +17,15 @@ class ActionSheetSectionHeader: UIView {
         return 50
     }
 
+    let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+
     let title: UILabel = {
         let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: 17)
@@ -32,6 +41,16 @@ class ActionSheetSectionHeader: UIView {
         return separator
     }()
 
+    let previousButton: UIButton = {
+        let previousButton = UIButton()
+        previousButton.setImage(UIImage(named: "disclosureChevron")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        previousButton.imageView?.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+        previousButton.tintColor = PresentationTheme.current.colors.orangeUI
+        previousButton.translatesAutoresizingMaskIntoConstraints = false
+        previousButton.isHidden = true
+        return previousButton
+    }()
+
     lazy var guide: LayoutAnchorContainer = {
         var guide: LayoutAnchorContainer = self
 
@@ -43,14 +62,25 @@ class ActionSheetSectionHeader: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupTitle()
+        setupStackView()
         setupSeparator()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setupTitle()
+        setupStackView()
         setupSeparator()
+    }
+
+    fileprivate func setupStackView() {
+        stackView.addArrangedSubview(previousButton)
+        stackView.addArrangedSubview(title)
+
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 20),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 20)
+        ])
     }
 
     fileprivate func setupSeparator() {
@@ -67,7 +97,6 @@ class ActionSheetSectionHeader: UIView {
         addSubview(title)
         NSLayoutConstraint.activate([
             title.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 20),
-            title.topAnchor.constraint(equalTo: topAnchor, constant: 20)
         ])
     }
 }

@@ -14,19 +14,23 @@ class AlbumModel: AudioCollectionModel {
 
     var sortModel = SortModel([.alpha, .duration, .releaseDate, .trackNumber])
 
-    var updateView: (() -> Void)?
+    var observable = Observable<MediaLibraryBaseModelObserver>()
 
     var files = [VLCMLAlbum]()
 
-    var cellType: BaseCollectionViewCell.Type { return MediaCollectionViewCell.self }
+    var cellType: BaseCollectionViewCell.Type {
+        return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(name)") ? MediaGridCollectionCell.self : MediaCollectionViewCell.self
+    }
 
     var medialibrary: MediaLibraryService
+
+    var name: String = "ALBUMS"
 
     var indicatorName: String = NSLocalizedString("ALBUMS", comment: "")
 
     required init(medialibrary: MediaLibraryService) {
         self.medialibrary = medialibrary
-        medialibrary.addObserver(self)
+        medialibrary.observable.addObserver(self)
         files = medialibrary.albums()
     }
 
@@ -41,7 +45,9 @@ extension AlbumModel {
         files = medialibrary.albums(sortingCriteria: criteria, desc: desc)
         sortModel.currentSort = criteria
         sortModel.desc = desc
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 }
 
@@ -73,7 +79,9 @@ extension VLCMLAlbumTrack: SearchableMLModel {
 extension AlbumModel: MediaLibraryObserver {
     func medialibrary(_ medialibrary: MediaLibraryService, didAddAlbums albums: [VLCMLAlbum]) {
         albums.forEach({ append($0) })
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 
     func medialibrary(_ medialibrary: MediaLibraryService,
@@ -89,14 +97,18 @@ extension AlbumModel: MediaLibraryObserver {
         }
 
         files = swapModels(with: albums)
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 
     func medialibrary(_ medialibrary: MediaLibraryService, didDeleteAlbumsWithIds albumsIds: [NSNumber]) {
         files.removeAll {
             albumsIds.contains(NSNumber(value: $0.identifier()))
         }
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 
     func medialibraryDidStartRescan() {

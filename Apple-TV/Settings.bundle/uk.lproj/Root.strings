@@ -9,6 +9,7 @@
 "SETTINGS_THEME_SYSTEM" = "Автоматично";
 "SETTINGS_PRIVACY_SUBTITLE" = "Відкрити у налаштуваннях";
 "SETTINGS_PASSCODE_LOCK_SUBTITLE" = "Безпечний доступ до вашого вмісту";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE" = "Ваші медіа будуть сховані у програмі Файли";
 
 "SETTINGS_DARKTHEME" = "Зовнішній вигляд";
 "SETTINGS_TIME_STRETCH_AUDIO" = "Часове розтягнення звуку";
@@ -17,6 +18,7 @@
 "SETTINGS_PASSCODE_LOCK" = "Захист паролем";
 "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID" = "Дозволити сенсорний ІД для розблокування";
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "Дозволити ІД обличчям для розблокування";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "Приховати бібліотеку медіа у програмі Файли";
 "SETTINGS_VIDEO_FULLSCREEN" = "Відтворювати відео на увесь екран";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "Продовжити відтворення відео";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "Продовжити відтворення аудіо";
@@ -24,6 +26,7 @@
 "SETTINGS_CONTINUE_PLAYBACK_ASK" = "Питати";
 "SETTINGS_CONTINUE_PLAYBACK_ALWAYS" = "Завжди";
 "SETTINGS_NETWORK_PLAY_ALL" = "Автоматично відтворювати наступний елемент";
+"SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING" = "Увімкнути прокручування тексту у списку медіа";
 
 "SETTINGS_SKIP_LOOP_FILTER" = "Фільтр деблокування";
 "SETTINGS_SKIP_LOOP_FILTER_NONE" = "Без деблокування (найшвидше)";
@@ -81,6 +84,9 @@
 "SETTINGS_HWDECODING" = "Апаратне декодування";
 "SETTINGS_HWDECODING_ON" = "Увімкн.";
 "SETTINGS_HWDECODING_OFF" = "Вимкн.";
+"SETTINGS_CASTING" = "Трансляція";
+"SETTINGS_PTCASTING" = "Аудіо роз'єм";
+"SETTINGS_PTCASTINGLONG" = "Нехай ваш телевізор управляє відтворенням аудіо";
 
 "SETTINGS_FEEDBACK" = "Відгук";
 "SETTINGS_SEND_FEEDBACK" = "Надіслати відгук";
@@ -89,23 +95,17 @@
 "SETTINGS_MEDIA_LIBRARY" = "Медіа бібліотека";
 "SETTINGS_MEDIA_LIBRARY_RESCAN" = "Примусити VLC пересканувати бібліотеку медіа";
 "SETTINGS_DECRAPIFY" = "Оптимізувати назви пунктів для відображення";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Довжина виявлення відеогруп";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Коротка";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Типова";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Довга";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Дуже довга";
 "SETTINGS_SHOW_THUMBNAILS" = "Показувати ескізи відео";
 "SETTINGS_SHOW_ARTWORKS" = "Показувати аудіо обкладинки";
 "SETTINGS_BACKUP_MEDIA_LIBRARY" = "Долучити бібліотеку медіа у резервну копію пристрою";
 
 "SETTINGS_FILE_SYNC" = "Синхронізація файлу";
-"SETTINGS_WIFISHARING_IPv6" = "Підтримка IPv6 для поширення WiFi";
-"SETTINGS_UNLINK_DROPBOX" = "Відв'язати від Dropbox";
-"SETTINGS_UNLINK_GOOGLEDRIVE" = "Відв'язати від диску Google";
-"SETTINGS_UNLINK_ONEDRIVE" = "Відв'язати від OneDrive";
-"SETTINGS_FTP_TEXT_ENCODING" = "Кодування тексту для з'єднань FTP";
+"SETTINGS_WIFISHARING_IPv6" = "Підтримка IPv6 для поширення через Wi-Fi";
 
 "SETTINGS_ARTWORK" = "Обкладинка";
 "SETTINGS_DOWNLOAD_ARTWORK" = "Звантажити обкладинку";
+
+"SETTINGS_LAB" = "Лабораторія";
+"SETTINGS_NEW_PLAYER" = "Новий програвач";
 
 "ABOUT_APP_TV" = "Про VLC для tvOS";

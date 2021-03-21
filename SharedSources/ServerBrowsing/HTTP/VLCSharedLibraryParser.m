@@ -76,7 +76,7 @@ NSString *const VLCSharedLibraryParserDeterminedNetserviceAsVLCInstance = @"VLCS
     [xmlparser setDelegate:self];
 
     if (![xmlparser parse]) {
-        APLog(@"VLC Library Parser url Errors : %@", url);
+        APLog(@"VLC Library parsing failed for %@ with error %@", url, xmlparser.parserError);
         return [NSArray array];
     }
 
@@ -93,8 +93,11 @@ NSString *const VLCSharedLibraryParserDeterminedNetserviceAsVLCInstance = @"VLCS
         if ([attributeDict objectForKey:@"libraryTitle"])
             [_dicoInfo setObject:[attributeDict objectForKey:@"libraryTitle"] forKey:@"libTitle"];
     } else if ([elementName isEqualToString:@"Media"]) {
-        if ([attributeDict objectForKey:@"title"])
-            [_dicoInfo setObject:[attributeDict objectForKey:@"title"] forKey:@"title"];
+        if ([attributeDict objectForKey:@"title"]) {
+            NSString *encodedTitle = [attributeDict objectForKey:@"title"];
+            NSString *title = [encodedTitle stringByRemovingPercentEncoding];
+            [_dicoInfo setObject:title forKey:@"title"];
+        }
         if ([attributeDict objectForKey:@"thumb"])
             [_dicoInfo setObject:[attributeDict objectForKey:@"thumb"] forKey:@"thumb"];
         if ([attributeDict objectForKey:@"duration"])

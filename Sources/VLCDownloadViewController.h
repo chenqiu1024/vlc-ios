@@ -2,7 +2,7 @@
  * VLCDownloadViewController.h
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2013 VideoLAN. All rights reserved.
+ * Copyright (c) 2013-2020 VideoLAN. All rights reserved.
  * $Id$
  *
  * Authors: Felix Paul Kühne <fkuehne # videolan.org>
@@ -15,8 +15,6 @@
 #import <UIKit/UIKit.h>
 
 @interface VLCDownloadViewController : UIViewController
-
-+ (instancetype)sharedInstance;
 
 @property (weak, nonatomic) IBOutlet UIView *contentView;
 @property (weak, nonatomic) IBOutlet UIView *downloadFieldContainer;
@@ -37,8 +35,6 @@
 
 - (IBAction)downloadAction:(id)sender;
 - (IBAction)cancelDownload:(id)sender;
-
-- (void)addURLToDownloadList:(NSURL *)aURL fileNameOfMedia:(NSString*) fileName;
 
 @property (nonatomic, readonly, copy) NSString *detailText;
 @property (nonatomic, readonly) UIImage *cellImage;

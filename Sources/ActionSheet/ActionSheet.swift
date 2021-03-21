@@ -39,7 +39,7 @@ class ActionSheet: UIViewController {
 
     var action: ((_ item: Any) -> Void)?
 
-    private lazy var backgroundView: UIView = {
+    lazy var backgroundView: UIView = {
         let backgroundView = UIView()
         backgroundView.alpha = 0
         backgroundView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -105,6 +105,13 @@ class ActionSheet: UIViewController {
         return collectionViewHeightConstraint
     }()
 
+    var offScreenFrame: CGRect {
+        let y = headerView.cellHeight
+        let w = collectionView.frame.size.width
+        let h = collectionView.frame.size.height
+        return CGRect(x: w, y: y, width: w, height: h)
+    }
+
     override func updateViewConstraints() {
         super.updateViewConstraints()
 
@@ -147,7 +154,7 @@ class ActionSheet: UIViewController {
 
         setupMainStackViewConstraints()
         setupCollectionViewConstraints()
-        setuplHeaderViewConstraints()
+        setupHeaderViewConstraints()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -211,7 +218,7 @@ class ActionSheet: UIViewController {
 // MARK: Private setup methods
 
 private extension ActionSheet {
-    private func setuplHeaderViewConstraints() {
+    private func setupHeaderViewConstraints() {
         NSLayoutConstraint.activate([
             headerView.heightAnchor.constraint(equalToConstant: headerView.cellHeight),
             headerView.widthAnchor.constraint(equalTo: view.widthAnchor),
@@ -256,6 +263,7 @@ extension ActionSheet {
     @objc func setAction(closure action: @escaping (_ item: Any) -> Void) {
         self.action = action
     }
+
 
     @objc func removeActionSheet() {
         let realMainStackView = mainStackView.frame

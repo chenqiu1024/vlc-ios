@@ -33,7 +33,7 @@ NSString *const VLCPlaybackServicePlaybackMetadataDidChange = @"VLCPlaybackServi
 NSString *const VLCPlaybackServicePlaybackDidFail = @"VLCPlaybackServicePlaybackDidFail";
 NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackServicePlaybackPositionUpdated";
 
-@interface VLCPlaybackService () <VLCMediaPlayerDelegate, VLCMediaDelegate, VLCRemoteControlServiceDelegate>
+@interface VLCPlaybackService () <VLCMediaPlayerDelegate, VLCMediaDelegate, VLCMediaListPlayerDelegate, VLCRemoteControlServiceDelegate>
 {
     VLCRemoteControlService *_remoteControlService;
     VLCMediaPlayer *_backgroundDummyPlayer;
@@ -48,7 +48,6 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 
     BOOL _isInFillToScreen;
     NSUInteger _previousAspectRatio;
-    
 
     UIView *_videoOutputViewWrapper;
     UIView *_actualVideoOutputView;
@@ -67,6 +66,8 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
     VLCDialogProvider *_dialogProvider;
     VLCCustomDialogRendererHandler *_customDialogHandler;
     VLCPlayerDisplayController *_playerDisplayController;
+
+    NSMutableArray *_openedLocalURLs;
 }
 
 @end
@@ -129,6 +130,10 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
         // stay alive in background exclusively for Chromecast.
         _backgroundDummyPlayer = [[VLCMediaPlayer alloc] initWithOptions:@[@"--demux=rawaud"]];
         _backgroundDummyPlayer.media = [[VLCMedia alloc] initWithPath:@"/dev/zero"];
+
+        _mediaList = [[VLCMediaList alloc] init];
+
+        _openedLocalURLs = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -198,7 +203,17 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
     _actualVideoOutputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _actualVideoOutputView.autoresizesSubviews = YES;
 
-    _listPlayer = [[VLCMediaListPlayer alloc] initWithDrawable:_actualVideoOutputView];
+    /* the chromecast-passthrough option cannot be set per media, so we need to set it per
+     * media player instance however, potentially initialising an additional library instance
+     * for this is costly, so this should be done only if needed */
+    BOOL chromecastPassthrough = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingCastingAudioPassthrough] boolValue];
+    if (chromecastPassthrough) {
+        _listPlayer = [[VLCMediaListPlayer alloc] initWithOptions:@[[@"--" stringByAppendingString:kVLCSettingCastingAudioPassthrough]]
+                                                      andDrawable:_actualVideoOutputView];
+    } else {
+        _listPlayer = [[VLCMediaListPlayer alloc] initWithDrawable:_actualVideoOutputView];
+    }
+    _listPlayer.delegate = self;
 
     /* to enable debug logging for the playback library instance, switch the boolean below
      * note that the library instance used for playback may not necessarily match the instance
@@ -303,19 +318,39 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 #endif
             [_mediaPlayer stop];
         }
+
+        if (_playbackCompletion) {
+            BOOL finishedPlaybackWithError = false;
+            if (_mediaPlayer.state == VLCMediaPlayerStateStopped && _mediaPlayer.media != nil) {
+                // Since VLCMediaPlayerStateError is sometimes not matched with a valid media.
+                // This checks for decoded Audio & Video blocks.
+                finishedPlaybackWithError = (_mediaPlayer.media.numberOfDecodedAudioBlocks == 0)
+                                             && (_mediaPlayer.media.numberOfDecodedVideoBlocks == 0);
+            } else {
+                finishedPlaybackWithError = _mediaPlayer.state == VLCMediaPlayerStateError;
+            }
+            finishedPlaybackWithError = finishedPlaybackWithError && !_sessionWillRestart;
+
+            _playbackCompletion(!finishedPlaybackWithError);
+        }
+
         _mediaPlayer = nil;
         _listPlayer = nil;
     }
+
+    for (NSURL *url in _openedLocalURLs) {
+        [url stopAccessingSecurityScopedResource];
+        NSLog(@"%@", url);
+    }
+    _openedLocalURLs = nil;
+    _openedLocalURLs = [[NSMutableArray alloc] init];
+
     if (!_sessionWillRestart) {
         _mediaList = nil;
+        _mediaList = [[VLCMediaList alloc] init];
     }
     _playerIsSetup = NO;
     [_shuffleStack removeAllObjects];
-
-    if (_playbackCompletion) {
-        BOOL finishedPlaybackWithError = _mediaPlayer.state == VLCMediaPlayerStateError &&  !_sessionWillRestart;
-        _playbackCompletion(!finishedPlaybackWithError);
-    }
 
     [[self remoteControlService] unsubscribeFromRemoteCommands];
 
@@ -328,7 +363,6 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 }
 
 #if TARGET_OS_IOS
-
 - (void)restoreAudioAndSubtitleTrack
 {
     VLCMLMedia *media = [_delegate mediaForPlayingMedia:_mediaPlayer.media];
@@ -397,10 +431,12 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 
 - (BOOL)currentMediaHasTrackToChooseFrom
 {
-    return [[_mediaPlayer audioTrackIndexes] count] > 2 || [[_mediaPlayer videoSubTitlesIndexes] count] > 1;
+    /* allow track selection if there is more than 1 audio track or if there is video because even if
+     * there is only video, there will always be the option to download additional subtitles */
+    return [[_mediaPlayer audioTrackIndexes] count] > 2 || [[_mediaPlayer videoTrackIndexes] count] >= 1;
 }
 
-- (BOOL) isSeekable
+- (BOOL)isSeekable
 {
     return _mediaPlayer.isSeekable;
 }
@@ -546,7 +582,7 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 
 - (NSInteger)numberOfVideoSubtitlesIndexes
 {
-    return _mediaPlayer.videoSubTitlesIndexes.count;
+    return _mediaPlayer.videoSubTitlesIndexes.count + 1;
 }
 
 - (NSInteger)numberOfTitles
@@ -561,8 +597,12 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 
 - (NSString *)videoSubtitleNameAtIndex:(NSInteger)index
 {
-    if (index >= 0 && index < _mediaPlayer.videoSubTitlesNames.count)
+    NSInteger count = _mediaPlayer.videoSubTitlesNames.count;
+    if (index >= 0 && index < count) {
         return _mediaPlayer.videoSubTitlesNames[index];
+    } else if (index == count) {
+        return NSLocalizedString(@"DOWNLOAD_SUBS_FROM_OSO", nil);
+    }
     return nil;
 }
 
@@ -725,6 +765,15 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackDidPause object:self];
 }
 
+- (void)playItemAtIndex:(NSUInteger)index
+{
+    VLCMedia *media = [_mediaList mediaAtIndex:index];
+    [_listPlayer playItemAtNumber:[NSNumber numberWithUnsignedInteger:index]];
+    _mediaPlayer.media = media;
+    if ([self.delegate respondsToSelector:@selector(prepareForMediaPlayback:)])
+        [self.delegate prepareForMediaPlayback:self];
+}
+
 - (void)setShuffleMode:(BOOL)shuffleMode
 {
     _shuffleMode = shuffleMode;
@@ -769,12 +818,12 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
     return nextIndex;
 }
 
-- (void)next
+- (BOOL)next
 {
     if (_mediaList.count == 1) {
         NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackForwardSkipLength];
         [_mediaPlayer jumpForward:skipLength.intValue];
-        return;
+        return YES;
     }
 
     NSInteger nextIndex = [self nextMediaIndex];
@@ -785,14 +834,15 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
             [[NSNotificationCenter defaultCenter]
              postNotificationName:VLCPlaybackServicePlaybackMetadataDidChange object:self];
         }
-        return;
+        return NO;
     }
 
     [_listPlayer playItemAtNumber:@(nextIndex)];
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackMetadataDidChange object:self];
+    return YES;
 }
 
-- (void)previous
+- (BOOL)previous
 {
     if (_mediaList.count > 1) {
         [_listPlayer previous];
@@ -802,6 +852,7 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
         NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackBackwardSkipLength];
         [_mediaPlayer jumpBackward:skipLength.intValue];
     }
+    return YES;
 }
 
 
@@ -1049,6 +1100,16 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
     return [_mediaPlayer preAmplification];
 }
 
+- (unsigned int)numberOfBands
+{
+    return [_mediaPlayer numberOfBands];
+}
+
+- (CGFloat)frequencyOfBandAtIndex:(unsigned int)index
+{
+    return [_mediaPlayer frequencyOfBandAtIndex:index];
+}
+
 #pragma mark - AVAudioSession Notification Observers
 
 - (void)handleInterruption:(NSNotification *)notification
@@ -1280,20 +1341,17 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 
 - (void)remoteControlServiceHitStop:(VLCRemoteControlService *)rcs
 {
-    //TODO handle stop playback entirely
-    [_listPlayer stop];
+    [self stopPlayback];
 }
 
 - (BOOL)remoteControlServiceHitPlayNextIfPossible:(VLCRemoteControlService *)rcs
 {
-    //TODO This doesn't handle shuffle or repeat yet
-    return [_listPlayer next];
+    return [self next];
 }
 
 - (BOOL)remoteControlServiceHitPlayPreviousIfPossible:(VLCRemoteControlService *)rcs
 {
-    //TODO This doesn't handle shuffle or repeat yet
-    return [_listPlayer previous];
+    return [self previous];
 }
 
 - (void)remoteControlService:(VLCRemoteControlService *)rcs jumpForwardInSeconds:(NSTimeInterval)seconds
@@ -1331,18 +1389,17 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
               kVLCSettingStretchAudio : [[defaults objectForKey:kVLCSettingStretchAudio] boolValue] ? kVLCSettingStretchAudioOnValue : kVLCSettingStretchAudioOffValue,
               kVLCSettingTextEncoding : [defaults objectForKey:kVLCSettingTextEncoding],
               kVLCSettingSkipLoopFilter : [defaults objectForKey:kVLCSettingSkipLoopFilter],
-              kVLCSettingHardwareDecoding : [defaults objectForKey:kVLCSettingHardwareDecoding],
-              kVLCForceSMBV1 : [NSNull null]
+              kVLCSettingHardwareDecoding : [defaults objectForKey:kVLCSettingHardwareDecoding]
     };
 }
 
 #pragma mark - Renderer
+
 - (void)setRenderer:(VLCRendererItem * __nullable)renderer
 {
     _renderer = renderer;
     [_mediaPlayer setRendererItem:_renderer];
 }
-
 
 #pragma mark - PlayerDisplayController
 
@@ -1355,6 +1412,15 @@ NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackService
 {
     [_playerDisplayController setEditing:hidden];
     [_playerDisplayController dismissPlaybackView];
+}
+
+#pragma mark - VLCMediaListPlayerDelegate
+
+- (void)mediaListPlayer:(VLCMediaListPlayer *)player nextMedia:(VLCMedia *)media
+{
+    if ([_delegate respondsToSelector:@selector(playbackService:nextMedia:)]) {
+        [_delegate playbackService:self nextMedia:media];
+    }
 }
 
 @end

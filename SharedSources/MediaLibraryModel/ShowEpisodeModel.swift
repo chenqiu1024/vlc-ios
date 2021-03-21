@@ -14,7 +14,7 @@ class ShowEpisodeModel: MediaModel {
 
     var sortModel = SortModel([.alpha, .duration, .insertionDate, .releaseDate, .fileSize])
 
-    var updateView: (() -> Void)?
+    var observable = Observable<MediaLibraryBaseModelObserver>()
 
     var files = [VLCMLMedia]()
 
@@ -22,18 +22,20 @@ class ShowEpisodeModel: MediaModel {
 
     var medialibrary: MediaLibraryService
 
+    var name: String = "EPISODES"
+
     var indicatorName: String = NSLocalizedString("EPISODES", comment: "")
 
     required init(medialibrary: MediaLibraryService) {
         self.medialibrary = medialibrary
-        medialibrary.addObserver(self)
+        medialibrary.observable.addObserver(self)
     }
 
     func append(_ item: VLCMLMedia) {
         files.append(item)
     }
 
-    func delete(_ items: [VLCMLObject]) {
+    func delete(_ items: [VLCMLMedia]) {
         preconditionFailure("ShowEpisodeModel: Cannot delete showEpisode")
     }
 }
@@ -51,7 +53,9 @@ extension ShowEpisodeModel {
 extension ShowEpisodeModel: MediaLibraryObserver {
     func medialibrary(_ medialibrary: MediaLibraryService, didAddShowEpisodes showEpisodes: [VLCMLMedia]) {
         showEpisodes.forEach({ append($0) })
-        updateView?()
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 
     func medialibraryDidStartRescan() {

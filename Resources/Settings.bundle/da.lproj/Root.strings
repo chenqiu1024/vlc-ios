@@ -7,8 +7,9 @@
 "SETTINGS_THEME_BRIGHT" = "Lyst tema";
 "SETTINGS_THEME_DARK" = "Mørkt tema";
 "SETTINGS_THEME_SYSTEM" = "Automatisk";
-"SETTINGS_PRIVACY_SUBTITLE" = "Åbn i indstillinger";
+"SETTINGS_PRIVACY_SUBTITLE" = "Åbn i Indstillinger";
 "SETTINGS_PASSCODE_LOCK_SUBTITLE" = "Sikker adgang til dit indhold";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE" = "Dit medie vil være skjult i programmet Filer";
 
 "SETTINGS_DARKTHEME" = "Udseende";
 "SETTINGS_TIME_STRETCH_AUDIO" = "Tidsudstrækning af lyd";
@@ -17,6 +18,7 @@
 "SETTINGS_PASSCODE_LOCK" = "Adgangskodelås";
 "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID" = "Tillad Touch ID at låse op";
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "Tillad Face ID at låse op";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "Skjul mediebiblioteket i Filer";
 "SETTINGS_VIDEO_FULLSCREEN" = "Afspil video i fuldskærm";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "Fortsæt videoafspilning";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "Fortsæt lydafspilning";
@@ -24,6 +26,7 @@
 "SETTINGS_CONTINUE_PLAYBACK_ASK" = "Spørg";
 "SETTINGS_CONTINUE_PLAYBACK_ALWAYS" = "Altid";
 "SETTINGS_NETWORK_PLAY_ALL" = "Automatisk afspilning af næste emne";
+"SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING" = "Aktivér tekstrulning i medieliste";
 
 "SETTINGS_SKIP_LOOP_FILTER" = "Blokdelingsfilter";
 "SETTINGS_SKIP_LOOP_FILTER_NONE" = "Ingen blokdeling (hurtigst)";
@@ -81,6 +84,9 @@
 "SETTINGS_HWDECODING" = "Hardwareafkodning";
 "SETTINGS_HWDECODING_ON" = "Til";
 "SETTINGS_HWDECODING_OFF" = "Fra";
+"SETTINGS_CASTING" = "Udsendelse";
+"SETTINGS_PTCASTING" = "Lydgennemsendelse";
+"SETTINGS_PTCASTINGLONG" = "Lad dit tv håndtere lydgenerering";
 
 "SETTINGS_FEEDBACK" = "Feedback";
 "SETTINGS_SEND_FEEDBACK" = "Send feedback";
@@ -89,23 +95,17 @@
 "SETTINGS_MEDIA_LIBRARY" = "Mediebibliotek";
 "SETTINGS_MEDIA_LIBRARY_RESCAN" = "Tving VLC til at genskanne mediebiblioteket";
 "SETTINGS_DECRAPIFY" = "Optimér emnenavne til skærm";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Længde på registrering af videogrupper";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Kort";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Standard";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Lang";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Ekstra lang";
 "SETTINGS_SHOW_THUMBNAILS" = "Vis videominiaturer";
 "SETTINGS_SHOW_ARTWORKS" = "Vis lydbilleder";
 "SETTINGS_BACKUP_MEDIA_LIBRARY" = "Medtag mediebiblioteket i enhedssikkerhedskopiering";
 
 "SETTINGS_FILE_SYNC" = "Filsynkronisering";
-"SETTINGS_WIFISHARING_IPv6" = "IPv6 understøttelse til WiFi deling";
-"SETTINGS_UNLINK_DROPBOX" = "Fjern forbindelse til Dropbox";
-"SETTINGS_UNLINK_GOOGLEDRIVE" = "Fjern forbindelse til Google Drive";
-"SETTINGS_UNLINK_ONEDRIVE" = "Fjern forbindelse til OneDrive";
-"SETTINGS_FTP_TEXT_ENCODING" = "Tekstkodning for FTP-forbindelser";
+"SETTINGS_WIFISHARING_IPv6" = "Understøttelse af IPv6 til Wi-Fi-deling";
 
 "SETTINGS_ARTWORK" = "Billede";
 "SETTINGS_DOWNLOAD_ARTWORK" = "Download billede";
+
+"SETTINGS_LAB" = "Lab";
+"SETTINGS_NEW_PLAYER" = "New player";
 
 "ABOUT_APP_TV" = "Om VLC til tvOS";

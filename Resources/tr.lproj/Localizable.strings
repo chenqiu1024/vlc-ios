@@ -1,4 +1,4 @@
-"STORE_DESCRIPTION" = "iOS için VLC, özgür VLC ortam oynatıcısının iPad, iPhone ve iPod touch üzerinde kullanılmak üzere derlenmiş sürümüdür.\nÇeşitli biçimlerdeki tüm film, dizi ve müziklerinizi herhangi bir dönüştürme işlemine gerek duymadan doğrudan oynatabilir.\nDropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes gibi bulut hizmetleri ile dosya eşitleme, doğrudan dosya indirme ve WiFi paylaşımı aracılığıyla SMB, FTP, UPnP/DLNA gibi ortam sunucularından ve web üzerinden akış yapma olanaklarını sağlar.\nTam SSA uyumluluğu ile gelişmiş alt yazılar, çok kayıtlı sesler ve oynatma hızı denetimini VLC tarafından desteklenen özelliklerden bazılarıdır.\n\niOS için VLC tamamen özgür ve açık kaynaklıdır.";
+"STORE_DESCRIPTION" = "iOS için VLC, özgür VLC ortam oynatıcısının iPad, iPhone ve iPod touch üzerinde kullanılmak üzere derlenmiş sürümüdür.\nÇeşitli biçimlerdeki tüm film, dizi ve müziklerinizi herhangi bir dönüştürme işlemine gerek duymadan doğrudan oynatabilir.\nDropbox, GDrive, OneDrive, Box, iCloud Drive, iTunes gibi bulut hizmetleri ile dosya eşitleme, doğrudan dosya indirme ve Wi-Fi paylaşımı aracılığıyla SMB, FTP, UPnP/DLNA gibi ortam sunucularından ve web üzerinden akış yapma olanaklarını sağlar.\nTam SSA uyumluluğu ile gelişmiş alt yazılar, çok kayıtlı sesler ve oynatma hızı denetimini VLC tarafından desteklenen özelliklerden bazılarıdır.\n\niOS için VLC tamamen özgür ve açık kaynaklıdır.";
 
 "STORE_DESCRIPTION_TV" = "VLC ortam oynatıcısı platformlar arasında kullanılabilen özgür ve açık kaynaklı bir çoklu ortam oynatma çözümüdür.\nÇeşitli biçimlerdeki tüm film, dizi ve müziklerinizi herhangi bir dönüştürme işlemine gerek duymadan doğrudan oynatabilir.\nBulut hizmetleri (Dropbox, OneDrive, Box), ortam sunucuları (SMB, FTP, UPnP/DLNA) ve web üzerinden ortam akışı ile Mac ya da Windows bilgisayarınızdan bir Web Arayüzü aracılığıyla Uzaktan Oynatım olanaklarını sağlar.\nTam SSA uyumluluğu ile gelişmiş alt yazılar, çok kayıtlı sesler ve oynatma hızı denetimi VLC tarafından desteklenen özelliklerden bazılarıdır.\n\niOS için VLC tamamen özgür ve açık kaynaklıdır.\n\nÜst veri ve kapak görselleri TMDb ve Hatchet toplulukları tarafından güncellenen film ve müzik veritabanları üzerinden sağlanmaktadır.";
 
@@ -35,9 +35,11 @@
 "VFILTER_SATURATION" = "Doygunluk";
 "VFILTER_GAMMA" = "Gamma";
 
+"PRESETS" = "Ön ayarlar";
 "PREAMP" = "Ön güçlendirme";
 "DB_FORMAT" = "%i dB";
 "CHOOSE_EQUALIZER_PROFILES" = "Dengeleyici Profili Seç";
+"SNAP_BANDS" = "Snap bantları";
 
 "PLAYBACK_FAILED" = "Oynatılamadı";
 "PLEASE_WAIT" = "Lütfen bekleyin";
@@ -72,17 +74,20 @@
 "PRIVATE_PLAYBACK_TOGGLE" = "Özel Oynatım";
 "SCAN_SUBTITLE_TOGGLE" = "Alt Yazı Araması (yalnız-http)";
 
-"BUTTON_RENDERER" = "Akış Oynatma Aygıtları";
-"BUTTON_RENDERER_HINT" = "Kullanılabilecek akış oynatma aygıtları menüsünü görüntüler";
+"BUTTON_RENDERER" = "Aktarım Aygıtları";
+"BUTTON_RENDERER_HINT" = "Kullanılabilecek aktarım aygıtları menüsünü görüntüler";
+
+
+"BUTTON_PLAY_QUEUE" = "Kuyruğu oynat";
+"BUTTON_PLAY_QUEUE_HINT" = "Oynatma kuyruğu görünümü";
 
 "UPGRADING_LIBRARY" = "Ortam Kitaplığı Yükseltiliyor";
-"UNKNOWN" = "Bilinmeyen";
 
 "OPEN_NETWORK" = "Ağ Akışı Aç";
 "NETWORK_TITLE" = "Ağ Akışı";
 "OPEN_NETWORK_HELP" = "Doğrudan akış açmak için bir HTTP, RTSP, RTMP, MMS, FTP ya da UDP/RTP adresi yazın.";
 "HTTP_UPLOAD_SERVER_OFF" = "Sunucu Etkin Değil";
-"HTTP_UPLOAD_NO_CONNECTIVITY" = "WiFi bağlantısı etkin değil";
+"HTTP_UPLOAD_NO_CONNECTIVITY" = "Wi-Fi bağlantısı etkin değil";
 "OPEN_STREAM_OR_DOWNLOAD" = "Bu İnternet adresinin içeriği indirilsin mi oynatılsın mı?";
 "SHARED_VLC_IOS_LIBRARY" = "iOS Kitaplığı için Paylaşılan VLC";
 "SMB_CIFS_FILE_SERVERS" = "Dosya Sunucuları (SMB)";
@@ -112,7 +117,7 @@
 
 "STREAMVC_DETAILTEXT" = "Akışlar indirilmeden doğrudan oynatılsın";
 "DOWNLOADVC_DETAILTEXT" = "Dosyalar doğrudan aygıtınıza indirilsin";
-"HEADER_TITLE_RENDERER" = " Bir akış oynatma aygıtı seçin";
+"HEADER_TITLE_RENDERER" = " Bir aktarım aygıtı seçin";
 
 "NETWORK" = "Ağ";
 "LOCAL_NETWORK" = "Yerel Ağ";
@@ -127,6 +132,9 @@
 "LOCAL_SERVER_LAST_UPDATE" = "Son Güncelleme %@";
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "SUNUCUYA BAĞLANILAMADI";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "Lütfen sunucu adresi ve kimlik bilgilerinizi denetleyin";
+
+"FILES_APP_CELL_TITLE" = "Yerel dosyalar";
+"FILES_APP_CELL_SUBTITLE" = "Bir dosyayı VLC üzerine kopyalamadan aç";
 
 "CLOUD_SERVICES" = "Bulut Hizmetleri";
 "LOGIN" = "Oturum Aç";
@@ -176,7 +184,7 @@
 "OFF" = "Kapalı";
 
 "EMPTY_LIBRARY" = "Ortam Kitaplığı Boş";
-"EMPTY_LIBRARY_LONG" = "Oynatılacak ortam akışı yerel ağınızdaki bir sunucudan ya da buluttan alınabilir. Ortamlar iTunes, WiFi Yükleme ya da Bulut hizmetleri ile eşitlenebilir.";
+"EMPTY_LIBRARY_LONG" = "Oynatılacak ortam akışı yerel ağınızdaki bir sunucudan ya da buluttan alınabilir. Ortamlar iTunes, Wi-Fi Yükleme ya da Bulut hizmetleri ile eşitlenebilir.";
 
 "EMPTY_PLAYLIST" = "Boş oynatma listesi";
 "EMPTY_PLAYLIST_DESCRIPTION" = "İlgili kategorilerde düzenleme yaparken ortam ekle.";
@@ -189,14 +197,18 @@
 "PLAYBACK_POSITION" = "Oynatma Konumu";
 "VIDEO_FILTER" = "Görüntü Süzgeçleri";
 "VIDEO_FILTER_RESET_BUTTON" = "Görüntü Süzgeçlerini Sıfırla";
-"VIDEO_ASPECT_RATIO_BUTTON" = "Görüntü En Boy Oranını Değiştir";
-"PLAY_PAUSE_BUTTON" = "Geçerli oynatımı Oynat ya da Duraklat";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Görüntü en boy oranı";
 "BWD_BUTTON" = "Geriye Atla";
 "FWD_BUTTON" = "İleriye Atla";
 "PLAY_BUTTON" = "Oynat";
 "NEXT_BUTTON" = "Sonraki";
 "PREV_BUTTON" = "Önceki";
 "PLAY_ALL_BUTTON" = "Tümünü oynat";
+
+"RESET_VIDEO_FILTERS" = "Görüntü etkilerini sıfırlamak ister misiniz?";
+"RESET_PLAYBACK_SPEED" = "Oynatma hızını sıfırlamak ister misiniz?";
+"RESET_EQUALIZER" = "Ses dengeleyici ayarlarını sıfırlamak ister misiniz?";
+"RESET_SLEEP_TIMER" = "Uyku sayacını sıfırlamak ister misiniz?";
 
 "VERSION_FORMAT" = "Sürüm: %@";
 "BASED_ON_FORMAT" = "Temel:<br />%@";
@@ -230,7 +242,7 @@
 "NO_SERVER_FOUND" = "Sunucu bulunamadı";
 "NO_RECENT_STREAMS" = "Önceden oynatılmış bir akış bulunamadı";
 
-"WEBINTF_TITLE" = "WiFi üzerinden paylaş";
+"WEBINTF_TITLE" = "Wi-Fi ile paylaşılıyor";
 "WEBINTF_DROPFILES" = "Dosyaları Sürükleyin";
 "WEBINTF_DROPFILES_LONG" = "Dosyaları %@ üzerine eklemek için pencereye bırakın.<br>Ya da dosya seçim penceresini görüntülemek için \"+\" düğmesine dokunun.";
 "WEBINTF_DOWNLOADFILES" = "Dosyaları İndir";
@@ -281,8 +293,11 @@
 "PLEX_LONG" = "Plex Ortam Sunucusu (Bonjour aracılığıyla)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "Dosya Aktarım Protokolü (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "Ağ Dosya Sistemi (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "BONJOUR Dosya Sunucusu";
 "DSM_WORKGROUP" = "Çalışma Grubu";
@@ -317,7 +332,7 @@
 "ARTISTS" = "Sanatçılar";
 "EPISODES" = "Bölümler";
 "GENRES" = "Türler";
-"MOVIES" = "Filmler";
+"ALL_VIDEOS" = "Tüm görüntüler";
 "SONGS" = "Şarkılar";
 "PLAYLISTS" = "Oynatma Listeleri";
 "VIDEO_GROUPS" = "Görüntü grupları";
@@ -356,6 +371,7 @@
 "DESCENDING_LABEL" = "Azalan Sıralama";
 "DESCENDING_SWITCH_LABEL" = "Artan ya da azalan sıralama";
 "DESCENDING_SWITCH_HINT" = "İçeriği artan ya da azalan şekilde sıralar";
+"GRID_LAYOUT" = "Izgara Görünümü";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -384,13 +400,38 @@
 "VARIOUS_ARTIST" = "Çeşitli Sanatçılar";
 "UNKNOWN_ALBUM" = "Albüm Bilinmiyor";
 
-/* VideoOptionsControlBar */
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Alt yazılar ve ses izleri";
+"SUBTITLE_AND_TRACK_HINT" = "Alt yazı ya da ses izini seçin";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "DVD arayüzü";
+
+"ROTATION_LOCK_BUTTON" = "Döndürme kilidi";
+"ROTATION_LOCK_HINT" = "Görüntüyü geçerli doğrultuda kilitle";
+
+"BACKWARD_BUTTON" = "Geri";
+"BACKWARD_HINT" = "Geriye atlar";
+
+"PREVIOUS_BUTTON" = "Önceki";
+"PREVIOUS_HINT" = "Önceki ortam";
+
+"PLAY_PAUSE_BUTTON" = "Oynat ya da duraklat";
+"PLAY_PAUSE_HINT" = "Geçerli oynatımı Oynatır ya da Duraklatır";
+
+"NEXT_HINT" = "Sonraki ortam";
+
+"FORWARD_BUTTON" = "İleri";
+"FORWARD_HINT" = "İleriye atlar";
+
 "INTERFACE_LOCK_BUTTON" = "Arayüzü kilitle";
-"INTERFACE_LOCK_HINT" = "Arayüz denetimlerini devre dışı bırak";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Görüntü en boy oranı";
+"VIDEO_ASPECT_RATIO_HINT" = "Geçerli görüntünün en boy oranını değiştir";
+
 "MORE_OPTIONS_BUTTON" = "Diğerleri";
 "MORE_OPTIONS_HINT" = "Diğer seçenek denetimlerini görüntüle";
-"REPEAT_MODE_HINT" = "Geçerli ögenin yinelenme kipini değiştir";
-"VIDEO_ASPECT_RATIO_HINT" = "Geçerli görüntünün en boy oranını değiştir";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "Dengeleyici";
@@ -410,3 +451,48 @@
 /* Preview labels */
 
 "ENCODING" = "Kodlama";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "Ortam grubuna ekle";
+"ADD_TO_MEDIA_GROUP_HINT" = "Ortam grubuna ekle menüsünü açar";
+
+"MEDIA_GROUPS" = "Ortam grupları";
+"MEDIA_GROUPS_DESCRIPTION" = "Yeni ortam grubunuzun adını yazın";
+"MEDIA_GROUPS_PLACEHOLDER" = "Ortam grubu başlığı";
+
+"REMOVE_FROM_MEDIA_GROUP" = "Ortam grubundan kaldır";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "Seçimi ortam grubundan kaldırır";
+
+"MEDIA_GROUP_CREATION" = "Ortam grubu ekle";
+"MEDIA_GROUP_CREATION_HINT" = "Bir oynatma listesi ekleme uyarısını görüntüler";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "İçeriği üst düzeye taşı";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "Seçilmiş içeriği üst düzeye taşır";
+
+"BUTTON_REGROUP" = "Yeniden Grupla";
+"BUTTON_REGROUP_TITLE" = "Seçimi yeniden gruplar";
+"BUTTON_REGROUP_HINT" = "Tek ortamı otomatik olarak yeniden gruplamayı dener.";
+"BUTTON_REGROUP_DESCRIPTION" = "Tek ortamı otomatik olarak yeniden gruplamayı denemek istediğinize emin misiniz?\nBu işlem uzun sürebilir.";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "Eklenecek ortamları buraya koyun";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "Ekleniyor...";
+
+/* tip jar */
+"GIVE_TIP" = "İpucu Ver";
+"CANNOT_MAKE_PAYMENTS" = "Bu aygıt üzerinden ödeme yapmanıza izin verilmiyor.";
+"PURCHASE_FAILED" = "Satın Alınamadı";
+"SEND_GIFT" = "Hediye gönderin";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "Oynat";
+"PLAY_LABEL" = "Oynat";
+"PLAY_NEXT_IN_QUEUE_HINT" = "Kuyruktaki sonrakini oynat";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "Kuyrukta sonrakini oynat";
+"APPEND_TO_QUEUE_HINT" = "Kuyruğa ekle";
+"APPEND_TO_QUEUE_LABEL" = "Kuyruğa ekle";
+
+"DISABLE_GROUPS" = "Grupları devre dışı bırak";
+"DISABLE_GROUPS_SWITCH_HINT" = "Gruplar görünümünü devre dışı bırakır";
+"DISPLAY_AS" = "Farklı görüntüle";

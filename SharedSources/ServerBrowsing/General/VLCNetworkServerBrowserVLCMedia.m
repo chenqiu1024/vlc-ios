@@ -2,10 +2,11 @@
  * VLCNetworkServerBrowserVLCMedia.m
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2015 VideoLAN. All rights reserved.
+ * Copyright (c) 2015, 2020 VideoLAN. All rights reserved.
  * $Id$
  *
  * Authors: Tobias Conradi <videolan # tobias-conradi.de>
+ *          Felix Paul Kühne <fkuehne # videolan.org>
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
@@ -38,7 +39,6 @@
         _mediaList = [[VLCMediaList alloc] init];
         _rootMedia = media;
         _rootMedia.delegate = self;
-        [media addOption:kVLCForceSMBV1];
         // Set timeout to 0 in order to avoid getting interrupted in dialogs for timeout reasons
         [media parseWithOptions:VLCMediaParseNetwork|VLCMediaDoInteract timeout:0];
         _mediaListUnfiltered = [_rootMedia subitems];
@@ -69,12 +69,6 @@
     }
 }
 
-- (BOOL)shouldFilterMedia:(VLCMedia *)media
-{
-    NSString *absoluteString = media.url.absoluteString;
-    return ![absoluteString isSupportedAudioMediaFormat] && ![absoluteString isSupportedMediaFormat] && ![absoluteString isSupportedPlaylistFormat] && media.mediaType != VLCMediaTypeDirectory;
-}
-
 - (void)_addMediaListRootItemsToList
 {
     VLCMediaList *rootItems = _rootMedia.subitems;
@@ -82,11 +76,9 @@
     NSUInteger count = rootItems.count;
     for (NSUInteger i = 0; i < count; i++) {
         VLCMedia *media = [rootItems mediaAtIndex:i];
-        if (![self shouldFilterMedia:media]) {
-            NSInteger mediaIndex = self.mutableItems.count;
-            [self.mediaList insertMedia:media atIndex:mediaIndex];
-            [self.mutableItems insertObject:[[VLCNetworkServerBrowserItemVLCMedia alloc] initWithMedia:media options:self.mediaOptions] atIndex:mediaIndex];
-        }
+        NSInteger mediaIndex = self.mutableItems.count;
+        [self.mediaList insertMedia:media atIndex:mediaIndex];
+        [self.mutableItems insertObject:[[VLCNetworkServerBrowserItemVLCMedia alloc] initWithMedia:media options:self.mediaOptions] atIndex:mediaIndex];
     }
     [rootItems unlock];
 }
@@ -111,11 +103,9 @@
 - (void)mediaList:(VLCMediaList *)aMediaList mediaAdded:(VLCMedia *)media atIndex:(NSUInteger)index
 {
     [media addOptions:self.mediaOptions];
-    if (![self shouldFilterMedia:media]) {
-        NSInteger mediaIndex = self.mutableItems.count;
-        [self.mediaList insertMedia:media atIndex:mediaIndex];
-        [self.mutableItems insertObject:[[VLCNetworkServerBrowserItemVLCMedia alloc] initWithMedia:media options:self.mediaOptions] atIndex:mediaIndex];
-    }
+    NSInteger mediaIndex = self.mutableItems.count;
+    [self.mediaList insertMedia:media atIndex:mediaIndex];
+    [self.mutableItems insertObject:[[VLCNetworkServerBrowserItemVLCMedia alloc] initWithMedia:media options:self.mediaOptions] atIndex:mediaIndex];
 
     [self.delegate networkServerBrowserDidUpdate:self];
 }
@@ -134,11 +124,15 @@
 - (void)mediaDidFinishParsing:(VLCMedia *)aMedia
 {
     if ([aMedia parsedStatus] != VLCMediaParsedStatusDone) {
-        [self.delegate networkServerBrowserShouldPopView:self];
+        if ([self.delegate respondsToSelector:@selector(networkServerBrowserShouldPopView:)]) {
+            [self.delegate networkServerBrowserShouldPopView:self];
+        }
     } else if (self.mediaList.count != 0) {
         [self.delegate networkServerBrowserDidUpdate:self];
     } else {
-        [self.delegate networkServerBrowserEndParsing:self];
+        if ([self.delegate respondsToSelector:@selector(networkServerBrowserEndParsing:)]) {
+            [self.delegate networkServerBrowserEndParsing:self];
+        }
     }
 }
 
@@ -167,13 +161,26 @@
         _name = title;
         _URL = media.url;
         _mediaOptions = [mediaOptions copy];
-        _downloadable = NO;
     }
     return self;
 }
 
 - (id<VLCNetworkServerBrowser>)containerBrowser {
     return [[VLCNetworkServerBrowserVLCMedia alloc] initWithMedia:self.media options:self.mediaOptions];
+}
+
+- (BOOL)isDownloadable
+{
+    return _media.mediaType == VLCMediaTypeFile;
+}
+
+- (NSURL *)thumbnailURL
+{
+    NSString *artworkUrlString = [_media metadataForKey:VLCMetaInformationArtworkURL];
+    if (artworkUrlString) {
+        return [NSURL URLWithString:artworkUrlString];
+    }
+    return nil;
 }
 
 @end

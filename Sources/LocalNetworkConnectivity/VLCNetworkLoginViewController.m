@@ -22,12 +22,12 @@
 #import "VLCNetworkServerLoginInformation.h"
 #import "VLC-Swift.h"
 
-
 // for protocol identifier
 #import "VLCLocalNetworkServiceBrowserPlex.h"
-#import "VLCLocalNetworkServiceBrowserFTP.h"
+#import "VLCNetworkServerBrowserVLCMedia+FTP.h"
+#import "VLCNetworkServerBrowserVLCMedia+SFTP.h"
 #import "VLCLocalNetworkServiceBrowserDSM.h"
-
+#import "VLCLocalNetworkServiceBrowserNFS.h"
 
 @interface VLCNetworkLoginViewController () <UITextFieldDelegate, VLCNetworkLoginDataSourceProtocolDelegate, VLCNetworkLoginDataSourceLoginDelegate, VLCNetworkLoginDataSourceSavedLoginsDelegate>
 
@@ -72,8 +72,9 @@
                                               style:UIBarButtonItemStyleDone target:self
                                               action:@selector(connectLoginDataSource)];
     if (@available(iOS 13.0, *)) {
-        self.navigationController.navigationBar.standardAppearance = [VLCApperanceManager navigationbarAppearance];
-        self.navigationController.navigationBar.scrollEdgeAppearance = [VLCApperanceManager navigationbarAppearance];
+        UINavigationBarAppearance *navigationBarAppearance = [VLCAppearanceManager navigationbarAppearance];
+        self.navigationController.navigationBar.standardAppearance = navigationBarAppearance;
+        self.navigationController.navigationBar.scrollEdgeAppearance = navigationBarAppearance;
     }
 }
 
@@ -99,6 +100,10 @@
         protocol = VLCServerProtocolSMB;
     } else if ([protocolIdentifier isEqualToString:VLCNetworkServerProtocolIdentifierPlex]) {
         protocol = VLCServerProtocolPLEX;
+    } else if ([protocolIdentifier isEqualToString:VLCNetworkServerProtocolIdentifierNFS]) {
+        protocol = VLCServerProtocolNFS;
+    } else if ([protocolIdentifier isEqualToString:VLCNetworkServerProtocolIdentifierSFTP]) {
+        protocol = VLCServerProtocolSFTP;
     }
     return protocol;
 }
@@ -120,6 +125,17 @@
         case VLCServerProtocolSMB:
         {
             protocolIdentifier = VLCNetworkServerProtocolIdentifierSMB;
+            break;
+        }
+        case VLCServerProtocolNFS:
+        {
+            protocolIdentifier = VLCNetworkServerProtocolIdentifierNFS;
+            break;
+        }
+        case VLCServerProtocolSFTP:
+        {
+            protocolIdentifier = VLCNetworkServerProtocolIdentifierSFTP;
+            break;
         }
         default:
             break;
@@ -129,6 +145,17 @@
 
 - (void)setLoginInformation:(VLCNetworkServerLoginInformation *)loginInformation
 {
+    if (loginInformation.protocolIdentifier == nil) {
+        loginInformation.protocolIdentifier = VLCNetworkServerProtocolIdentifierSMB;
+        VLCNetworkServerLoginInformationField *workgroupField = [[VLCNetworkServerLoginInformationField alloc]
+                                                                 initWithType:VLCNetworkServerLoginInformationFieldTypeText
+                                                                 identifier:@"VLCLocalNetworkServiceDSMWorkgroup"
+                                                                 label:NSLocalizedString(@"DSM_WORKGROUP", nil)
+                                                                 textValue:@"WORKGROUP"];
+
+
+        loginInformation.additionalFields = @[workgroupField];
+    }
     _loginInformation = loginInformation;
     self.protocolDataSource.protocol = [self protocolForProtocolIdentifier:loginInformation.protocolIdentifier];
     self.loginDataSource.loginInformation = loginInformation;

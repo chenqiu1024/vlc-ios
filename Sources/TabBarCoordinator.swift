@@ -25,6 +25,7 @@ class TabBarCoordinator: NSObject {
     }
 
     private func setup() {
+        tabBarController.delegate = self
         setupViewControllers()
         setupEditToolbar()
         updateTheme()
@@ -38,7 +39,7 @@ class TabBarCoordinator: NSObject {
         tabBarController.tabBar.barTintColor = PresentationTheme.current.colors.tabBarColor
         tabBarController.tabBar.itemPositioning = .fill
         tabBarController.viewControllers?.forEach {
-            if let navController = $0 as? UINavigationController, navController.topViewController is VLCSettingsController {
+            if let navController = $0 as? UINavigationController, navController.topViewController is SettingsController {
                 navController.navigationBar.isTranslucent = false
                 navController.navigationBar.barTintColor = PresentationTheme.current.colors.navigationbarColor
                 navController.navigationBar.tintColor = PresentationTheme.current.colors.orangeUI
@@ -61,10 +62,11 @@ class TabBarCoordinator: NSObject {
             AudioViewController(services: services),
             PlaylistViewController(services: services),
             VLCServerListViewController(nibName: nil, bundle: nil),
-            VLCSettingsController(mediaLibraryService: services.medialibraryService)
+            SettingsController(mediaLibraryService: services.medialibraryService)
         ]
 
         tabBarController.viewControllers = controllers.map { UINavigationController(rootViewController: $0) }
+        tabBarController.selectedIndex = UserDefaults.standard.integer(forKey: kVLCTabBarIndex)
     }
 
     func handleShortcutItem(_ item: UIApplicationShortcutItem) {
@@ -115,27 +117,16 @@ private extension TabBarCoordinator {
     }
 }
 
+extension TabBarCoordinator: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        let viewControllerIndex: Int = tabBarController.viewControllers?.firstIndex(of: viewController) ?? 0
+        UserDefaults.standard.set(viewControllerIndex, forKey: kVLCTabBarIndex)
+    }
+}
+
 extension UITabBarController {
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         return PresentationTheme.current.colors.statusBarStyle
-    }
-
-    override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 13.0, *) {
-            guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else {
-                // Since traitCollectionDidChange is called in, for example rotations, we make sure that
-                // there was a userInterfaceStyle change.
-                return
-            }
-            guard UserDefaults.standard.integer(forKey: kVLCSettingAppTheme) == kVLCSettingAppThemeSystem else {
-                // Theme is specificly set, do not follow systeme theme.
-                return
-            }
-
-            let isSystemDarkTheme = traitCollection.userInterfaceStyle == .dark
-            PresentationTheme.current = isSystemDarkTheme ? PresentationTheme.darkTheme : PresentationTheme.brightTheme
-        }
     }
 }
 
@@ -159,5 +150,12 @@ extension UITabBarController {
             return
         }
         editToolbar.isHidden = true
+    }
+
+    func enableMediaGroup(_ enable: Bool) {
+        guard let editToolbar = editToolBar() else {
+            return
+        }
+        editToolbar.enableMediaGroupButton(enable)
     }
 }

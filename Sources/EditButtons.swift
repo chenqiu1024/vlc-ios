@@ -8,11 +8,16 @@
 * Refer to the COPYING file of the official project for license.
 *****************************************************************************/
 
-enum EditButtonType {
+@objc enum EditButtonType: Int {
     case addToPlaylist
+    case addToMediaGroup
+    case removeFromMediaGroup
     case rename
     case delete
     case share
+    case play
+    case playNextInQueue
+    case appendToQueue
 }
 
 class EditButton {
@@ -44,7 +49,7 @@ class EditButton {
     @available(iOS 13.0, *)
     func action(_ handler: @escaping (UIAction) -> Void) -> UIAction {
         let generatedAction = UIAction(title: title,
-                                       image: UIImage(named: image),
+                                       image: UIImage(named: image)?.withTintColor(PresentationTheme.current.colors.orangeUI),
                                        identifier: UIAction.Identifier(rawValue: image),
                                        handler: handler)
         generatedAction.accessibilityLabel = accessibilityLabel
@@ -54,19 +59,25 @@ class EditButton {
 }
 
 class EditButtonsFactory {
-    static func buttonList(for file: VLCMLObject?) -> [EditButtonType] {
+    static func buttonList(for model: MediaLibraryBaseModel) -> [EditButtonType] {
         var actionList = [EditButtonType]()
 
-        if let file = file {
-            actionList.append(.addToPlaylist)
-            if !(file is VLCMLArtist) && !(file is VLCMLGenre) && !(file is VLCMLAlbum) && !(file is VLCMLVideoGroup) {
-                actionList.append(.rename)
-            }
-            if !(file is VLCMLVideoGroup) {
-                actionList.append(.delete)
-            }
-            actionList.append(.share)
+        actionList.append(.play)
+        actionList.append(.playNextInQueue)
+        actionList.append(.appendToQueue)
+        actionList.append(.addToPlaylist)
+        if model is MediaGroupViewModel {
+            actionList.append(.addToMediaGroup)
+        } else if let collectionModel = model as? CollectionModel,
+            collectionModel.mediaCollection is VLCMLMediaGroup {
+            actionList.append(.removeFromMediaGroup)
         }
+
+        if !(model is ArtistModel) && !(model is GenreModel) && !(model is AlbumModel) {
+            actionList.append(.rename)
+        }
+        actionList.append(.delete)
+        actionList.append(.share)
         return actionList
     }
 
@@ -80,6 +91,21 @@ class EditButtonsFactory {
                                                   image: "addToPlaylist",
                                                   accessibilityLabel: NSLocalizedString("ADD_TO_PLAYLIST", comment: ""),
                                                   accessibilityHint: NSLocalizedString("ADD_TO_PLAYLIST_HINT", comment: "")))
+                case .addToMediaGroup:
+                    editButtons.append(EditButton(identifier: button,
+                                                  title: NSLocalizedString("ADD_TO_MEDIA_GROUP", comment: ""),
+                                                  image: "addToMediaGroup",
+                                                  accessibilityLabel: NSLocalizedString("ADD_TO_MEDIA_GROUP", comment: ""),
+                                                  accessibilityHint: NSLocalizedString("ADD_TO_MEDIA_GROUP_HINT",
+                                                                                       comment: "")))
+                case .removeFromMediaGroup:
+                    editButtons.append(EditButton(identifier: button,
+                                                  title: NSLocalizedString("REMOVE_FROM_MEDIA_GROUP", comment: ""),
+                                                  image: "removeFromMediaGroup",
+                                                  accessibilityLabel: NSLocalizedString("REMOVE_FROM_MEDIA_GROUP",
+                                                                                        comment: ""),
+                                                  accessibilityHint: NSLocalizedString("REMOVE_FROM_MEDIA_GROUP_HINT",
+                                                                                       comment: "")))
                 case .rename:
                     editButtons.append(EditButton(identifier: button,
                                                   title: NSLocalizedString("BUTTON_RENAME", comment: ""),
@@ -98,6 +124,24 @@ class EditButtonsFactory {
                                                   image: "share",
                                                   accessibilityLabel: NSLocalizedString("SHARE_LABEL", comment: ""),
                                                   accessibilityHint: NSLocalizedString("SHARE_HINT", comment: "")))
+                case .play:
+                    editButtons.append(EditButton(identifier: button,
+                                                  title: NSLocalizedString("PLAY_LABEL", comment: ""),
+                                                  image: "MiniPlay",
+                                                  accessibilityLabel: NSLocalizedString("PLAY_LABEL", comment: ""),
+                                                  accessibilityHint: NSLocalizedString("PLAY_HINT", comment: "")))
+                case .playNextInQueue:
+                    editButtons.append(EditButton(identifier: button,
+                                                  title: NSLocalizedString("PLAY_NEXT_IN_QUEUE_LABEL", comment: ""),
+                                                  image: "playNextInQueue",
+                                                  accessibilityLabel: NSLocalizedString("PLAY_NEXT_IN_QUEUE_LABEL", comment: ""),
+                                                  accessibilityHint: NSLocalizedString("PLAY_NEXT_IN_QUEUE_HINT", comment: "")))
+                case .appendToQueue:
+                    editButtons.append(EditButton(identifier: button,
+                                                  title: NSLocalizedString("APPEND_TO_QUEUE_LABEL", comment: ""),
+                                                  image: "appendToQueue",
+                                                  accessibilityLabel: NSLocalizedString("APPEND_TO_QUEUE_LABEL", comment: ""),
+                                                  accessibilityHint: NSLocalizedString("APPEND_TO_QUEUE_HINT", comment: "")))
             }
         }
         return editButtons

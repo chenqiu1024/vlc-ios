@@ -1,5 +1,124 @@
 # Changelog
 
+## iOS [3.3.0]
+
+· Add support to browse NFS and SFTP shares
+· Replace previous UPnP integration with VLC's native support based on libupnp
+  · this improves compatibility with off-standard UPnP servers
+· Replace previous FTP integration with VLC's native support
+  · this improves compatibility with servers using non-western text encodings
+    and allows connections to servers with off-standard port configurations
+· Add downloads from SMB servers
+· Add support for http(s) downloads from servers requiring authentication
+· Add grid layout for Audio library
+· Fix storing user credentials for network shares
+· Retain downloaded subtitles for locally stored media
+· Automatic video deinterlacing (by default)
+· Retain last opened media category
+
+## tvOS [3.1.0]
+
+· Add support to browse NFS and SFTP shares
+· Replace previous UPnP integration with VLC's native support based on libupnp
+  · this improves compatibility with off-standard UPnP servers
+· Replace previous FTP integration with VLC's native support
+  · this improves compatibility with servers using non-western text encodings
+    and allows connections to servers with off-standard port configurations
+· Fix storing user credentials for network shares
+
+## iOS [3.2.13]
+
+· Add support for SMBv3
+· Fix authentication regression with SMBv2 servers
+· Fix DNS lookup regression with SMBv2 servers on IPv6-capable networks
+· Fix login to Box.com
+
+## tvOS [3.0.12]
+
+· Add support for SMBv3
+· Fix authentication regression with SMBv2 servers
+· Fix DNS lookup regression with SMBv2 servers on IPv6-capable networks
+
+## iOS [3.2.12]
+
+· Fix playback of 10bit and 12bit content encoded in HEVC or AVC on iOS 14 and later
+
+## tvOS [3.0.11]
+
+· Fix playback of 10bit and 12bit content encoded in HEVC or AVC on tvOS 14 and later
+
+## iOS [3.2.11]
+
+· Fix adding new item to playlists
+· Update Dutch translation
+
+## tvOS [3.0.10]
+
+· Fix subtitle display for tracks embedded in MKV files
+
+## iOS [3.2.10]
+
+· Fix subtitle display for tracks embedded in MKV files
+· Minor UI fix
+
+## tvOS [3.0.9]
+
+· Fix repeat button appearance on tvOS 13 and later
+· Fix Remote Playback on IPv6-only networks
+· Prevent screensaver from appearing during Remote Playback sessions
+· Greatly improve AV1 decoding performance by updating dav1d
+· Improve adaptive streaming behavior
+· Improve seeking accuracy for certain mp4 media
+· Fix silence after pausing video playback
+
+## iOS [3.2.9]
+
+· Add option to enable Chromecast audio passthrough
+· Fix adding media to existing playlists
+· Fix WiFi sharing on IPv6-only networks
+· Greatly improve AV1 decoding performance by updating dav1d
+· Improve adaptive streaming behavior
+· Improve seeking accuracy for certain mp4 media
+· Fix silence after pausing video playback
+
+## iOS [3.2.8]
+
+· Add support to create media groups manually
+· Port subtitles support from tvOS
+· Fix potential Files app hiding issue
+· Improve application startup time
+· Improve sharing of the library on the local network between multiple VLCs
+· Minor UI improvements and fixes
+
+## tvOS [3.0.7]
+
+· Fix artwork display
+· Fix crashes when navigating network shares
+· Minor UI improvements and fixes
+
+## iOS [3.2.7]
+
+This is a bug fix release, we are actively working on media groups.
+
+· Fix streaming content on Google Drive
+· Add passcode protection for WiFi Sharing
+· Re-add more granular playback speed control
+· Display file size information in Edit mode
+· Fix repeating media when shuffle is disabled
+· Fix uploads of media larger than 10 GB via WiFi
+· Fix storage of recent network streams without iCloud
+· Fix random playback control through lock screen
+· Fix progress display for downloads via FTP
+· Fix missing Share sheet on iPad
+· Fix Chromecast button not to show in some cases
+· Minor UI improvements and fixes
+
+## tvOS [3.0.7]
+
+· Update codecs and networking libraries
+· Fix audio playback delay with external accessories
+· Minor UI improvements by deploying the current SDK
+
 ## iOS [3.2.6]
 
 · Fix media title display

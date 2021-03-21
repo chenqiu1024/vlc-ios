@@ -35,9 +35,11 @@
 "VFILTER_SATURATION" = "Färgmättnad";
 "VFILTER_GAMMA" = "Gamma";
 
+"PRESETS" = "Förinställningar";
 "PREAMP" = "Försteg";
 "DB_FORMAT" = "%i dB";
 "CHOOSE_EQUALIZER_PROFILES" = "Välj equalizerprofil";
+"SNAP_BANDS" = "Fäst band";
 
 "PLAYBACK_FAILED" = "Uppspelning misslyckades";
 "PLEASE_WAIT" = "Var god vänta";
@@ -75,8 +77,11 @@
 "BUTTON_RENDERER" = "Castenheter";
 "BUTTON_RENDERER_HINT" = "Visa en meny med tillgängliga castenheter";
 
+
+"BUTTON_PLAY_QUEUE" = "Uppspelningskö";
+"BUTTON_PLAY_QUEUE_HINT" = "Visa vyn för uppspelningskön";
+
 "UPGRADING_LIBRARY" = "Uppgraderar mediabiblioteket";
-"UNKNOWN" = "Okänd";
 
 "OPEN_NETWORK" = "Öppna nätverksström";
 "NETWORK_TITLE" = "Nätverksström";
@@ -128,6 +133,9 @@
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "SERVERANSLUTNING MISSLYCKADES";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "Var god kontrollera din serveradress och autentiseringsuppgifter";
 
+"FILES_APP_CELL_TITLE" = "Lokala filer";
+"FILES_APP_CELL_SUBTITLE" = "Öppna en fil utan att kopiera den till VLC.";
+
 "CLOUD_SERVICES" = "Molntjänster";
 "LOGIN" = "Logga in";
 "LOGGED_IN" = "Inloggad";
@@ -176,7 +184,7 @@
 "OFF" = "Av";
 
 "EMPTY_LIBRARY" = "Tomt mediabibliotek";
-"EMPTY_LIBRARY_LONG" = "För uppspelning kan du strömma media från en server på ditt lokala nätverk, från molnet eller synkronisera media till din enhet via iTunes, WiFi eller molntjänster.";
+"EMPTY_LIBRARY_LONG" = "För att spela upp media kan du strömma från en server på ditt lokala nätverk, från molnet eller synkronisera media till din enhet via iTunes, WiFi eller molntjänster.";
 
 "EMPTY_PLAYLIST" = "Tom spellista";
 "EMPTY_PLAYLIST_DESCRIPTION" = "Lägg till media medan du redigerar de respektive kategorierna.";
@@ -189,14 +197,18 @@
 "PLAYBACK_POSITION" = "Uppspelningsposition";
 "VIDEO_FILTER" = "Videofilter";
 "VIDEO_FILTER_RESET_BUTTON" = "Återställ videofilter";
-"VIDEO_ASPECT_RATIO_BUTTON" = "Byt videons bildförhållande";
-"PLAY_PAUSE_BUTTON" = "Spela eller pausa aktuell uppspelning";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Bildförhållande för video";
 "BWD_BUTTON" = "Hoppa bakåt";
 "FWD_BUTTON" = "Hoppa framåt";
 "PLAY_BUTTON" = "Spela upp";
 "NEXT_BUTTON" = "Nästa";
 "PREV_BUTTON" = "Föregående";
 "PLAY_ALL_BUTTON" = "Spela upp alla";
+
+"RESET_VIDEO_FILTERS" = "Vill du återställa videofiltren?";
+"RESET_PLAYBACK_SPEED" = "Vill du återställa uppspelningshastigheten?";
+"RESET_EQUALIZER" = "Vill du återställa equalizerinställningarna?";
+"RESET_SLEEP_TIMER" = "Vill du återställa sovtimern?";
 
 "VERSION_FORMAT" = "Version: %@";
 "BASED_ON_FORMAT" = "Baserad på:<br />%@";
@@ -210,7 +222,7 @@
 "VO_VIDEOPLAYER_TITLE" = "Videospelare";
 "VO_VIDEOPLAYER_DOUBLETAP" = "Dubbelknacka för att visa eller dölja uppspelningskontroller";
 
-"FIRST_STEPS_ITUNES" = "iTunes Filsynkronisering";
+"FIRST_STEPS_ITUNES" = "iTunes-filsynkning";
 "FIRST_STEPS_ITUNES_TITLE" = "Synkronisera med din dator";
 "FIRST_STEPS_ITUNES_DETAILS" = "Anslut din enhet till iTunes och välj din enhet. Välj \"Fildelning\" i sidomenyn till vänster i iTunes och leta efter VLC för att överföra filer";
 "FIRST_STEPS_WIFI_TITLE" = "Dela via WiFi";
@@ -281,8 +293,11 @@
 "PLEX_LONG" = "Plex Media Server (via Bonjour)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "File Transfer Protocol (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "Network File System (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "BONJOUR-filserver";
 "DSM_WORKGROUP" = "Arbetsgrupp";
@@ -317,7 +332,7 @@
 "ARTISTS" = "Artister";
 "EPISODES" = "Episoder";
 "GENRES" = "Genrer";
-"MOVIES" = "Filmer";
+"ALL_VIDEOS" = "Alla videor";
 "SONGS" = "Låtar";
 "PLAYLISTS" = "Spellistor";
 "VIDEO_GROUPS" = "Videogrupper";
@@ -356,6 +371,7 @@
 "DESCENDING_LABEL" = "Fallande ordning";
 "DESCENDING_SWITCH_LABEL" = "Stigande eller fallande ordning";
 "DESCENDING_SWITCH_HINT" = "Sortera alternativmenyn i stigande eller fallande ordning";
+"GRID_LAYOUT" = "Rutnätslayout";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -384,13 +400,38 @@
 "VARIOUS_ARTIST" = "Blandade artister";
 "UNKNOWN_ALBUM" = "Okänt album";
 
-/* VideoOptionsControlBar */
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Undertext- och ljudspår";
+"SUBTITLE_AND_TRACK_HINT" = "Välj undertext- eller ljudspår";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "DVD-gränssnitt";
+
+"ROTATION_LOCK_BUTTON" = "Roteringslås";
+"ROTATION_LOCK_HINT" = "Lås videon till nuvarande orientering";
+
+"BACKWARD_BUTTON" = "Bakåt";
+"BACKWARD_HINT" = "Spola tillbaka";
+
+"PREVIOUS_BUTTON" = "Föregående";
+"PREVIOUS_HINT" = "Föregående mediafil";
+
+"PLAY_PAUSE_BUTTON" = "Spela upp eller pausa";
+"PLAY_PAUSE_HINT" = "Spela upp eller pausa nuvarande uppspelning";
+
+"NEXT_HINT" = "Nästa mediafil";
+
+"FORWARD_BUTTON" = "Framåt";
+"FORWARD_HINT" = "Spola framåt";
+
 "INTERFACE_LOCK_BUTTON" = "Lås gränssnitt";
-"INTERFACE_LOCK_HINT" = "Inaktivera gränssnittskontroller";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Bildförhållande för video";
+"VIDEO_ASPECT_RATIO_HINT" = "Ändra bildförhållandet för aktuell video";
+
 "MORE_OPTIONS_BUTTON" = "Mer";
 "MORE_OPTIONS_HINT" = "Visa fler kontrollalternativ";
-"REPEAT_MODE_HINT" = "Ändra upprepningsläget för aktuellt objekt";
-"VIDEO_ASPECT_RATIO_HINT" = "Ändra bildförhållandet för aktuell video";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "Equalizer";
@@ -410,3 +451,48 @@
 /* Preview labels */
 
 "ENCODING" = "Kodning";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "Lägg till i mediagrupp";
+"ADD_TO_MEDIA_GROUP_HINT" = "Öppna menyn för att lägga till i mediagrupper";
+
+"MEDIA_GROUPS" = "Mediagrupper";
+"MEDIA_GROUPS_DESCRIPTION" = "Välj en titel för din nya mediagrupp";
+"MEDIA_GROUPS_PLACEHOLDER" = "Titel på mediagrupp";
+
+"REMOVE_FROM_MEDIA_GROUP" = "Ta bort från mediagrupp";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "Ta bort markerade filer från mediagruppen";
+
+"MEDIA_GROUP_CREATION" = "Ny mediagrupp";
+"MEDIA_GROUP_CREATION_HINT" = "Visa dialogruta för att skapa en spellista";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "Flytta innehåll längst upp";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "Flyttar markeringens innehåll längst upp";
+
+"BUTTON_REGROUP" = "Omgruppera";
+"BUTTON_REGROUP_TITLE" = "Omgruppera markering";
+"BUTTON_REGROUP_HINT" = "Försök omgruppera enskild media automatiskt.";
+"BUTTON_REGROUP_DESCRIPTION" = "Är du säker på att du vill prova omgruppera enskild media automatiskt?\nDetta kan ta en stund.";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "Placera mediafiler här för att lägga till dem";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "Lägger till...";
+
+/* tip jar */
+"GIVE_TIP" = "Ge dricks";
+"CANNOT_MAKE_PAYMENTS" = "Du har inte tillåtelse att genomföra köp på denna enhet.";
+"PURCHASE_FAILED" = "Köp misslyckades";
+"SEND_GIFT" = "Skicka din gåva";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "Spela upp";
+"PLAY_LABEL" = "Spela upp";
+"PLAY_NEXT_IN_QUEUE_HINT" = "Spela upp nästa i kön";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "Spela upp nästa i kön";
+"APPEND_TO_QUEUE_HINT" = "Lägg till i slutet på kön";
+"APPEND_TO_QUEUE_LABEL" = "Lägg till i kön";
+
+"DISABLE_GROUPS" = "Inaktivera grupper";
+"DISABLE_GROUPS_SWITCH_HINT" = "Inaktivera grupplayout";
+"DISPLAY_AS" = "Visa som";

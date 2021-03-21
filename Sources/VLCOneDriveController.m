@@ -57,11 +57,10 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 {
     self = [super init];
 
-    if (!self)
-        return self;
-//    [self restoreFromSharedCredentials];
-    _oneDriveClient = [ODClient loadCurrentClient];
-    [self setupSession];
+    if (self) {
+        _oneDriveClient = [ODClient loadCurrentClient];
+        [self setupSession];
+    }
     return self;
 }
 
@@ -84,13 +83,27 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 {
     _presentingViewController = presentingViewController;
 
+    if (@available(iOS 11.0, *)) {
+        [[UINavigationBar appearance] setPrefersLargeTitles:NO];
+    }
+
     [ODClient authenticatedClientWithCompletion:^(ODClient *client, NSError *error) {
+        if (@available(iOS 11.0, *)) {
+            [VLCAppearanceManager setupAppearanceWithTheme:PresentationTheme.current];
+        }
         if (error) {
             [self authFailed:error];
             return;
         }
         self->_oneDriveClient = client;
         [self authSuccess];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.delegate) {
+                if ([self.delegate respondsToSelector:@selector(sessionWasUpdated)])
+                    [self.delegate performSelector:@selector(sessionWasUpdated)];
+            }
+        });
     }];
 }
 
@@ -106,6 +119,9 @@ static void *ProgressObserverContext = &ProgressObserverContext;
         self->_rootItemID = nil;
         self->_parentItem = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.delegate) {
+                [self.delegate performSelector:@selector(mediaListUpdated)];
+            }
             if (self->_presentingViewController) {
                 [self->_presentingViewController.navigationController popViewControllerAnimated:YES];
             }
@@ -123,20 +139,8 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     return _oneDriveClient != nil;
 }
 
-- (void)authSuccess
+- (void)sessionWasUpdated
 {
-    APLog(@"VLCOneDriveController: Authentication complete.");
-
-    [self setupSession];
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:VLCOneDriveControllerSessionUpdated object:self];
-//    [self shareCredentials];
-}
-
-- (void)authFailed:(NSError *)error
-{
-    APLog(@"VLCOneDriveController: Authentication failure.");
-
     if (self.delegate) {
         if ([self.delegate respondsToSelector:@selector(sessionWasUpdated)])
             [self.delegate performSelector:@selector(sessionWasUpdated)];
@@ -144,35 +148,24 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCOneDriveControllerSessionUpdated object:self];
 }
 
-- (void)shareCredentials
+- (void)authSuccess
 {
-    // FIXME: https://github.com/OneDrive/onedrive-sdk-ios/issues/187
+    APLog(@"VLCOneDriveController: Authentication complete.");
 
-/* share our credentials */
-//    LiveAuthStorage *authStorage = [[LiveAuthStorage alloc] initWithClientId:kVLCOneDriveClientID];
-//    _oneDriveClient = [[ODClient alloc] ]
-//    _oneDriveClient.authProvider.accountSession.refreshToken;
-//NSString *credentials = [authStorage refreshToken];
-//  NSString *credentials = [_oneDriveClient token]
-//    if (credentials == nil)
-//        return;
-//
-//    NSUbiquitousKeyValueStore *ubiquitousStore = [NSUbiquitousKeyValueStore defaultStore];
-//    [ubiquitousStore setString:credentials forKey:kVLCStoreOneDriveCredentials];
-//    [ubiquitousStore synchronize];
+    [self setupSession];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self sessionWasUpdated];
+    });
 }
 
-- (BOOL)restoreFromSharedCredentials
+- (void)authFailed:(NSError *)error
 {
-//    LiveAuthStorage *authStorage = [[LiveAuthStorage alloc] initWithClientId:kVLCOneDriveClientID];
-//    NSUbiquitousKeyValueStore *ubiquitousStore = [NSUbiquitousKeyValueStore defaultStore];
-//    [ubiquitousStore synchronize];
-//    NSString *credentials = [ubiquitousStore stringForKey:kVLCStoreOneDriveCredentials];
-//    if (!credentials)
-//        return NO;
-//
-//    [authStorage setRefreshToken:credentials];
-    return YES;
+    APLog(@"VLCOneDriveController: Authentication failure.");
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self sessionWasUpdated];
+    });
 }
 
 #pragma mark - listing

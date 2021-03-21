@@ -9,6 +9,7 @@
 "SETTINGS_THEME_SYSTEM" = "Automatikus";
 "SETTINGS_PRIVACY_SUBTITLE" = "Megnyitás a Beállításokban";
 "SETTINGS_PASSCODE_LOCK_SUBTITLE" = "Biztonságos hozzáférés a tartalmához";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE" = "A médiái rejtve lesznek a Fájlok alkalmazásban";
 
 "SETTINGS_DARKTHEME" = "Megjelenés";
 "SETTINGS_TIME_STRETCH_AUDIO" = "Időbeli hangnyújtás";
@@ -17,6 +18,7 @@
 "SETTINGS_PASSCODE_LOCK" = "Jelkódzár";
 "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID" = "Touch ID engedélyezése a feloldáshoz";
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "Face ID engedélyezése a feloldáshoz";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "A médiatár elrejtése a Fájlokban";
 "SETTINGS_VIDEO_FULLSCREEN" = "Videó lejátszása teljes képernyőn";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "Videólejátszás folytatása";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "Hanglejátszás folytatása";
@@ -24,6 +26,7 @@
 "SETTINGS_CONTINUE_PLAYBACK_ASK" = "Kérdezzen";
 "SETTINGS_CONTINUE_PLAYBACK_ALWAYS" = "Mindig";
 "SETTINGS_NETWORK_PLAY_ALL" = "Következő elem automatikus lejátszása";
+"SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING" = "Szöveggörgetés engedélyezése a médialistában";
 
 "SETTINGS_SKIP_LOOP_FILTER" = "Blokkbontó szűrő";
 "SETTINGS_SKIP_LOOP_FILTER_NONE" = "Nincs blokkbontás (leggyorsabb)";
@@ -81,6 +84,9 @@
 "SETTINGS_HWDECODING" = "Hardveres dekódolás";
 "SETTINGS_HWDECODING_ON" = "Be";
 "SETTINGS_HWDECODING_OFF" = "Ki";
+"SETTINGS_CASTING" = "Vetítés";
+"SETTINGS_PTCASTING" = "Hangáteresztés";
+"SETTINGS_PTCASTINGLONG" = "A TV kezelje a hangrenderelést";
 
 "SETTINGS_FEEDBACK" = "Visszajelzés";
 "SETTINGS_SEND_FEEDBACK" = "Visszajelzés küldése";
@@ -89,23 +95,17 @@
 "SETTINGS_MEDIA_LIBRARY" = "Médiatár";
 "SETTINGS_MEDIA_LIBRARY_RESCAN" = "A VLC kényszerítése, hogy újra átvizsgálja a médiatárat";
 "SETTINGS_DECRAPIFY" = "Elemnevek kijelzőhöz igazítása";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Videocsoportok észlelési hossza";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Rövid";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Alapértelmezett";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Hosszú";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Extra hosszú";
 "SETTINGS_SHOW_THUMBNAILS" = "Videó bélyegképek megjelenítése";
 "SETTINGS_SHOW_ARTWORKS" = "Hang grafikák megjelenítése";
 "SETTINGS_BACKUP_MEDIA_LIBRARY" = "A médiatár belevétele az eszköz biztonsági mentésébe";
 
 "SETTINGS_FILE_SYNC" = "Fájlszinkronizáció";
-"SETTINGS_WIFISHARING_IPv6" = "IPv6 támogatás a WiFi megosztáshoz";
-"SETTINGS_UNLINK_DROPBOX" = "Dropbox leválasztása";
-"SETTINGS_UNLINK_GOOGLEDRIVE" = "Google Drive leválasztása";
-"SETTINGS_UNLINK_ONEDRIVE" = "OneDrive leválasztása";
-"SETTINGS_FTP_TEXT_ENCODING" = "Szövegkódolás FTP kapcsolatoknál";
+"SETTINGS_WIFISHARING_IPv6" = "IPv6 támogatás a Wi-Fi megosztáshoz";
 
 "SETTINGS_ARTWORK" = "Grafika";
 "SETTINGS_DOWNLOAD_ARTWORK" = "Grafika letöltése";
+
+"SETTINGS_LAB" = "Lab";
+"SETTINGS_NEW_PLAYER" = "Új lejátszó";
 
 "ABOUT_APP_TV" = "A VLC for tvOS névjegye";

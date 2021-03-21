@@ -75,8 +75,11 @@
 "BUTTON_RENDERER" = "投放裝置";
 "BUTTON_RENDERER_HINT" = "顯示可用的投放裝置選單";
 
+
+"BUTTON_PLAY_QUEUE" = "播放佇列";
+"BUTTON_PLAY_QUEUE_HINT" = "顯示播放佇列檢視";
+
 "UPGRADING_LIBRARY" = "升級媒體櫃中";
-"UNKNOWN" = "未知的";
 
 "OPEN_NETWORK" = "開啟網路串流";
 "NETWORK_TITLE" = "網路串流";
@@ -127,6 +130,9 @@
 "LOCAL_SERVER_LAST_UPDATE" = "上次在 %@ 更新";
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "伺服器連線失敗";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "請選擇您的伺服器地址與驗證 ";
+
+"FILES_APP_CELL_TITLE" = "Local files";
+"FILES_APP_CELL_SUBTITLE" = "Open a file without copying it to VLC";
 
 "CLOUD_SERVICES" = "雲端設備";
 "LOGIN" = "登入";
@@ -179,7 +185,7 @@
 "EMPTY_LIBRARY_LONG" = "為了播放，您可以從您區域網路中的一台伺服器串流媒體，透過 iTunes 從雲端或是同步媒體到您的設備上，WiFi 上傳或是雲端服務。";
 
 "EMPTY_PLAYLIST" = "空白播放清單";
-"EMPTY_PLAYLIST_DESCRIPTION" = "Add media while editing in the respective categories.";
+"EMPTY_PLAYLIST_DESCRIPTION" = "在相對類別中編輯時新增媒體";
 
 "PLAYBACK_SCRUB_HELP" = "下滑以調整刷新率。";
 "PLAYBACK_SCRUB_HIGH" = "高速刷新";
@@ -189,14 +195,18 @@
 "PLAYBACK_POSITION" = "播放位置";
 "VIDEO_FILTER" = "影片濾鏡";
 "VIDEO_FILTER_RESET_BUTTON" = "重設影片濾鏡";
-"VIDEO_ASPECT_RATIO_BUTTON" = "切換影片寬高比。";
-"PLAY_PAUSE_BUTTON" = "播放或暫停目前播放內容";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video aspect ratio";
 "BWD_BUTTON" = "向後";
 "FWD_BUTTON" = "向前";
 "PLAY_BUTTON" = "播放";
 "NEXT_BUTTON" = "下一個";
 "PREV_BUTTON" = "上一個";
 "PLAY_ALL_BUTTON" = "全部播放";
+
+"RESET_VIDEO_FILTERS" = "Do you want to reset the video filters?";
+"RESET_PLAYBACK_SPEED" = "Do you want to reset the playback speed?";
+"RESET_EQUALIZER" = "Do you want to reset the equalizer's settings?";
+"RESET_SLEEP_TIMER" = "Do you want to reset the sleep timer?";
 
 "VERSION_FORMAT" = "版本: %@";
 "BASED_ON_FORMAT" = "基於 :<br />%@";
@@ -213,7 +223,7 @@
 "FIRST_STEPS_ITUNES" = "iTunes 檔案同步";
 "FIRST_STEPS_ITUNES_TITLE" = "與電腦同步";
 "FIRST_STEPS_ITUNES_DETAILS" = "將您的裝置連接到 iTunes 並選擇您的裝置。選擇 iTunes 左側選單中的「檔案分享」並尋找 VLC 來傳輸檔案";
-"FIRST_STEPS_WIFI_TITLE" = "透過 WiFi 分享";
+"FIRST_STEPS_WIFI_TITLE" = "分享至WiFi";
 "FIRST_STEPS_WIFI_DETAILS" = "連接到與手機相同的網路，並在您喜歡的網路瀏覽器中輸入產生的網址";
 "FIRST_STEPS_CLOUDS" = "雲端";
 "FIRST_STEPS_CLOUD_TITLE" = "雲端";
@@ -240,6 +250,9 @@
 "WEBINTF_URL_SENT" = "網址要求成功";
 "WEBINTF_URL_EMPTY" = "網址不能是空的";
 "WEBINTF_URL_INVALID" = "不是正確的網址";
+"WEBINTF_AUTH_REQUIRED" = "請在 VLC iOS 輸入您設定的密碼:";
+"WEBINTF_AUTH_WRONG_PASSCODE" = "密碼錯誤。<br>剩餘嘗試次數:";
+"WEBINTF_AUTH_BANNED" = "您輸入了太多錯誤的密碼。<br>請重新啟動 VLC iOS ，然後再試一次。";
 
 
 
@@ -278,8 +291,11 @@
 "PLEX_LONG" = "Plex媒體服務器 (使用Bonjour)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "文件傳輸協定 (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "網路檔案系統 (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "BONJOUR 檔案伺服器";
 "DSM_WORKGROUP" = "工作小組";
@@ -290,8 +306,8 @@
 "DELETE_ITEM_HINT" = "按下 %@ 來刪除"; /* Insert %@ where play-pause-glyph should be placed */
 
 "DELETE_MESSAGE" = "確認刪除選取的項目";
-"DELETE_MESSAGE_PLAYLIST" = "Are you sure to delete the selected playlist?\nAssociated media files won't be deleted.";
-"DELETE_MESSAGE_PLAYLIST_CONTENT" = "Are you sure to remove the selected media from the playlist?\nThey won't be deleted from the disk.";
+"DELETE_MESSAGE_PLAYLIST" = "您確定要刪除選取的播放清單嗎？\n關聯的媒體檔案不會被刪除。";
+"DELETE_MESSAGE_PLAYLIST_CONTENT" = "您確定要從播放清單中移除選取的媒體嗎？\n它們不會從磁碟中被刪除。";
 "DELETE_TITLE" = "刪除選取的項目";
 
 //Drag and Drop
@@ -314,7 +330,7 @@
 "ARTISTS" = "藝人";
 "EPISODES" = "插曲";
 "GENRES" = "類型";
-"MOVIES" = "電影";
+"ALL_VIDEOS" = "所有影片";
 "SONGS" = "歌曲";
 "PLAYLISTS" = "播放列表";
 "VIDEO_GROUPS" = "影片分組";
@@ -353,6 +369,7 @@
 "DESCENDING_LABEL" = "遞減排序";
 "DESCENDING_SWITCH_LABEL" = "遞增或遞減排序";
 "DESCENDING_SWITCH_HINT" = "以遞增或遞減順序排序內容";
+"GRID_LAYOUT" = "格線配置";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -381,13 +398,38 @@
 "VARIOUS_ARTIST" = "多個藝人";
 "UNKNOWN_ALBUM" = "未知專輯";
 
-/* VideoOptionsControlBar */
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Subtitles and audio tracks";
+"SUBTITLE_AND_TRACK_HINT" = "Choose subtitle or audio tracks";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "DVD interface";
+
+"ROTATION_LOCK_BUTTON" = "Rotation lock";
+"ROTATION_LOCK_HINT" = "Lock video to current orientation";
+
+"BACKWARD_BUTTON" = "Backward";
+"BACKWARD_HINT" = "Jump Backwards";
+
+"PREVIOUS_BUTTON" = "Previous";
+"PREVIOUS_HINT" = "Previous media";
+
+"PLAY_PAUSE_BUTTON" = "Play or pause";
+"PLAY_PAUSE_HINT" = "Play or Pause current playback";
+
+"NEXT_HINT" = "Next media";
+
+"FORWARD_BUTTON" = "Forward";
+"FORWARD_HINT" = "Jump forwards";
+
 "INTERFACE_LOCK_BUTTON" = "鎖定介面";
-"INTERFACE_LOCK_HINT" = "停用介面控制";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video aspect ratio";
+"VIDEO_ASPECT_RATIO_HINT" = "變更目前影片的長寬比例";
+
 "MORE_OPTIONS_BUTTON" = "更多";
 "MORE_OPTIONS_HINT" = "檢視更多選項控制";
-"REPEAT_MODE_HINT" = "變更目前項目的重複模式";
-"VIDEO_ASPECT_RATIO_HINT" = "變更目前影片的長寬比例";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "等化器";
@@ -399,7 +441,56 @@
 
 // Local Network
 
-"SMBV1_WARN_TITLE" = "SMBv1 Connection Warning";
-"SMBV1_WARN_DESCRIPTION" = "We detected an old protocol (SMBv1).\nAre you really sure to continue with SMBv1?\nWe advise upgrading or changing your server settings.";
-"SMBV1_CONTINUE" = "Continue with SMBv1";
-"SMBV1_NEXT_PROTOCOL" = "Try SMBv2/v3";
+"SMBV1_WARN_TITLE" = "SMBv1 連線警告";
+"SMBV1_WARN_DESCRIPTION" = "我們偵測到舊版通訊協定 (SMBv1)。\n您確定要繼續使用 SMBv1 嗎?\n我們建議升級或變更您的伺服器設定。";
+"SMBV1_CONTINUE" = "用 SMBv1 繼續";
+"SMBV1_NEXT_PROTOCOL" = "試用 SMBv2/v3";
+
+/* Preview labels */
+
+"ENCODING" = "編碼";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "加入至媒體群組";
+"ADD_TO_MEDIA_GROUP_HINT" = "開啟加入至媒體群組選單";
+
+"MEDIA_GROUPS" = "媒體群組";
+"MEDIA_GROUPS_DESCRIPTION" = "選擇您新的媒體群組的標題";
+"MEDIA_GROUPS_PLACEHOLDER" = "媒體群組標題";
+
+"REMOVE_FROM_MEDIA_GROUP" = "自媒體群組移除";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "自媒體群組移除選擇項目";
+
+"MEDIA_GROUP_CREATION" = "新增媒體群組";
+"MEDIA_GROUP_CREATION_HINT" = "顯示建立播放清單的提醒";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "將內容移動至最上層";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "將選取項目的內容移動至最上層";
+
+"BUTTON_REGROUP" = "復原群組";
+"BUTTON_REGROUP_TITLE" = "為選擇項目復原群組";
+"BUTTON_REGROUP_HINT" = "嘗試自動為單一媒體復原群組";
+"BUTTON_REGROUP_DESCRIPTION" = "您確定要嘗試自動為單一媒體復原群組嗎?\n此項操作可能會花一點時間。";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "將媒體放在此處以添加它們";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "新增中";
+
+/* tip jar */
+"GIVE_TIP" = "提供小費";
+"CANNOT_MAKE_PAYMENTS" = "你沒有權限在此設備上付款。";
+"PURCHASE_FAILED" = "購買失敗";
+"SEND_GIFT" = "送贈禮物";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "播放";
+"PLAY_LABEL" = "播放";
+"PLAY_NEXT_IN_QUEUE_HINT" = "播放佇列中下一個";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "播放佇列中下一個";
+"APPEND_TO_QUEUE_HINT" = "插入佇列最後一項";
+"APPEND_TO_QUEUE_LABEL" = "插入佇列最後一項";
+
+"DISABLE_GROUPS" = "Disable groups";
+"DISABLE_GROUPS_SWITCH_HINT" = "Disable groups layout";
+"DISPLAY_AS" = "Display as";

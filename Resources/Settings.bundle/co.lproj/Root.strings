@@ -4,19 +4,21 @@
 "SETTINGS_VIDEO_TITLE" = "Video";
 "SETTINGS_AUDIO_TITLE" = "Audio";
 
-"SETTINGS_THEME_BRIGHT" = "Bright theme";
-"SETTINGS_THEME_DARK" = "Dark theme";
-"SETTINGS_THEME_SYSTEM" = "Automatic";
+"SETTINGS_THEME_BRIGHT" = "Tema luminosu";
+"SETTINGS_THEME_DARK" = "Tema scuru";
+"SETTINGS_THEME_SYSTEM" = "Autumaticu";
 "SETTINGS_PRIVACY_SUBTITLE" = "Apre in Preferenze";
 "SETTINGS_PASSCODE_LOCK_SUBTITLE" = "Accessu assicuratu à u vostru cuntenutu";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE" = "U vostru media serà piattatu in l’appiecazione Schedarii";
 
-"SETTINGS_DARKTHEME" = "Appearance";
+"SETTINGS_DARKTHEME" = "Aspettu";
 "SETTINGS_TIME_STRETCH_AUDIO" = "Stinzata di tempu audio";
 "SETTINGS_BACKGROUND_AUDIO" = "Ripruduzzione audio in fondu";
 "SETTINGS_GENERIC_TITLE" = "Genericu";
 "SETTINGS_PASSCODE_LOCK" = "Codice di serratura";
 "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID" = "Permette di sbluccà cù Touch ID";
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "Permette Face ID per sbluccà";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "Piattà a bibliuteca di media in Schedarii";
 "SETTINGS_VIDEO_FULLSCREEN" = "Sunà a video di screnu sanu";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "Cuntinuà a ripruduzzione video";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "Cuntinuà a ripruduzzione audio";
@@ -24,11 +26,12 @@
 "SETTINGS_CONTINUE_PLAYBACK_ASK" = "Dumandà";
 "SETTINGS_CONTINUE_PLAYBACK_ALWAYS" = "Sempre";
 "SETTINGS_NETWORK_PLAY_ALL" = "Sunà autumaticamente l’elementu chì seguita";
+"SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING" = "Attivà a sfilarata di u testu in a lista di i media";
 
-"SETTINGS_SKIP_LOOP_FILTER" = "Filtru per sbluccà";
+"SETTINGS_SKIP_LOOP_FILTER" = "Filtru di sblucchime";
 "SETTINGS_SKIP_LOOP_FILTER_NONE" = "Senza filtru (u più rapidu)";
-"SETTINGS_SKIP_LOOP_FILTER_NONREF" = "Sbluccà medianu";
-"SETTINGS_SKIP_LOOP_FILTER_NONKEY" = "Sbluccà legeru";
+"SETTINGS_SKIP_LOOP_FILTER_NONREF" = "Sblucchime medianu";
+"SETTINGS_SKIP_LOOP_FILTER_NONKEY" = "Sblucchime legeru";
 
 "SETTINGS_NETWORK_CACHING_TITLE" = "Livellu d’Impiatta di Reta";
 "SETTINGS_NETWORK_CACHING_LEVEL_LOWEST" = "Cumportu d’Attesa u Più Bassu";
@@ -81,31 +84,28 @@
 "SETTINGS_HWDECODING" = "Discudificazione materiale";
 "SETTINGS_HWDECODING_ON" = "Iè";
 "SETTINGS_HWDECODING_OFF" = "Innò";
+"SETTINGS_CASTING" = "Diffusione";
+"SETTINGS_PTCASTING" = "Traversata audio";
+"SETTINGS_PTCASTINGLONG" = "Lascià a vostra TV urganizà a trasfurmazione audio";
 
 "SETTINGS_FEEDBACK" = "Ritornu d’avisu";
 "SETTINGS_SEND_FEEDBACK" = "Mandà u vostru avisu";
 "SETTINGS_SEND_RATING" = "Vi ringraziemu d’apprezzià VLC for iOS";
 
-"SETTINGS_MEDIA_LIBRARY" = "Media library";
-"SETTINGS_MEDIA_LIBRARY_RESCAN" = "Force VLC to rescan the media library";
+"SETTINGS_MEDIA_LIBRARY" = "Bibliuteca di media";
+"SETTINGS_MEDIA_LIBRARY_RESCAN" = "Sfurzà VLC à analisà torna a mediateca";
 "SETTINGS_DECRAPIFY" = "Megliurà i nomi d’elementi per l’affissu";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Video groups detection length";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Short";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Default";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Long";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Extra long";
-"SETTINGS_SHOW_THUMBNAILS" = "Show video thumbnails";
-"SETTINGS_SHOW_ARTWORKS" = "Show audio artworks";
-"SETTINGS_BACKUP_MEDIA_LIBRARY" = "Include the media library in device backup";
+"SETTINGS_SHOW_THUMBNAILS" = "Affissà e vignette di e video";
+"SETTINGS_SHOW_ARTWORKS" = "Affissà l’illustrazioni di i schedarii audio";
+"SETTINGS_BACKUP_MEDIA_LIBRARY" = "Include a mediateca in a salvaguardia di l’apparechju";
 
 "SETTINGS_FILE_SYNC" = "Sincrunizazione di schedariu";
-"SETTINGS_WIFISHARING_IPv6" = "Supportu IPv6 per spartimentu WiFi";
-"SETTINGS_UNLINK_DROPBOX" = "Dissucià da Dropbox";
-"SETTINGS_UNLINK_GOOGLEDRIVE" = "Dissucià da Google Drive";
-"SETTINGS_UNLINK_ONEDRIVE" = "Dissucià da OneDrive";
-"SETTINGS_FTP_TEXT_ENCODING" = "Cudificazione di testu per cunnessioni FTP";
+"SETTINGS_WIFISHARING_IPv6" = "IPv6 accettatu per u spartimentu Wi-Fi";
 
 "SETTINGS_ARTWORK" = "Illustrazione";
 "SETTINGS_DOWNLOAD_ARTWORK" = "Scaricà l’illustrazione";
+
+"SETTINGS_LAB" = "Lab";
+"SETTINGS_NEW_PLAYER" = "New player";
 
 "ABOUT_APP_TV" = "Apprupositu di VLC for tvOS";

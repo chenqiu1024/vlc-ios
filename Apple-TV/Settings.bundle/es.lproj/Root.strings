@@ -9,6 +9,7 @@
 "SETTINGS_THEME_SYSTEM" = "Automático";
 "SETTINGS_PRIVACY_SUBTITLE" = "Abrir en preferencias";
 "SETTINGS_PASSCODE_LOCK_SUBTITLE" = "Acceso seguro a su contenido";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE" = "Su medio estará oculto en la app Files";
 
 "SETTINGS_DARKTHEME" = "Apariencia";
 "SETTINGS_TIME_STRETCH_AUDIO" = "Audio «time-stretching»";
@@ -17,6 +18,7 @@
 "SETTINGS_PASSCODE_LOCK" = "Contraseña de bloqueo";
 "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID" = "Permitir Touch ID para desbloquear";
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "Permitir Touch ID para desbloquear";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "Ocultar la librería de medios en Files";
 "SETTINGS_VIDEO_FULLSCREEN" = "Reproducir vídeo a pantalla completa";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "Continuar reproducción de vídeo";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "Continuar reproducción de audio";
@@ -24,6 +26,7 @@
 "SETTINGS_CONTINUE_PLAYBACK_ASK" = "Preguntar";
 "SETTINGS_CONTINUE_PLAYBACK_ALWAYS" = "Siempre";
 "SETTINGS_NETWORK_PLAY_ALL" = "Reproducir automáticamente el siguiente elemento";
+"SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING" = "Habilitar desplazamiento de texto en la lista de medios";
 
 "SETTINGS_SKIP_LOOP_FILTER" = "Filtro de desbloqueo";
 "SETTINGS_SKIP_LOOP_FILTER_NONE" = "Sin desbloqueo (el más rápido)";
@@ -81,6 +84,9 @@
 "SETTINGS_HWDECODING" = "Decodificación por hardware";
 "SETTINGS_HWDECODING_ON" = "Activar";
 "SETTINGS_HWDECODING_OFF" = "Desactivar";
+"SETTINGS_CASTING" = "Reparto";
+"SETTINGS_PTCASTING" = "Paso del audio";
+"SETTINGS_PTCASTINGLONG" = "Dejar a su TV gestionar la presentación del audio";
 
 "SETTINGS_FEEDBACK" = "Reacción";
 "SETTINGS_SEND_FEEDBACK" = "Enviar reacción";
@@ -89,23 +95,17 @@
 "SETTINGS_MEDIA_LIBRARY" = "Librería de medios";
 "SETTINGS_MEDIA_LIBRARY_RESCAN" = "Forzar a VLC a volver a buscar en la librería de medios";
 "SETTINGS_DECRAPIFY" = "Optimizar nombres de elementos para visualizar";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Detección de longitud de grupos de vídeo";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Corto";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Predeterminado";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Largo";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Extra largo";
 "SETTINGS_SHOW_THUMBNAILS" = "Mostrar previsualización de vídeos";
 "SETTINGS_SHOW_ARTWORKS" = "Mostrar material artístico de audio";
 "SETTINGS_BACKUP_MEDIA_LIBRARY" = "Incluir la biblioteca multimedia en la copia de seguridad del dispositivo";
 
 "SETTINGS_FILE_SYNC" = "Sincronización de archivos";
-"SETTINGS_WIFISHARING_IPv6" = "Soporte IPv6 para compartición de WiFi";
-"SETTINGS_UNLINK_DROPBOX" = "Desvincular de Dropbox";
-"SETTINGS_UNLINK_GOOGLEDRIVE" = "Desvincular de Google Drive";
-"SETTINGS_UNLINK_ONEDRIVE" = "Desasociar de OneDrive";
-"SETTINGS_FTP_TEXT_ENCODING" = "Codificación del texto para conexiones FTP";
+"SETTINGS_WIFISHARING_IPv6" = "Soporte IPv6 para compartición WiFi";
 
 "SETTINGS_ARTWORK" = "Material artístico";
 "SETTINGS_DOWNLOAD_ARTWORK" = "Descargar material artístico";
+
+"SETTINGS_LAB" = "Lab";
+"SETTINGS_NEW_PLAYER" = "Nuevo reproductor";
 
 "ABOUT_APP_TV" = "Acerca de VLC para tvOS";

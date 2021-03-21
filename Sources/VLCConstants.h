@@ -11,11 +11,10 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-#define kVLCVersionCodename @"All Along the Watchtower"
-
 #define kVLCSettingPasscodeOnKey @"PasscodeProtection"
 #define kVLCSettingPasscodeAllowTouchID @"AllowTouchID"
 #define kVLCSettingPasscodeAllowFaceID @"AllowFaceID"
+#define kVLCSettingHideLibraryInFilesApp @"HideLibraryInFilesApp"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
 #define kVLCSettingAppTheme @"darkMode"
 #define kVLCSettingAppThemeBright 0
@@ -45,7 +44,7 @@
 #define kVLCSettingSubtitlesFontColorDefaultValue @"16777215"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingDeinterlace @"deinterlace"
-#define kVLCSettingDeinterlaceDefaultValue @(0)
+#define kVLCSettingDeinterlaceDefaultValue @(-1)
 #define kVLCSettingHardwareDecoding @"codec"
 #define kVLCSettingHardwareDecodingDefault @""
 #define kVLCSettingNetworkCaching @"network-caching"
@@ -60,8 +59,6 @@
 #define kVLCSettingVideoFullscreenPlayback @"AlwaysUseFullscreenForVideo"
 #define kVLCSettingContinuePlayback @"ContinuePlayback"
 #define kVLCSettingContinueAudioPlayback @"ContinueAudioPlayback"
-#define kVLCSettingFTPTextEncoding @"ftp-text-encoding"
-#define kVLCSettingFTPTextEncodingDefaultValue @(5) // ISO Latin 1
 #define kVLCSettingPlaybackSpeedDefaultValue @"playback-speed"
 #define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
 #define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
@@ -78,13 +75,17 @@
 #define kVLCSettingShowThumbnailsDefaultValue @YES
 #define kVLCSettingShowArtworks @"ShowArtworks"
 #define kVLCSettingShowArtworksDefaultValue @YES
+#define kVLCSettingsDisableGrouping @"MLDisableGrouping"
+#define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
+#define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
 #define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
 #define kVLCSettingBackupMediaLibraryDefaultValue @NO
+#define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
+
+#define kVLCSettingLabNewPlayer @"newPlayer"
+#define kVLCSettingLabNewPlayerDefaultValue @YES
 
 #define kVLCForceSMBV1 @"smb-force-v1"
-
-#define kVLCSettingsMediaLibraryVideoGroupPrefixLength @"VideoGroupPrefixLength"
-#define kVLCSettingsMediaLibraryVideoGroupPrefixLengthDefaultValue @"6"
 
 #define kVLCShowRemainingTime @"show-remaining-time"
 #define kVLCRecentURLs @"recent-urls"
@@ -92,6 +93,7 @@
 #define kVLCPrivateWebStreaming @"private-streaming"
 #define kVLChttpScanSubtitle @"http-scan-subtitle"
 #define kVLCHTTPUploadDirectory @"Upload"
+#define kVLCAudioLibraryGridLayout @"kVLCAudioLibraryGridLayout"
 
 #define kSupportedFileExtensions @"\\.(3g2|3gp|3gp2|3gpp|amv|asf|avi|bik|bin|crf|divx|drc|dv|evo|f4v|flv|gvi|gxf|iso|m1v|m2v|m2t|m2ts|m4v|mkv|mov|mp2|mp2v|mp4|mp4v|mpe|mpeg|mpeg1|mpeg2|mpeg4|mpg|mpv2|mts|mtv|mxf|mxg|nsv|nuv|ogg|ogm|ogv|ogx|ps|rec|rm|rmvb|rpl|thp|tod|ts|tts|txd|vlc|vob|vro|webm|wm|wmv|wtv|xesc)$"
 #define kSupportedSubtitleFileExtensions @"\\.(cdg|idx|srt|sub|utf|ass|ssa|aqt|jss|psb|rt|smi|txt|smil|stl|usf|dks|pjs|mpl2|mks|vtt|ttml|dfxp)$"
@@ -126,6 +128,16 @@
 #define kVLCWifiAuthentificationSuccess 0
 #define kVLCWifiAuthentificationFailure 1
 #define kVLCWifiAuthentificationBanned 2
+
+#define kVLCSortDefault @"SortDefault"
+#define kVLCSortDescendingDefault @"SortDescendingDefault"
+#define kVLCHasLaunchedBefore @"hasLaunchedBefore"
+
+#define kVLCTabBarIndex @"TabBarIndex"
+
+#define kVLCGroupLayout @"kVLCGroupLayout"
+
+#define kVLCEqualizerSnapBands @"EqualizerSnapBands"
 
 /* LEGACY KEYS, DO NOT USE IN NEW CODE */
 #define kVLCFTPServer @"ftp-server"

@@ -75,8 +75,11 @@
 "BUTTON_RENDERER" = "キャスティングデバイス";
 "BUTTON_RENDERER_HINT" = "利用可能なキャスティングデバイスのメニューを表示";
 
+
+"BUTTON_PLAY_QUEUE" = "キューを再生";
+"BUTTON_PLAY_QUEUE_HINT" = "再生キューを表示";
+
 "UPGRADING_LIBRARY" = "メディアライブラリのアップグレード中";
-"UNKNOWN" = "不明";
 
 "OPEN_NETWORK" = "ネットワークストリームを開く";
 "NETWORK_TITLE" = "ネットワークストリーム";
@@ -127,6 +130,9 @@
 "LOCAL_SERVER_LAST_UPDATE" = "最終更新: %@";
 "LOCAL_SERVER_CONNECTION_FAILED_TITLE" = "サーバーへの接続に失敗しました";
 "LOCAL_SERVER_CONNECTION_FAILED_MESSAGE" = "サーバーのアドレスとクレデンシャルを確認してください";
+
+"FILES_APP_CELL_TITLE" = "ローカルファイル";
+"FILES_APP_CELL_SUBTITLE" = "ファイルをVLCにコピーすることなく開く";
 
 "CLOUD_SERVICES" = "クラウドサービス";
 "LOGIN" = "ログイン";
@@ -189,14 +195,18 @@
 "PLAYBACK_POSITION" = "再生位置";
 "VIDEO_FILTER" = "ビデオフィルター";
 "VIDEO_FILTER_RESET_BUTTON" = "ビデオフィルターをリセット";
-"VIDEO_ASPECT_RATIO_BUTTON" = "ビデオのアスペクト比を切り替え";
-"PLAY_PAUSE_BUTTON" = "現在の再生・一時停止の切り替え";
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video aspect ratio";
 "BWD_BUTTON" = "ジャンプして戻る";
 "FWD_BUTTON" = "ジャンプして進む";
 "PLAY_BUTTON" = "再生";
 "NEXT_BUTTON" = "次";
 "PREV_BUTTON" = "前";
 "PLAY_ALL_BUTTON" = "すべて再生";
+
+"RESET_VIDEO_FILTERS" = "Do you want to reset the video filters?";
+"RESET_PLAYBACK_SPEED" = "Do you want to reset the playback speed?";
+"RESET_EQUALIZER" = "Do you want to reset the equalizer's settings?";
+"RESET_SLEEP_TIMER" = "Do you want to reset the sleep timer?";
 
 "VERSION_FORMAT" = "バージョン: %@";
 "BASED_ON_FORMAT" = "Based on:<br />%@";
@@ -230,7 +240,7 @@
 "NO_SERVER_FOUND" = "サーバーが見つかりません";
 "NO_RECENT_STREAMS" = "ストリームの再生履歴がありません";
 
-"WEBINTF_TITLE" = "WiFi経由で共有";
+"WEBINTF_TITLE" = "WiFiで共有";
 "WEBINTF_DROPFILES" = "ファイルをドロップ";
 "WEBINTF_DROPFILES_LONG" = "あなたの%@に追加したいファイルをウィンドウにドロップするか<br>\"+\"ボタンをクリックしてファイルピッカーダイアログを使用してください。";
 "WEBINTF_DOWNLOADFILES" = "ファイルをダウンロード";
@@ -281,8 +291,11 @@
 "PLEX_LONG" = "Plexメディアサーバー (Bonjour)";
 "PLEX_SHORT" = "Plex";
 
-"FTP_LONG" = "ファイル転送プロトコル (FTP)";
 "FTP_SHORT" = "FTP";
+"SFTP_SHORT" = "SFTP";
+
+"NFS_LONG" = "ネットワークファイルシステム (NFS)";
+"NFS_SHORT" = "NFS";
 
 "BONJOUR_FILE_SERVERS" = "BONJOURファイルサーバー";
 "DSM_WORKGROUP" = "ワークグループ";
@@ -317,7 +330,7 @@
 "ARTISTS" = "アーティスト";
 "EPISODES" = "エピソード";
 "GENRES" = "ジャンル";
-"MOVIES" = "映画";
+"ALL_VIDEOS" = "すべてのビデオ";
 "SONGS" = "楽曲";
 "PLAYLISTS" = "プレイリスト";
 "VIDEO_GROUPS" = "ビデオグループ";
@@ -356,6 +369,7 @@
 "DESCENDING_LABEL" = "逆順";
 "DESCENDING_SWITCH_LABEL" = "昇順/逆順";
 "DESCENDING_SWITCH_HINT" = "並び替えの順序";
+"GRID_LAYOUT" = "グリッドレイアウト";
 
 // VLCMediaLibraryKit - Sorting Criteria
 
@@ -384,13 +398,38 @@
 "VARIOUS_ARTIST" = "複数アーティスト";
 "UNKNOWN_ALBUM" = "未知のアルバム";
 
-/* VideoOptionsControlBar */
+/* VideoPlayerControls */
+
+"SUBTITLE_AND_TRACK_BUTTON" = "Subtitles and audio tracks";
+"SUBTITLE_AND_TRACK_HINT" = "Choose subtitle or audio tracks";
+
+"DVD_BUTTON" = "DVD";
+"DVD_HINT" = "DVD interface";
+
+"ROTATION_LOCK_BUTTON" = "Rotation lock";
+"ROTATION_LOCK_HINT" = "Lock video to current orientation";
+
+"BACKWARD_BUTTON" = "Backward";
+"BACKWARD_HINT" = "Jump Backwards";
+
+"PREVIOUS_BUTTON" = "Previous";
+"PREVIOUS_HINT" = "Previous media";
+
+"PLAY_PAUSE_BUTTON" = "Play or pause";
+"PLAY_PAUSE_HINT" = "Play or Pause current playback";
+
+"NEXT_HINT" = "Next media";
+
+"FORWARD_BUTTON" = "Forward";
+"FORWARD_HINT" = "Jump forwards";
+
 "INTERFACE_LOCK_BUTTON" = "インターフェースをロック";
-"INTERFACE_LOCK_HINT" = "インターフェース制御を無効化";
+
+"VIDEO_ASPECT_RATIO_BUTTON" = "Video aspect ratio";
+"VIDEO_ASPECT_RATIO_HINT" = "現在のビデオのアスペクト比を変更";
+
 "MORE_OPTIONS_BUTTON" = "もっと";
 "MORE_OPTIONS_HINT" = "より多くの制御オプションを表示";
-"REPEAT_MODE_HINT" = "現在の項目の再生モードを変更";
-"VIDEO_ASPECT_RATIO_HINT" = "現在のビデオのアスペクト比を変更";
 
 /* MediaMoreOptionsActionSheet */
 "EQUALIZER_CELL_TITLE" = "イコライザー";
@@ -410,3 +449,48 @@
 /* Preview labels */
 
 "ENCODING" = "エンコーディング";
+
+/* Media groups */
+
+"ADD_TO_MEDIA_GROUP" = "メディアグループに追加";
+"ADD_TO_MEDIA_GROUP_HINT" = "メディアグループに追加メニューを表示";
+
+"MEDIA_GROUPS" = "メディアグループ";
+"MEDIA_GROUPS_DESCRIPTION" = "新しいメディアグループのタイトルを選択してください";
+"MEDIA_GROUPS_PLACEHOLDER" = "メディアグループタイトル";
+
+"REMOVE_FROM_MEDIA_GROUP" = "メディアグループから削除";
+"REMOVE_FROM_MEDIA_GROUP_HINT" = "選択したものをメディアグループから削除";
+
+"MEDIA_GROUP_CREATION" = "新しいメディアグループ";
+"MEDIA_GROUP_CREATION_HINT" = "プレイリストを作成するためのアラートを表示";
+"MEDIA_GROUP_MOVE_TO_ROOT" = "コンテンツをトップレベルに移動";
+"MEDIA_GROUP_MOVE_TO_ROOT_HINT" = "選択したコンテンツをトップレベルに移動";
+
+"BUTTON_REGROUP" = "再グループ";
+"BUTTON_REGROUP_TITLE" = "選択したものを再グループ";
+"BUTTON_REGROUP_HINT" = "単一メディアを自動的に再グループすることを試行";
+"BUTTON_REGROUP_DESCRIPTION" = "単一メディアを自動的に再グループすることを本当に試行しますか?\nこの操作には少し時間がかかります。";
+
+/* Files.app persistence file */
+"MEDIALIBRARY_FILES_PLACEHOLDER" = "ここでメディアを追加することができます";
+"MEDIALIBRARY_ADDING_PLACEHOLDER" = "追加中...";
+
+/* tip jar */
+"GIVE_TIP" = "ティップスを提供";
+"CANNOT_MAKE_PAYMENTS" = "このデバイスで支払い許可がありません。";
+"PURCHASE_FAILED" = "購入手続きに失敗しました";
+"SEND_GIFT" = "ギフトを送る";
+
+// MARK: - QueueViewController
+
+"PLAY_HINT" = "再生";
+"PLAY_LABEL" = "再生";
+"PLAY_NEXT_IN_QUEUE_HINT" = "キューの次の項目を再生";
+"PLAY_NEXT_IN_QUEUE_LABEL" = "キューの次の項目を再生";
+"APPEND_TO_QUEUE_HINT" = "キューに追加";
+"APPEND_TO_QUEUE_LABEL" = "キューに追加";
+
+"DISABLE_GROUPS" = "グループを無効化";
+"DISABLE_GROUPS_SWITCH_HINT" = "グループレイアウトを無効化";
+"DISPLAY_AS" = "表示";

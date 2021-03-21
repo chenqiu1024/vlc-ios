@@ -9,6 +9,13 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
+@objc(VLCMediaLibraryBaseModelObserver)
+protocol MediaLibraryBaseModelObserver {
+    func mediaLibraryBaseModelReloadView()
+    @objc optional func mediaLibraryBaseModelReload(at indexPaths: [IndexPath])
+    @objc optional func mediaLibraryBaseModelPopView()
+}
+
 // Expose a "shadow" version without associatedType in order to use it as a type
 protocol MediaLibraryBaseModel {
     init(medialibrary: MediaLibraryService)
@@ -17,14 +24,15 @@ protocol MediaLibraryBaseModel {
 
     var sortModel: SortModel { get }
 
-    var updateView: (() -> Void)? { get set }
-
     var indicatorName: String { get }
     var cellType: BaseCollectionViewCell.Type { get }
 
-    func append(_ item: VLCMLObject)
-    func delete(_ items: [VLCMLObject])
+    func anyAppend(_ item: VLCMLObject)
+    func anyDelete(_ items: [VLCMLObject])
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
+
+    // Give a name to a model to identify each model programmatically
+    var name: String { get }
 }
 
 protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
@@ -36,13 +44,12 @@ protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
 
     var medialibrary: MediaLibraryService { get }
 
-    var updateView: (() -> Void)? { get set }
+    var observable: Observable<MediaLibraryBaseModelObserver> { get }
 
     var indicatorName: String { get }
 
     func append(_ item: MLType)
-    // FIXME: Ideally items should be MLType but Swift isn't happy so it will always fail
-    func delete(_ items: [VLCMLObject])
+    func delete(_ items: [MLType])
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
 }
 
@@ -51,12 +58,18 @@ extension MLBaseModel {
         return files
     }
 
-    func append(_ item: VLCMLObject) {
-        fatalError()
+    func anyAppend(_ item: VLCMLObject) {
+        guard let item = item as? MLType else {
+            preconditionFailure("MLBaseModel: Wrong underlying ML type.")
+        }
+        append(item)
     }
 
-    func delete(_ items: [VLCMLObject]) {
-        fatalError()
+    func anyDelete(_ items: [VLCMLObject]) {
+        guard let items = items as? [MLType] else {
+            preconditionFailure("MLBaseModel: Wrong underlying ML type.")
+        }
+        delete(items)
     }
 
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
@@ -105,6 +118,12 @@ extension MLBaseModel {
             return true
         }
     }
+
+    func filterFilesFromDeletion(of ids: [VLCMLIdentifier]) {
+        files = files.filter() {
+            return !ids.contains($0.identifier())
+        }
+    }
 }
 
 extension VLCMLObject {
@@ -122,16 +141,16 @@ extension MediaCollectionModel {
     func thumbnail() -> UIImage? {
         var image: UIImage? = nil
         if image == nil {
-            for track in files() ?? [] where track.isThumbnailGenerated() {
+            for track in files() ?? [] where track.thumbnailStatus() == .available {
                 image = UIImage(contentsOfFile: track.thumbnail()?.path ?? "")
                 break
             }
         }
         if image == nil
-            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowThumbnails) && self is VLCMLVideoGroup)
-            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowArtworks) && !(self is VLCMLVideoGroup)) {
+            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowThumbnails) && self is VLCMLMediaGroup)
+            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowArtworks) && !(self is VLCMLMediaGroup)) {
             let isDarktheme = PresentationTheme.current == PresentationTheme.darkTheme
-            if self is VLCMLVideoGroup {
+            if self is VLCMLMediaGroup {
                 image = isDarktheme ? UIImage(named: "movie-placeholder-dark") : UIImage(named: "movie-placeholder-white")
             } else {
                 image = isDarktheme ? UIImage(named: "album-placeholder-dark") : UIImage(named: "album-placeholder-white")

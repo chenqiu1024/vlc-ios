@@ -9,6 +9,7 @@
 "SETTINGS_THEME_SYSTEM" = "Otomatik";
 "SETTINGS_PRIVACY_SUBTITLE" = "Ayarlarda Aç";
 "SETTINGS_PASSCODE_LOCK_SUBTITLE" = "İçeriğinize güvenli erişim";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE" = "Çoklu ortamlarınız Dosyalar uygulamasında görüntülenmeyecek";
 
 "SETTINGS_DARKTHEME" = "Görünüm";
 "SETTINGS_TIME_STRETCH_AUDIO" = "Zamana yaymalı ses";
@@ -17,6 +18,7 @@
 "SETTINGS_PASSCODE_LOCK" = "Parola Kilidi";
 "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID" = "Kilidi açmak için Touch ID kullanılsın";
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "Kilidi açmak için Face ID kullanılsın";
+"SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "Ortam kitaplığı Dosyalarda görüntülenmesin";
 "SETTINGS_VIDEO_FULLSCREEN" = "Görüntü tam ekranda oynatılsın";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "Görüntü oynatımını sürdür";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "Ses oynatımını sürdür";
@@ -24,6 +26,7 @@
 "SETTINGS_CONTINUE_PLAYBACK_ASK" = "Sorulsun";
 "SETTINGS_CONTINUE_PLAYBACK_ALWAYS" = "Her zaman";
 "SETTINGS_NETWORK_PLAY_ALL" = "Sonraki öge otomatik olarak oynatılsın";
+"SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING" = "Ortam listesinde metin kaydırılabilsin";
 
 "SETTINGS_SKIP_LOOP_FILTER" = "Engel kaldırma süzgeci";
 "SETTINGS_SKIP_LOOP_FILTER_NONE" = "Engel kaldırma yok (en hızlı)";
@@ -81,6 +84,9 @@
 "SETTINGS_HWDECODING" = "Donanımsal Kod Çözme";
 "SETTINGS_HWDECODING_ON" = "Açık";
 "SETTINGS_HWDECODING_OFF" = "Kapalı";
+"SETTINGS_CASTING" = "Aktarım";
+"SETTINGS_PTCASTING" = "Doğrudan Ses Geçişi";
+"SETTINGS_PTCASTINGLONG" = "Ses TV tarafından oluşturulsun";
 
 "SETTINGS_FEEDBACK" = "Geri Bildirim";
 "SETTINGS_SEND_FEEDBACK" = "Geri Bildirim Gönderin";
@@ -89,23 +95,17 @@
 "SETTINGS_MEDIA_LIBRARY" = "Ortam kitaplığı";
 "SETTINGS_MEDIA_LIBRARY_RESCAN" = "VLC ortam kitaplığını yeniden taramaya zorlansın";
 "SETTINGS_DECRAPIFY" = "Öge adları uygun şekilde görüntülensin";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH" = "Görüntü grupları algılama derinliği";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_SHORT" = "Kısa";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_NORMAL" = "Varsayılan";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_LONG" = "Uzun";
-"SETTINGS_MEDIA_LIBRARY_VIDEO_GROUP_PREFIX_LENGTH_EXTRA_LONG" = "Çok uzun";
 "SETTINGS_SHOW_THUMBNAILS" = "Görüntü küçük görselleri görüntülensin";
 "SETTINGS_SHOW_ARTWORKS" = "Ses kapak görselleri görüntülensin";
 "SETTINGS_BACKUP_MEDIA_LIBRARY" = "Aygıt yedeğine ortam kitaplığı katılsın";
 
 "SETTINGS_FILE_SYNC" = "Dosya Eşitleme";
-"SETTINGS_WIFISHARING_IPv6" = "WiFi Paylaşımı için IPv6 desteği";
-"SETTINGS_UNLINK_DROPBOX" = "Dropbox Bağlantısını Kes";
-"SETTINGS_UNLINK_GOOGLEDRIVE" = "Google Drive Bağlantısını Kes";
-"SETTINGS_UNLINK_ONEDRIVE" = "OneDrive Bağlantısını Kes";
-"SETTINGS_FTP_TEXT_ENCODING" = "FTP bağlantılarının metin kodlaması";
+"SETTINGS_WIFISHARING_IPv6" = "Wi-Fi Paylaşımı için IPv6 desteği";
 
 "SETTINGS_ARTWORK" = "Albüm Kapağı";
 "SETTINGS_DOWNLOAD_ARTWORK" = "Albüm Kapağını İndir";
+
+"SETTINGS_LAB" = "Lab";
+"SETTINGS_NEW_PLAYER" = "Yeni oynatıcı";
 
 "ABOUT_APP_TV" = "tvOS için VLC Hakkında";

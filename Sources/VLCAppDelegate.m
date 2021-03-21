@@ -18,24 +18,13 @@
  *****************************************************************************/
 
 #import "VLCAppDelegate.h"
-#import "VLCMediaFileDiscoverer.h"
-#import "NSString+SupportedMedia.h"
-#import "UIDevice+VLC.h"
-#import "VLCHTTPUploaderController.h"
-#import "VLCPlaybackService.h"
-#import "VLCPlaybackService+MediaLibrary.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import "VLCActivityManager.h"
-#import "VLCDropboxConstants.h"
-#import "VLCPlaybackNavigationController.h"
-#import "PAPasscodeViewController.h"
 #import "VLC-Swift.h"
-#import <OneDriveSDK.h>
-#import "VLCOneDriveConstants.h"
 
 #import <AppCenter/AppCenter.h>
 #import <AppCenterAnalytics/AppCenterAnalytics.h>
 #import <AppCenterCrashes/AppCenterCrashes.h>
+
+NSString *VLCAppCenterAppID = @"0114ca8e-2652-44ce-588d-2ebd035c3577";
 
 #define BETA_DISTRIBUTION 1
 
@@ -54,8 +43,12 @@
 + (void)initialize
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUInteger appThemeIndex = kVLCSettingAppThemeBright;
+    if (@available(iOS 13.0, *)) {
+        appThemeIndex = kVLCSettingAppThemeSystem;
+    }
 
-    NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(kVLCSettingAppThemeBright),
+    NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
                                   kVLCSettingPasscodeAllowFaceID : @(1),
                                   kVLCSettingPasscodeAllowTouchID : @(1),
                                   kVLCSettingContinueAudioInBackgroundKey : @(YES),
@@ -78,7 +71,6 @@
                                   kVLCSettingVideoFullscreenPlayback : @(YES),
                                   kVLCSettingContinuePlayback : @(1),
                                   kVLCSettingContinueAudioPlayback : @(1),
-                                  kVLCSettingFTPTextEncoding : kVLCSettingFTPTextEncodingDefaultValue,
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,
                                   kVLCSettingEqualizerProfileDisabled : @(YES),
@@ -87,15 +79,17 @@
                                   kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
                                   kVLCAutomaticallyPlayNextItem : @(YES),
                                   kVLCSettingEnableMediaCellTextScrolling : @(NO),
-                                  kVLCSettingsMediaLibraryVideoGroupPrefixLength: kVLCSettingsMediaLibraryVideoGroupPrefixLengthDefaultValue,
                                   kVLCSettingShowThumbnails : kVLCSettingShowThumbnailsDefaultValue,
                                   kVLCSettingShowArtworks : kVLCSettingShowArtworksDefaultValue,
-                                  kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue
+                                  kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
+                                  kVLCSettingCastingAudioPassthrough : @(NO),
+                                  kVLCForceSMBV1 : @(YES),
+                                  kVLCSettingLabNewPlayer : kVLCSettingLabNewPlayerDefaultValue
     };
     [defaults registerDefaults:appDefaults];
 }
 
-- (void)setup
+- (void)setupApplicationCoordinator
 {
     void (^setupAppCoordinator)(void) = ^{
         self->appCoordinator = [[AppCoordinator alloc] initWithTabBarController:self->rootViewController];
@@ -104,27 +98,8 @@
     [self validatePasscodeIfNeededWithCompletion:setupAppCoordinator];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (void)configureShortCutItemsWithApplication:(UIApplication *)application
 {
-    [MSAppCenter start:@"0114ca8e-2652-44ce-588d-2ebd035c3577" withServices:@[
-                                                                              [MSAnalytics class],
-                                                                              [MSCrashes class]
-                                                                              ]];
-    // Configure Dropbox
-    [DBClientsManager setupWithAppKey:kVLCDropboxAppKey];
-
-    // Configure OneDrive
-    [ODClient setMicrosoftAccountAppId:kVLCOneDriveClientID scopes:@[@"onedrive.readwrite", @"offline_access"]];
-
-    self.orientationLock = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
-
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    rootViewController = [UITabBarController new];
-    self.window.rootViewController = rootViewController;
-    [self.window makeKeyAndVisible];
-    [VLCApperanceManager setupAppearanceWithTheme:PresentationTheme.current];
-    [self setup];
-
     /* add our static shortcut items the dynamic way to ease l10n and dynamic elements to be introduced later */
     if (application.shortcutItems == nil || application.shortcutItems.count < 4) {
         UIApplicationShortcutItem *localVideoItem = [[UIApplicationShortcutItem alloc] initWithType:kVLCApplicationShortcutLocalVideo
@@ -149,6 +124,22 @@
                                                                                         userInfo:nil];
         application.shortcutItems = @[localVideoItem, localAudioItem, localplaylistItem, networkItem];
     }
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [MSAppCenter start:VLCAppCenterAppID withServices:@[[MSAnalytics class], [MSCrashes class]]];
+
+    self.orientationLock = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
+
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    rootViewController = [UITabBarController new];
+    self.window.rootViewController = rootViewController;
+    [self.window makeKeyAndVisible];
+    [VLCAppearanceManager setupAppearanceWithTheme:PresentationTheme.current];
+    [self setupApplicationCoordinator];
+
+    [self configureShortCutItemsWithApplication:application];
 
     return YES;
 }
@@ -204,7 +195,7 @@ didFailToContinueUserActivityWithType:(NSString *)userActivityType
     //Touch ID is shown 
     if ([_window.rootViewController.presentedViewController isKindOfClass:[UINavigationController class]]){
         UINavigationController *navCon = (UINavigationController *)_window.rootViewController.presentedViewController;
-        if ([navCon.topViewController isKindOfClass:[PAPasscodeViewController class]]){
+        if ([navCon.topViewController isKindOfClass:[PasscodeLockController class]]){
             return;
         }
     }
